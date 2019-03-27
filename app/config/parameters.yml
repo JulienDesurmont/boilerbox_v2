@@ -1,0 +1,46 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+#    database_host: 127.0.0.1
+    database_host: localhost
+    database_port: null
+    database_name: boilerbox_dev
+    database_user: cargo
+    database_password: adm5667
+    mailer_transport: smtp
+    mailer_user: LCI-group
+    mailer_password: adm5667
+    mailer_host: smtpcorp.com
+    mailer_delivery: Assistance_IBC@lci-group.fr
+    mailer_disable: false
+    mailer_sender: adminIpc@cargo-france.fr
+    mailer_auth: login
+    mailer_port: 2525
+    locale: fr
+    secret: ThisTokenIsNotSoSecretChangeIt
+    log.class: Ipc\ProgBundle\Services\GestionLog\ServiceGestionLog
+    socket_unix: '/var/run/mysqld/mysqld.sock'
+
+    traduction.class: Ipc\ProgBundle\Services\Traduction\ServiceTraduction
+    importbin.class: Ipc\ProgBundle\Services\ImportBin\ServiceImportBin
+    importipc.class: Ipc\ProgBundle\Services\ImportIpc\ServiceImportIpc
+    fillnumber.class: Ipc\ProgBundle\Services\FillNumbers\ServiceFillNumbers
+    transformeTexte.class: Ipc\ProgBundle\Services\TransformeTexte\ServiceTransformeTexte
+    connectbd.class: Ipc\ProgBundle\Services\Connexion\ServiceConnexion
+    mailing.class: Ipc\ProgBundle\Services\Mailing\ServiceMailing
+    password.class: Ipc\ProgBundle\Services\Password\ServicePassword
+    transfertftp.class: Ipc\ProgBundle\Services\TransfertFtp\ServiceTransfertFtp
+    rapports.class: Ipc\ProgBundle\Services\Rapports\ServiceRapports
+    etats.class: Ipc\EtatBundle\Services\ServiceEtatQueries
+    requeteType.class: Ipc\ProgBundle\Services\RequeteType\ServiceRequeteType
+    modbus.class: Ipc\ProgBundle\Services\ModBus\ServiceModBus
+    ipcsession.class: Ipc\ProgBundle\Services\Session\ServiceSession
+    configuration.class: Ipc\ProgBundle\Services\Configuration\ServiceConfiguration
+    service_fichiers.class: Ipc\ProgBundle\Services\Fichiers\ServiceFichiers
+    rattrapimportbin.class: Ipc\ProgBundle\Services\RattrapImportBin\ServiceRattrapImportBin
+
+    registration.class: Ipc\UserBundle\Form\Type\RegistrationType
+
+    security.authentication.listener.form.class: Ipc\ProgBundle\Listener\Security\UsernamePasswordFormAuthenticationListener
+    security.logout_listener.class: Ipc\ProgBundle\Listener\Security\LogoutListener
+    detectLocaleListener.class: Ipc\ProgBundle\Listener\Locale\LocaleListener
