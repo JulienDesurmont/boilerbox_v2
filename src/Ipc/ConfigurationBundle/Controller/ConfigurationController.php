@@ -791,7 +791,7 @@ public function configurationAuto($type) {
 	}
 	// Variable de la nouvelle version
 	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.5.0";
+	$liste_conf['numero_version']['value'] = "2.6.0";
 	$liste_conf['numero_version']['parametreAdmin'] = true;
 
     $liste_conf['rapport_pourcentage_messages_max']['description'] = "Pourcentage maximum avant déclanchement d'une erreur dans le rapport journalier";
@@ -2164,6 +2164,16 @@ public function modbusClotureFtpAction() {
 	$this->writeModbus('closeFtp');
 	return new Response();
 }
+
+
+//Fonction de cloture Ftp appelée depuis le Cloud
+public function modbusClotureCloudFtpAction() {
+    echo "Cloture";
+	$this->constructeur();
+    $this->writeModbus('closeFtp');
+    return $this->render('IpcConfigurationBundle:Configuration:clotureFtpByCloud.html.twig');
+}
+
 
 
 public function accueilInterventionAction() {

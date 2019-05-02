@@ -14,6 +14,10 @@ ipc_modbus_cloture_ftp:
     path: /modbusClotureFtp
     defaults: { _controller: IpcConfigurationBundle:Configuration:modbusClotureFtp }
 
+ipc_modbus_cloture_cloud_ftp:
+    path: /anonym/modbusClotureCloudFtp
+    defaults: { _controller: IpcConfigurationBundle:Configuration:modbusClotureCloudFtp }
+
 ipc_read_modbus:
     path: /readModbus
     defaults: { _controller: IpcConfigurationBundle:Configuration:readModbus }
