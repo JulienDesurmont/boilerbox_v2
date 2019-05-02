@@ -12,3 +12,17 @@ Logs : 		/web/logs
 Uploads : 	/web/uploads
 
 
+
+Lors d'une compression du dossier BoilerBox, s'assurer de 
+- Supprimer les fichiers 
+	app/config/parameters.yml
+	web/config_ipc.txt
+
+
+Différences entre V2 et V1
+	Les couple groupe / proprietaire des fichiers est 
+		wwwrun:www 			sur V1
+		www-data:www-data 	sur V2
+	Les versions de php / Symfony etc. ne sont pas les mêmes. !!! - Ne pas recopier les vendors - !!!
+
+
