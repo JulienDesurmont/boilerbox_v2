@@ -1,1 +1,7 @@
 
+2019-06-03 08:34:09;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")
+2019-06-03 08:38:02;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")
+2019-06-03 08:59:39;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")
+2019-06-11 06:20:38;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")
+2019-06-13 05:01:40;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")
+2019-06-15 09:49:15;Connexion SUCCESS;AnonymousToken(user="anon.", authenticated=true, roles="")

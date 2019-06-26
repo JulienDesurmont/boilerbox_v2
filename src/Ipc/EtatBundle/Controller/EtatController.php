@@ -1931,21 +1931,25 @@ public function creationEtat1FromCsv($url_fichier) {
     }
     $liste_id_forcage = substr($liste_id_forcage, 0, -1);
 
-    foreach($liste_m_combustible1 as $m_combustible1){
-		$tmp_id = $this->getIdModule($m_combustible1, $entity_mode);
-		if ($tmp_id != null) {
-        	$liste_id_combustible1 .= $tmp_id.'___;';
-		}
-    }
-    $liste_id_combustible1 = substr($liste_id_combustible1, 0, -1);
+	if ($liste_m_combustible1[0] != '') {
+    	foreach($liste_m_combustible1 as $m_combustible1){
+			$tmp_id = $this->getIdModule($m_combustible1, $entity_mode);
+			if ($tmp_id != null) {
+    	    	$liste_id_combustible1 .= $tmp_id.'___;';
+			}
+    	}
+    	$liste_id_combustible1 = substr($liste_id_combustible1, 0, -1);
+	}
 
-    foreach($liste_m_combustible2 as $m_combustible2){
-		$tmp_id = $this->getIdModule($m_combustible2, $entity_mode);
-		if ($tmp_id != null) {
-        	$liste_id_combustible2 .= $tmp_id.'___;';
-		}
-   	} 
-    $liste_id_combustible2 = substr($liste_id_combustible2, 0, -1);
+	if ($liste_m_combustible2[0] != '') {
+    	foreach($liste_m_combustible2 as $m_combustible2){
+			$tmp_id = $this->getIdModule($m_combustible2, $entity_mode);
+			if ($tmp_id != null) {
+    	    	$liste_id_combustible2 .= $tmp_id.'___;';
+			}
+   		} 
+    	$liste_id_combustible2 = substr($liste_id_combustible2, 0, -1);
+	}
 
 
     $liste_modules = ($id_flamme2 != null) ? 'bifoyer;' : 'monofoyer;';
