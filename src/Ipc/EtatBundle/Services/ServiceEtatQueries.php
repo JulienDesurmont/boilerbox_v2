@@ -554,7 +554,7 @@ protected function searchNbRearmements($dateDeb, $dateFin, $idLocalisation, $idR
 	    	    // Recherche du nombre d'occurences du module d'Acquittement entre le début et la fin de la période
 	    	    $nbRearmements = $this->occurencesSurPeriode($tableau_debut['0']['horodatage'], $tableau_debut['0']['cycle'], $tableau_fin['0']['horodatage'], $tableau_fin['0']['cycle'], $idLocalisation, $idRearmement, $condRearmement, $valRearmement, $val2Rearmement);
 		    	// La fin de la période précédente devient le début de la nouvelle période d'analyse
-		    	$pointeur = $tableau_fin['0']['horodatage'];
+		    	$pointeur = $this->transformeDate($tableau_fin['0']['horodatage']);
 		    	$cycleA = $tableau_fin['0']['cycle'];
                 // Si le nombre d'occurences est le nombre max rencontré jusqu'à présent : Définition des nouvelles données du tableau de réarmement
 		    	if ($nbRearmements > $nbMaxRearmement) {
@@ -1275,7 +1275,7 @@ public function EtatAnalyseDeMarche($action, $entityEtat) {
 			return(1);
 		}
 	}
-	echo " - Dossier Etat : $dossier_etat\n";
+	//echo " - Dossier Etat : $dossier_etat\n";
 	if (! is_dir($dossier_etat)) {
 	   	if (! mkdir($dossier_etat)) {
 			// Impossibilité de créer le dossier
@@ -1923,6 +1923,16 @@ private function reverseDate($dateToBeTransformed, $format) {
     }
     return($dateTransformed);
 }
+
+private function transformeDate($dateToBeTransformed) {
+    $dateTransformed = null;
+    $pattern = '/^(\d{2})-(\d{2})-(\d{4}) (\d{2}:\d{2}:\d{2})$/';
+    if (preg_match($pattern, $dateToBeTransformed, $tabDate)) {
+        $dateTransformed = $tabDate[1].'/'.$tabDate[2].'/'.$tabDate[3].' '.$tabDate[4];
+    }
+    return($dateTransformed);
+}
+
 
 
 private function rechercheValeurLivre($dateDeb, $dateFin, $idLA, $idModule){
