@@ -25,7 +25,7 @@ fi
 # Création du flag et lancement du script
 touch $flagRapportEtat
 chmod 666 $flagRapportEtat
-chown wwwrun $flagRapportEtat
+chown www-data $flagRapportEtat
 retour=`nice -0 php ${BOILERBOX}/app/console creation:rapportsEtat`
 # Libération du flag
 rm $flagRapportEtat
