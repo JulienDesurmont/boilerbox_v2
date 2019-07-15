@@ -48,6 +48,12 @@ var $objScrollbar;
 
 var chart1;
 
+function afficheChart(chartOptions) {
+    var saveSerie = chartOptions.series;
+    chart1 = new Highcharts.StockChart(chartOptions);
+    chartOptions.series = saveSerie;
+}
+
 // Objet de l'axe des ordonnés
 function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
     var laxe;
@@ -576,7 +582,8 @@ $(document).ready(function() {
 	//	Affichage du graphique à l'affichage de la page
 	//	Modification du tooltip
 	checkTooltip();
-	chart1 = new Highcharts.StockChart(chartOptions);
+	//chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
 	// Création de la légende
 	$('#legendeGraphique').html($legende);
     //  Pour chaque courbe : Mise en place des nouveaux points affichés pour la courbe
@@ -619,7 +626,8 @@ $(document).ready(function() {
                 chartOptions.series = lesSeries;
 			    // Modification du tooltip
 				checkTooltip();
-                chart1 = new Highcharts.StockChart(chartOptions);
+                //chart1 = new Highcharts.StockChart(chartOptions);
+				afficheChart(chartOptions);
                 // Remise de la recherche d'origine
                 modifTexteRecherche(numeroReq, newTextCourbe, chart1.series[numeroReq].processedXData.length);
 			} else {
@@ -647,7 +655,8 @@ $(document).ready(function() {
         	// Modification du tooltip
 			checkTooltip();
 			// Création du nouveau graphique
-			chart1 = new Highcharts.StockChart(chartOptions);
+			//chart1 = new Highcharts.StockChart(chartOptions);
+			afficheChart(chartOptions);
 			// Modification des messages de la page affichage_graphique.html.twig indiquant la recherche en cours
             modifTexteRecherche(numeroReq,$new_recherche,chart1.series[numeroReq].processedXData.length);
 	        // Mise en place des nouveaux points affichés pour la courbe
@@ -740,7 +749,8 @@ function reinitialiseGraphique() {
     chartOptions.series 	= lesSeries;
     // Modification du tooltip
 	checkTooltip();
-    chart1 = new Highcharts.StockChart(chartOptions);
+    //chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
     //  Pour chaque courbe : Mise en place des nouveaux points affichés pour la courbe
     for (var nomRequete = 0; nomRequete < nb_de_requetes; nomRequete++) {
         newSession(nomRequete,chart1.series[nomRequete].processedXData,chart1.series[nomRequete].processedYData);
@@ -789,7 +799,8 @@ function setOldGraphique(oldSeries, oldGraphique) {
     // Modification du tooltip
 	checkTooltip();
     // On réaffiche le graphique
-    chart1 = new Highcharts.StockChart(chartOptions);
+    //chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
     // Pour chaque courbe : Mise en place des nouveaux points affichés pour la courbe
     for (var nomRequete = 0; nomRequete < nb_de_requetes; nomRequete++) {
         newSession(nomRequete, chart1.series[nomRequete].processedXData, chart1.series[nomRequete].processedYData);
@@ -1040,7 +1051,8 @@ function rechargeGraphique() {
 	});
 	chartOptions.series = last_series;
 
-	chart1 = new Highcharts.StockChart(chartOptions);
+	//chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
 	// Remise de la période demandée avant le clic sur Infos-Bulle
 	// Permet d'afficher la bonne période en cas de zoom géré par highchart (cad zoom sans requête Ajax)
     if (tabZoom[indiceTabZoom]['all'] == true) {
@@ -1158,10 +1170,12 @@ function changeEchelle(type) {
 	// Mise à jour du graphique seulement si la box est cochée
 	if (type == 'maj') {
 	    if ($('#infoEchelle').is(':checked')) {
-			chart1 = new Highcharts.StockChart(chartOptions);
+			//chart1 = new Highcharts.StockChart(chartOptions);
+			afficheChart(chartOptions);
 	    }
 	} else {
-        chart1 = new Highcharts.StockChart(chartOptions);
+        //chart1 = new Highcharts.StockChart(chartOptions);
+		afficheChart(chartOptions);
 	}
 	// Remise de la période demandée avant le clic sur Infos-Bulle
     // Permet d'afficher la bonne période en cas de zoom géré par highchart (cad zoom sans requête Ajax)
@@ -1535,7 +1549,8 @@ function newGraphs(datemin, datemax, choix) {
             // Modification du tooltip
 			checkTooltip();
             // Création du nouveau graphique
-            chart1 = new Highcharts.StockChart(chartOptions);
+            //chart1 = new Highcharts.StockChart(chartOptions);
+			afficheChart(chartOptions);
             // Pour chaque courbe : Mise en place des nouveaux points affichés pour la courbe
             for (var nomRequete = 0; nomRequete < nb_de_requetes; nomRequete++) {
                 newSession(nomRequete, chart1.series[nomRequete].processedXData, chart1.series[nomRequete].processedYData);
@@ -1795,7 +1810,8 @@ function preimpression() {
 	chartOptions.legend = {
 		enabled: false
 	};
-	chart1 = new Highcharts.StockChart(chartOptions);
+	//chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
 
 	// Création de la légende html qui ne comporte que les courbes affichées
 	var $tabLegendeHtml = [$tabLegende[0]];
@@ -1828,7 +1844,8 @@ function finimpression() {
 	chartOptions.scrollbar = $objScrollbar;
 	chartOptions.chart.marginBottom = $chartMarginBottom;
     chartOptions.legend = $objLegend;
-	chart1 = new Highcharts.StockChart(chartOptions);
+	//chart1 = new Highcharts.StockChart(chartOptions);
+	afficheChart(chartOptions);
 	var chartExtrem = $('#container').highcharts();
     var xExt = chartExtrem.xAxis[0].setExtremes(minData, maxData);
     return 0;
