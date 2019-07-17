@@ -848,6 +848,11 @@ public function configurationAuto($type) {
     $liste_conf['limitation_export_sql_listing']['value'] = 200000;
     $liste_conf['limitation_export_sql_listing']['parametreAdmin'] = false;
 
+    $liste_conf['url_http_boilerbox']['description'] = "Url accès au serveur Web";
+	$liste_conf['url_http_boilerbox']['value'] = "";
+	$liste_conf['url_http_boilerbox']['parametreAdmin'] = false;
+
+
 
 
 
