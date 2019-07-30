@@ -129,8 +129,8 @@
     function checkValue($valeur) {
         var $retour = $valeur.match(/^[a-zA-Z0-9\s]+$/);
         if ($retour !== null) {
-            if ($valeur.length > 40) {
-                alert("40 caractères maximum autorisés (" + $valeur.length + " actuellement.)");
+            if ($valeur.length > 60) {
+                alert("60 caractères maximum autorisés (" + $valeur.length + " actuellement.)");
             } else {
                 return true;
             }
