@@ -42,4 +42,16 @@ class DonneeRepository extends EntityRepository
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
+
+    public function findLastDataForLoc($id_localisation) {
+        $qb = $this->createQueryBuilder('d');
+        $qb ->where('d.localisation_id = :id_loc')
+			->orderBy('d.id', 'DESC')
+			->setParameter('id_loc', $id_localisation)
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+
 }
