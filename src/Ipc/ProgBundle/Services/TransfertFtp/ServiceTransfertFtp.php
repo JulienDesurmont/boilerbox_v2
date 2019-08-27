@@ -444,7 +444,7 @@ protected function rechercheLastTransfert($liste_mots, $adresseIp, $designation)
 			// La ligne est mal configuré : Email 
 			$titre = $this->site->getAffaire()." - $designation - Echec de log";
 			$liste_messages = array();
-			$liste_messages[] = "Echec de lecture des logs depuis ".$this->site->getIntitule();
+			$liste_messages[] = "Echec de lecture des logs - Date non indiquée - depuis ".$this->site->getIntitule();
 			$liste_messages[] = "1) Détails";
 			$liste_messages[] = "Date : $date_message<br />";
 			$liste_messages[] = "[ERROR];Log Error;$adresseIp;Ligne de log incorrecte retournée lors de la recherche du dernier fichier transféré";
