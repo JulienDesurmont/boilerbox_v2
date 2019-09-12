@@ -218,6 +218,10 @@ ipc_setSessionVars:
     path: /anonym/configuration/ajax/setSessionVars
     defaults: { _controller: IpcConfigurationBundle:AnonymAjax:setSessionVars }
 
+ipc_setNewSessionVars:
+    path: /anonym/configuration/ajax/setNewSessionVars
+    defaults: { _controller: IpcConfigurationBundle:AnonymAjax:setNewSessionVars }
+
 ipc_selectLangue:
     path: /anonym/configuration/selectLangue/{langue}/{site}
     defaults: { _controller: IpcConfigurationBundle:AnonymConfiguration:selectLangue, langue: fr}

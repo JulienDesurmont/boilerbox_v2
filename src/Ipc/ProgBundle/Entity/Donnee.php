@@ -595,14 +595,29 @@ class Donnee
 
 
     //	Execution des requêtes count et retour de la somme des counts
-    public function sqlCountListing($dbh, $datedebut, $datefin, $champ, $requeteToBeSummed) {
+    public function sqlCountListing($dbh, $datedebut, $datefin, $champ, $requeteToBeSummed, $limite) {
 		$donnees = null;
-		$requete = "SELECT SQL_NO_CACHE COUNT(*) as count FROM t_donnee d WHERE ($requeteToBeSummed) AND d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin'";
-		if (($reponse = $dbh->query($requete)) != false) {
-            $donnees = $reponse->fetchColumn();
-            $reponse->closeCursor();
-        }
-        return($donnees);
+
+		if ($limite != -1) {
+			$requete = "SELECT SQL_NO_CACHE 1 FROM t_donnee d WHERE ($requeteToBeSummed) AND d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' LIMIT $limite ";
+			if (($reponse = $dbh->query($requete)) != false) {
+        	    $donnees = $reponse->fetchColumn();
+        	    $reponse->closeCursor();
+        	}
+			$requete = "SELECT found_rows()";
+			if (($reponse = $dbh->query($requete)) != false) {
+        	    $donnees = $reponse->fetchColumn();
+        	    $reponse->closeCursor();
+        	}
+        	return($donnees + 1);
+		} else {
+			$requete = "SELECT SQL_NO_CACHE COUNT(*) FROM t_donnee d WHERE ($requeteToBeSummed) AND d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin'";
+			if (($reponse = $dbh->query($requete)) != false) {
+                $donnees = $reponse->fetchColumn();
+                $reponse->closeCursor();
+            }
+			return($donnees);
+		}
     }
 
 
