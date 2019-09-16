@@ -635,6 +635,7 @@ class Donnee
         $donnees = null;
         $requete = "SELECT SQL_NO_CACHE d.horodatage, d.cycle, d.valeur1, d.valeur2, d.module_id, d.localisation_id FROM t_donnee d ";
 		$requete .= "WHERE ($requeteToBeSearch) AND d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin'  ORDER BY d.horodatage, d.cycle LIMIT $limit OFFSET $offset";
+		//echo "$requete";
         if (($reponse = $dbh->query($requete)) != false) {
             $donnees = $reponse->fetchAll();
             $reponse->closeCursor();

@@ -281,6 +281,7 @@ public function indexAction() {
 	// Initialisation des variables globales
 	// Si l'accès à la page des Listing n'est pas autorisée, retour vers la page d'accueil avec un message flash d'information
 	$this->initialisation();
+	//return new Response();
 	$autorisation_acces = $this->initialisationListes();
 	if ($autorisation_acces == false) { 
 		return $this->redirect($this->generateUrl('ipc_prog_homepage'));
@@ -1039,7 +1040,7 @@ public function afficheListingAction($page) {
 						$this->session->set('tabDesDonnees', $tabDesDonnees);
 					}
 				} else {
-					$message_tmp = 'Le nombre de données satisfaisants la demande est trop élevé ( > à '.$this->limit_export_sql." [limitation_export_sql_listing])<br /><br /> Veuillez spécifier une autre période svp";
+					$message_tmp = 'Le nombre de données touvées est trop élevé : > à '.$this->limit_export_sql." [limitation_export_sql_listing]<br /><br /> Veuillez spécifier une autre période svp";
 					$message_tmp .= "<br /><br />La recherche peut tout de même être lancée mais le temps d'attente peut être long et la requête ne pas aboutir<br /><br />";
 					$this->get('session')->getFlashBag()->set('info',$message_tmp);
 					$message_erreur = 'Nombre de données trop élevé ('.$session_page['nbDonneesTotal'].')';

@@ -1,1 +1,25 @@
 
+11/09/2019;13:07:52;Modification du paramètre popup_simplifiee
+11/09/2019;13:07:52;Anciennes données : Indique si la popup ne doit afficher que les messages enregistrés en base  (0:'Non' 1:'Oui') [ 1 ]
+11/09/2019;13:07:52;Nouvelles données : Indique si la popup ne doit afficher que les messages enregistrés en base  (0:\'Non\' 1:\'Oui\') [ 0 ]
+11/09/2019;15:13:04;Modification du paramètre admin_ecart_max
+11/09/2019;15:13:04;Anciennes données : Compte administrateur : Nombre de jours maximum de la période [ 90 ]
+11/09/2019;15:13:04;Nouvelles données : Compte administrateur : Nombre de jours maximum de la période [ 390 ]
+12/09/2019;16:44:08;Modification du paramètre limitation_export_sql_graphique
+12/09/2019;16:44:08;Anciennes données : Limitation sql du nombre de lignes autorisées lors de l'exportation des données graphiques [ 200000 ]
+12/09/2019;16:44:08;Nouvelles données : Limitation sql du nombre de lignes autorisées lors de l\'exportation des données graphiques [ 90 ]
+12/09/2019;16:45:23;Modification du paramètre limitation_excel_graphique
+12/09/2019;16:45:23;Anciennes données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données graphiques [ 500000 ]
+12/09/2019;16:45:23;Nouvelles données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données graphiques [ 90 ]
+12/09/2019;16:45:55;Modification du paramètre limitation_excel_listing
+12/09/2019;16:45:55;Anciennes données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing [ 200000 ]
+12/09/2019;16:45:55;Nouvelles données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing [ 90 ]
+12/09/2019;16:51:08;Modification du paramètre limitation_export_sql_listing
+12/09/2019;16:51:08;Anciennes données : Limitation sql du nombre de lignes autorisées lors de l'exportation des données de listing [ 200000 ]
+12/09/2019;16:51:08;Nouvelles données : Limitation sql du nombre de lignes autorisées lors de l\'exportation des données de listing [ 40 ]
+12/09/2019;16:51:23;Modification du paramètre limitation_export_sql_graphique
+12/09/2019;16:51:23;Anciennes données : Limitation sql du nombre de lignes autorisées lors de l'exportation des données graphiques [ 90 ]
+12/09/2019;16:51:23;Nouvelles données : Limitation sql du nombre de lignes autorisées lors de l\'exportation des données graphiques [ 40 ]
+12/09/2019;16:51:36;Modification du paramètre limitation_excel_listing
+12/09/2019;16:51:36;Anciennes données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing [ 90 ]
+12/09/2019;16:51:36;Nouvelles données : Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing [ 40 ]
