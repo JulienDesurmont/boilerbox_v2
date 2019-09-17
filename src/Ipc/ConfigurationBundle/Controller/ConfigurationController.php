@@ -788,11 +788,6 @@ public function configurationAuto($type) {
     	$liste_conf['autorisation_mails']['description'] = "Autorisation de l'envoi des mails";
     	$liste_conf['autorisation_mails']['value'] = true;
     	$liste_conf['autorisation_mails']['parametreAdmin'] = true;
-	}
-	// Variable de la nouvelle version
-	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.6.5";
-	$liste_conf['numero_version']['parametreAdmin'] = true;
 
     $liste_conf['rapport_pourcentage_messages_max']['description'] = "Pourcentage maximum avant déclanchement d'une erreur dans le rapport journalier";
     $liste_conf['rapport_pourcentage_messages_max']['value'] = 90;
@@ -813,10 +808,9 @@ public function configurationAuto($type) {
     $liste_conf['etat_amc_codes_syst_stat_io_avert']['parametreAdmin'] = true;
 
 
-	$liste_conf['popup_simplifiee']['description'] = "Indique si la popup ne doit afficher que les messages enregistrés en base  (0:'Non' 1:'Oui')";
-	$liste_conf['popup_simplifiee']['value'] = 1;
-	$liste_conf['popup_simplifiee']['parametreAdmin'] = false;
-
+    $liste_conf['popup_simplifiee']['description'] = "Indique si la popup ne doit afficher que les messages enregistrés en base  (0:'Non' 1:'Oui')";
+    $liste_conf['popup_simplifiee']['value'] = 1;
+    $liste_conf['popup_simplifiee']['parametreAdmin'] = false;
 
 
     // Paramètres rapports : Remplace l'ancien paramètre 'rapports_erreur' -----------------------------------------
@@ -836,10 +830,7 @@ public function configurationAuto($type) {
     $liste_conf['limitation_export_sql_graphique']['parametreAdmin'] = false;
 
 
-
-
-
-    $liste_conf['limitation_excel_listing']['description'] = "Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing";
+   $liste_conf['limitation_excel_listing']['description'] = "Limitation du nombre de lignes autorisées dans les fichiers excel lors des impressions des données de listing";
     $liste_conf['limitation_excel_listing']['value'] = 200000;
     $liste_conf['limitation_excel_listing']['parametreAdmin'] = false;
 
@@ -849,11 +840,17 @@ public function configurationAuto($type) {
     $liste_conf['limitation_export_sql_listing']['parametreAdmin'] = false;
 
     $liste_conf['url_http_boilerbox']['description'] = "Url accès au serveur Web";
-	$liste_conf['url_http_boilerbox']['value'] = "";
-	$liste_conf['url_http_boilerbox']['parametreAdmin'] = false;
+    $liste_conf['url_http_boilerbox']['value'] = "";
+    $liste_conf['url_http_boilerbox']['parametreAdmin'] = false;
 
 
 
+
+	}
+	// Variable de la nouvelle version
+	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
+	$liste_conf['numero_version']['value'] = "2.7.0";
+	$liste_conf['numero_version']['parametreAdmin'] = true;
 
 
 

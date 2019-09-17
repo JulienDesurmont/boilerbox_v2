@@ -417,7 +417,7 @@ class Donnee
     }
 
     //      Indique le nombre de points récupérés pour la recherche graphique
-    public function SqlGetCountForGraphiqueWP($dbh, $datedebut, $datefin, $liste_id_localisations, $id_module, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max, $choixRecherche, $precision) {
+    public function SqlGetCountForGraphiqueWP($dbh, $datedebut, $datefin, $liste_id_localisations, $id_module, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max, $choixRecherche, $precision, $limite) {
         $id_module = "'$id_module'";
         $liaison = ' WHERE ';
         $donnees = null;
@@ -439,35 +439,72 @@ class Donnee
                 $format_date = '%Y-%m';
             break;
         }
-        switch ($choixRecherche) {
-            case 'all' :
-                $requete = "SELECT SQL_NO_CACHE COUNT(*) FROM t_donnee d";
-                $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
-                if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
-                    $liaison = ' WHERE ';
-                } else {
-                    $liaison = ' AND ';
-                }
-                $requete .= "$liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' ";
-            break;
-            default :
-                $requete = "SELECT SQL_NO_CACHE COUNT(*) FROM ( SELECT horodatage, valeur1, valeur2, module_id, localisation_id FROM t_donnee d";
-                $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
-                if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
-                    $liaison = ' WHERE ';
-                } else {
-                     $liaison = ' AND ';
-                }
-                $requete .= " $liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' ";
-                $requete .= "GROUP BY DATE_FORMAT(horodatage,'$format_date') ORDER BY null ) AS T1";
-            break;
-        }
-        $requete = $this->addSearchValues($requete, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max);
-        if (($reponse = $dbh->query($requete)) != false) {
-            $donnees = $reponse->fetchColumn();
-            $reponse->closeCursor();
-        }
-        return($donnees);
+		if ($limite != -1) {
+			switch ($choixRecherche) {
+                case 'all' :
+                    $requete = "SELECT SQL_NO_CACHE 1 FROM t_donnee d";
+                    $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
+                    if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
+                        $liaison = ' WHERE ';
+                    } else {
+                        $liaison = ' AND ';
+                    }
+                    $requete .= "$liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' LIMIT $limite ";
+                break;
+                default :
+                    $requete = "SELECT SQL_NO_CACHE 1 FROM ( SELECT horodatage, valeur1, valeur2, module_id, localisation_id FROM t_donnee d";
+                    $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
+                    if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
+                        $liaison = ' WHERE ';
+                    } else {
+                         $liaison = ' AND ';
+                    }
+                    $requete .= " $liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' ";
+                    $requete .= "GROUP BY DATE_FORMAT(horodatage,'$format_date') ORDER BY null LIMIT $limite  ) AS T1";
+                break;
+            }
+            $requete = $this->addSearchValues($requete, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max);
+            if (($reponse = $dbh->query($requete)) != false) {
+                $donnees = $reponse->fetchColumn();
+                $reponse->closeCursor();
+            }
+			$requete = "SELECT found_rows()";
+            if (($reponse = $dbh->query($requete)) != false) {
+                $donnees = $reponse->fetchColumn();
+                $reponse->closeCursor();
+            }
+            return($donnees + 1);
+		} else {
+        	switch ($choixRecherche) {
+        	    case 'all' :
+        	        $requete = "SELECT SQL_NO_CACHE COUNT(*) FROM t_donnee d";
+        	        $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
+        	        if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
+        	            $liaison = ' WHERE ';
+        	        } else {
+        	            $liaison = ' AND ';
+        	        }
+        	        $requete .= "$liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' ";
+       	     	break;
+            	default :
+            	    $requete = "SELECT SQL_NO_CACHE COUNT(*) FROM ( SELECT horodatage, valeur1, valeur2, module_id, localisation_id FROM t_donnee d";
+            	    $requete = $this->addParamSearch($requete,$liste_id_localisations,$id_module,1);
+            	    if (($liste_id_localisations == "'all'") && ($id_module == "'all'")) {
+            	        $liaison = ' WHERE ';
+            	    } else {
+            	         $liaison = ' AND ';
+            	    }
+            	    $requete .= " $liaison d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin' ";
+            	    $requete .= "GROUP BY DATE_FORMAT(horodatage,'$format_date') ORDER BY null ) AS T1";
+            	break;
+        	}
+        	$requete = $this->addSearchValues($requete, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max);
+        	if (($reponse = $dbh->query($requete)) != false) {
+        	    $donnees = $reponse->fetchColumn();
+        	    $reponse->closeCursor();
+        	}
+        	return($donnees);
+		}
     }
 
 
@@ -493,7 +530,8 @@ class Donnee
 
 	//	Utilisée dans GraphiqueController
     public function SqlGetForGraphique($dbh, $datedebut, $datefin, $liste_id_localisations, $id_module, $codeVal1, $val1min, $val1max, $codeVal2, $val2min, $val2max, $limit, $offset, $choixRecherche, $precision) {
-		if ($choixRecherche == 'average') {
+		// On utilise les moyennes pondérées plutot que les moyennes du logiciel HighChart
+		if (($choixRecherche == 'average') && ($precision != 'Mois')) {
 			$choixRecherche = 'all';
 		}
         $id_module = "'$id_module'";
@@ -635,7 +673,6 @@ class Donnee
         $donnees = null;
         $requete = "SELECT SQL_NO_CACHE d.horodatage, d.cycle, d.valeur1, d.valeur2, d.module_id, d.localisation_id FROM t_donnee d ";
 		$requete .= "WHERE ($requeteToBeSearch) AND d.horodatage >= '$datedebut' AND d.horodatage <= '$datefin'  ORDER BY d.horodatage, d.cycle LIMIT $limit OFFSET $offset";
-		//echo "$requete";
         if (($reponse = $dbh->query($requete)) != false) {
             $donnees = $reponse->fetchAll();
             $reponse->closeCursor();
