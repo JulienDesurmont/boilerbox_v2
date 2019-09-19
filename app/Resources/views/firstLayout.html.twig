@@ -369,20 +369,29 @@
 				<div id='messageboxTexte'>
 					<div id='messageboxInfos'>
 						{% set nb_messagesbox = 0 %}
-						{% for message in app.session.flashbag.get('info') %}
-							{% set nb_messagesbox = nb_messagesbox + 1 %}
-							<div id='divMessageBox'>
-								{{ message|raw }}.
-							</div>
-						{% endfor %}
+
+						<div id='messageInfoBox'>
+                       		{% for message in app.session.flashbag.get('info') %}
+                    	 		{% set nb_messagesbox = nb_messagesbox + 1 %}
+                    			{{ message|raw }}
+							{% endfor %}
+                        </div>
 						{% for message in app.session.flashbag.get('precision') %}
 							{% set nb_messagesbox = nb_messagesbox + 1 %}
-							{{ message }}.
+							{{ message }}
 						{% endfor %}
+						<div id='messageValidationBox'>
+							{% for message in app.session.flashbag.get('info_a_valider') %}
+								{{ message|raw }}
+							{% endfor %}
+						</div>
 					</div>
 				</div>
 				<br />
-				<div class='right'>
+				<div class='right messageInfoBox'>
+					<a href='#' style="height:30px;" id='lienValiderMessageBox' onClick="validation_messagebox();return false;" ><div class='bouton green'><div class='bgbouton'>Ok</div></div></a>
+				</div>
+				<div class='right messageValidationBox cacher'>
 					<a href='#' style="height:30px;" id='lienContinuMessageBox' onClick="continuation_messagebox();return false;" ><div class='bouton red'><div class='bgbouton'>Lancer la recherche</div></div></a>
 					<a href='#' style="height:30px;" id='lienMessageBox' onClick="annulation_messagebox();return false;" ><div class='bouton green'><div class='bgbouton'>Annuler</div></div></a>
 				</div>
@@ -561,6 +570,10 @@
 		var $reponsePing = true;
 		var $nbTimeoutPing = 0;
 		$(document).ready(function() {
+			if ($.trim($("#messageValidationBox").text()) != "") {
+				$('.messageValidationBox').toggleClass('cacher');
+				$('.messageInfoBox').toggleClass('cacher');
+			}
 			var $url_ping = $("#ping").attr('data-url');
 			$ping_timeout = $("#pingTimeout").val();
 			$ping_intervalle  = $("#pingIntervalle").val();
