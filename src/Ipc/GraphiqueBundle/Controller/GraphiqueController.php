@@ -1153,7 +1153,7 @@ public function analyseAction() {
 
 						// Si le nombre de données max n'a pas été rechercher, on le recherche lors de la demande d'affichage des courbes
 						if (! $liste_req[$key]['MaxDonnees']) {
-							if (($typeValidation == 'Recherche') || ($typeValidation == 'Valider')) {
+							if ((($typeValidation == 'Recherche') && ($liste_req[$key]['NbDonnees'] != 'NA') && ($liste_req[$key]['NbDonnees'] < $this->limit)) || ($typeValidation == 'Valider')) {
 								$liste_req[$key]['MaxDonnees'] = $tmp_donnee->SqlGetCountForGraphiqueWP(
                         		$dbh,
                         		$tmp_date_deb,
