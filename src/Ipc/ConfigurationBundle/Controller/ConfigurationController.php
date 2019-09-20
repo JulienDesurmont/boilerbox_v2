@@ -409,7 +409,7 @@ public function voiripcAction(Fichier $fichier) {
 	
 // Fonction qui retourne le formulaire permettant de paramétrer la configuration de l'IPC
 // Cette fonction est également utilisée lors de la modification de paramètres
-public function parametresipcAction() {
+public function parametresipcAction(Request $requete) {
 	$this->constructeur();
 	$this->initialisation();
 	$service_password = $this->get('ipc_prog.password');
@@ -470,7 +470,7 @@ public function parametresipcAction() {
 					case 'Modifier' :
 						$acceptUpdate = true;
 						# Gestion des conditions particulières de modification des paramètre ipc
-						$this->get("session")->getFlashBag()->add('info',"Paramètre $parametre");
+						$this->get("session")->getFlashBag()->add('info',"Paramètre [ $parametre ]<br /><br />");
 						switch ($parametre) {
 						case 'ping_intervalle' : 
 							// Pour la modification du ping, on refuse un ping de moins de 10 secondes pour ne pas engorger le trafic réseau
@@ -549,6 +549,9 @@ public function parametresipcAction() {
 							$this->log->setLog("Anciennes données : ".$old_entity_configuration->getDesignation()." [ ".$old_entity_configuration->getValeur()." ]", $this->fichier_log);
 							$this->log->setLog("Nouvelles données : ".$configuration->getDesignation()." [ ".$configuration->getValeur()." ]", $this->fichier_log);
 							$message_tmp = "Modification effectuée".$this->setMessageConfiguration($parametre);
+
+							$this->get("session")->getFlashBag()->add('info',$message_tmp);
+							return $this->configurationAction($requete);
 						}
 						break;
 					case 'Supprimer' :
@@ -849,8 +852,15 @@ public function configurationAuto($type) {
 	}
 	// Variable de la nouvelle version
 	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.7.0";
+	$liste_conf['numero_version']['value'] = "2.8.0";
 	$liste_conf['numero_version']['parametreAdmin'] = true;
+
+
+    $liste_conf['nb_jours_nb_db_donnees']['description'] = "Nombre de jours pour la recherche du nombre de données dans la table t_donnee";
+    $liste_conf['nb_jours_nb_db_donnees']['value'] = "3";
+    $liste_conf['nb_jours_nb_db_donnees']['parametreAdmin'] = true;
+
+
 
 
 

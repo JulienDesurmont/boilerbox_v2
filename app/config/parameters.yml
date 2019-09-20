@@ -38,6 +38,7 @@ parameters:
     configuration.class: Ipc\ProgBundle\Services\Configuration\ServiceConfiguration
     service_fichiers.class: Ipc\ProgBundle\Services\Fichiers\ServiceFichiers
     rattrapimportbin.class: Ipc\ProgBundle\Services\RattrapImportBin\ServiceRattrapImportBin
+    getNbDBDonnees.class: Ipc\OutilsBundle\Services\ServiceVerificationDB
 
     registration.class: Ipc\UserBundle\Form\Type\RegistrationType
 
