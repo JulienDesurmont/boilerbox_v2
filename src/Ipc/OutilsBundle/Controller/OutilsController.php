@@ -642,7 +642,7 @@ public function calculNbDBDonneesAction(Request $request) {
 	$srv_getNbDBDonnees = $this->container->get('ipc_outil.getNbDBDonnees');
 
 	// Récupération du nombre de données 
-	$nb_donnees = $srv_getNbDBDonnees->getNbDBDonnees();
+	$nb_donnees = $srv_getNbDBDonnees->getSqlNbDBDonnees();
 	$s = '';
 	if ($nb_donnees > 1) {
 		$s = 's';

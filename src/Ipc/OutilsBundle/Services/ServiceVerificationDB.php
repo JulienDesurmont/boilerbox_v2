@@ -42,17 +42,18 @@ private $database_name;
 
 
     // Inscrit le  nombre de données (de la table t_donnee) des X derniers jours de la DB en cours d'utilisation dans la table t_configuration dans le paramètre de configuration 'Nb_DB_Donnees'
-    public function setNbDBDonnees($nb_jours=null) {
-        $nb_db_donnees = $this->getNbDBDonnees($nb_jours, $this->database_name);
+    public function setSqlNbDBDonnees($nb_jours=null) {
+		$date_du_jour = date('d/m/Y');
+        $nb_db_donnees = $this->getSqlNbDBDonnees($nb_jours, $this->database_name);
         $ent_configuration = $this->em->getRepository('IpcProgBundle:Configuration')->findOneByParametre('nb_db_donnees');
         if ($ent_configuration) {
-            $ent_configuration->setValeur($nb_db_donnees);
+            $ent_configuration->setValeur($date_du_jour.';'.$nb_db_donnees);
             $ent_configuration->SqlUpdateValue($this->dbh);
         } else {
             $ent_configuration = new configuration();
             $ent_configuration->setParametre('nb_db_donnees');
             $ent_configuration->setDesignation('Nombre de données en table t_donnee sur les X derniers jours');
-            $ent_configuration->setValeur($nb_db_donnees);
+            $ent_configuration->setValeur($date_du_jour.';'.$nb_db_donnees);
             $ent_configuration->setParametreAdmin(true);
             $ent_configuration->SqlInsert($this->dbh);
         }
@@ -61,7 +62,7 @@ private $database_name;
 
 	// Compte le nombre de données (de la table t_donnee) des X derniers jours de la DB en cours d'utilisation
 	// Le X est donnée par la variable de configuration [nb_jours_nb_db_donnees]
-	public function getNbDBDonnees($nb_jours=null, $database=null) {
+	public function getSqlNbDBDonnees($nb_jours=null, $database=null) {
 		if ($nb_jours == null) {
 			$ent_configuration = $this->getEntityParamNbJours();
 			$nb_jours = $ent_configuration->getValeur();
@@ -88,8 +89,8 @@ private $database_name;
 		$ent_configuration = $this->getEntityParamNbJours();
 		$nb_jours = $ent_configuration->getValeur();
 
-		$valeur_DB1 = $this->getNbDBDonnees($nb_jours, $database1);
-		$valeur_DB2 = $this->getNbDBDonnees($nb_jours, $database2);
+		$valeur_DB1 = $this->getSqlNbDBDonnees($nb_jours, $database1);
+		$valeur_DB2 = $this->getSqlNbDBDonnees($nb_jours, $database2);
 		if ($valeur_DB1 == $valeur_DB2) {
 			return(0);
 		} else if ($valeur_DB1 > $valeur_DB2) {
