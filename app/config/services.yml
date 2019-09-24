@@ -55,7 +55,7 @@ services:
          class: "Ipc\UserBundle\Services\detectLogin"
     ipc_outil.getNbDBDonnees:
         class: "%getNbDBDonnees.class%"
-        arguments: ["@doctrine", "@ipc_prog.connectbd", "%database_name%"]
+        arguments: ["@doctrine", "@ipc_prog.connectbd", "%database_name%", "@ipc_prog.log"]
     ipc_user.detect.login.listener:
         class: "Ipc\UserBundle\Services\detectLoginListener"
         arguments: ["@ipc_user.detect.login"]

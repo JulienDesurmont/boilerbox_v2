@@ -13,13 +13,16 @@ private $srv_doctrine;
 private $dbh;
 private $em;
 private $database_name;
+private $srv_logs;
+private $nb_jours;
 
 
-	public function __construct($doctrine, $connexion, $database_name) {
-		$this->doctrine = $doctrine;
-		$this->em 		= $doctrine->getManager(); 
-		$this->dbh 		= $connexion->getDbh();
+	public function __construct($doctrine, $connexion, $database_name, $srv_logs) {
+		$this->doctrine 	 = $doctrine;
+		$this->em 			 = $doctrine->getManager(); 
+		$this->dbh 			 = $connexion->getDbh();
 		$this->database_name = $database_name; 
+		$this->srv_logs 	 = $srv_logs;
 	}
 
 
@@ -57,6 +60,9 @@ private $database_name;
             $ent_configuration->setParametreAdmin(true);
             $ent_configuration->SqlInsert($this->dbh);
         }
+		$fichier_log = 'parametresIpc.log';
+		$message_log = "Recherche du $date_du_jour;Base de donnée [".$this->database_name."];Sur les ".$this->nb_jours." derniers jours;Nombre de données dans la table t_donnee=$nb_db_donnees";
+		$this->srv_logs->setLog($message_log, $fichier_log);
     }
 
 
@@ -67,6 +73,7 @@ private $database_name;
 			$ent_configuration = $this->getEntityParamNbJours();
 			$nb_jours = $ent_configuration->getValeur();
 		}		
+		$this->nb_jours = $nb_jours;
 		if ($database == null) {
             $database = $this->database_name;
         }
