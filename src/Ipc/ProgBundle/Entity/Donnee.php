@@ -804,6 +804,16 @@ class Donnee
         return($retour);
     }
 
+	public function getMaxId($dbh) {	
+		$max_id = -1;
+		$requete = "SELECT MAX(id) FROM t_donnee";
+        if (($reponse = $dbh->query($requete)) != false) {
+            $max_id = $reponse->fetchColumn();
+            $reponse->closeCursor();
+        }
+        return($max_id);
+	}
+
     // Requêtes utilisées pour l'insertion des données en base de donnée
     public function checkDoublon($dbh, $module_id, $localisation_id) {
 		$donnees = null;
