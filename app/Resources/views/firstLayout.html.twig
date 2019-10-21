@@ -427,16 +427,17 @@
         'bundles/ipcprog/js/jquery.js'
         'bundles/ipcprog/js/jquery.mCustomScrollbar.concat.min.js'
         'bundles/ipcprog/js/functions_boilerbox.js'
-        'bundles/ipcprog/js/jquery-ui.js'
+        'bundles/ipcprog/js/jquery-ui-min_1.12.1.js'
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+{# Décommenter pour le DEVELOPPEMENT DU FICHIER functions_boilerbox.js #}
 {#
         {% javascripts output='js/main_test.js' filter='jsqueeze'
             'bundles/ipcprog/js/jquery.js'
             'bundles/ipcprog/js/jquery.mCustomScrollbar.concat.min.js'
-            'bundles/ipcprog/js/jquery-ui.js'
+            'bundles/ipcprog/js/jquery-ui-min_1.12.1.js'
         %}
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
