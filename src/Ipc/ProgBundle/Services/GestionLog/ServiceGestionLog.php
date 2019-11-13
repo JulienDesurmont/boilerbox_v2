@@ -34,7 +34,7 @@ public function rechercheLastTexte($fichier_log, $texte) {
 	// Le texte est composé d'une suite de mots séparés par des ;
 	$liste_mots = explode(';',$texte);
 	// Création de la ligne de commande
-	$cmd = "grep '";
+	$cmd = "grep --binary-files=text '";
 	foreach ($liste_mots as $mot) {
 		$cmd .= $mot.'.*';
 	}
@@ -58,7 +58,7 @@ public function rechercheTexte($fichier_log, $texte, $option) {
 	// Le texte est composé d'une suite de mots séparés par des ;
 	$liste_mots = explode(';', $texte);
 	// Création de la ligne de commande
-	$cmd = "grep '";
+	$cmd = "grep --binary-files=text '";
 	if (substr($fichier_log, -4) === '.bz2') {
 		$cmd = "zgrep '";	
 	}
