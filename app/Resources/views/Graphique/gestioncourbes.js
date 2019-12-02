@@ -48,6 +48,14 @@ var $objScrollbar;
 
 var chart1;
 
+var $opacity;
+if ($('#infoOpacite').is(':checked')) {
+       $opacity = 0.3;
+} else {
+       $opacity = 1;
+}
+
+
 function afficheChart(chartOptions) {
     var saveSerie = chartOptions.series;
     chart1 = new Highcharts.StockChart(chartOptions);
@@ -420,7 +428,7 @@ $(function() {
 				},
                 states: {
                     inactive: {
-                        opacity: 1
+                        opacity: $opacity
                     }
                 }
 			}
@@ -1895,5 +1903,28 @@ function isEntier(nombre) {
        return nombre;
    }
 }
+
+function changeOpacite() {
+    if ($('#infoOpacite').is(':checked')) {
+        resetOpacite('opaque');
+    } else {
+        resetOpacite('none');
+    }
+    rechargeGraphique();
+}
+
+
+// Met ou enleve l'opacité sur les courbe lors du survol par la sourie
+function resetOpacite($type) {
+    if ($type == 'opaque') {
+               chartOptions.plotOptions.series.states.inactive.opacity = 0.3;
+    }
+    if ($type == 'none') {
+               chartOptions.plotOptions.series.states.inactive.opacity = 1;
+    }
+}
+
+
+
 
 </script>

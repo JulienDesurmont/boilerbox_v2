@@ -130,7 +130,7 @@ label:
     sur: on 
     chargement: Loading ...
     legende:
-        checkbox: Legend
+        checkbox_courbes: Graph
         requetes: Queries
         localisations: Locations
         genres: Genres

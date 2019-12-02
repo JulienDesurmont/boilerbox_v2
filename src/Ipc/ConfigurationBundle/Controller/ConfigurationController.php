@@ -852,7 +852,7 @@ public function configurationAuto($type) {
 	}
 	// Variable de la nouvelle version
 	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.9.0";
+	$liste_conf['numero_version']['value'] = "2.10.0";
 	$liste_conf['numero_version']['parametreAdmin'] = true;
 
 
