@@ -29,45 +29,6 @@
     }
 
 
-	// Fonctions utilisées pour la sauvegarde, la suppression et l'affichage des requêtes personnelles : 
-	/*	Elles nécessitent l'inclusion du template IpcConfigurationBundle:Configuration:popupNouvelleRequetePerso.html.twig
-    function saveRequest() {
-        var $url = '';
-        var $page = $('#choixPage_requetePerso').val();
-        if($page == 'listing') {
-             $url = $('#lien_url_ajax').attr('data-urlSaveListingPersoRequest');
-        }else if($page == 'graphique') {
-            $url = $('#lien_url_ajax').attr('data-urlSaveGraphiquePersoRequest');
-        }
-        var $requeteClient = $('#chkRequeteClient').prop('checked');
-        $nameRequest = $('#intituleRequetePerso').val();
-        if (checkValue($nameRequest)) {
-            attente();
-            // Fonction ajax faisant l'enregistrement des requêtes
-            $.ajax({
-                url: $url,
-                method: 'GET',
-                data: { nom: $nameRequest, requeteClient: $requeteClient},
-                timeout: 10000
-            })
-            .done(function($message, $status) {
-                $('#ajout_requete_perso').addClass('cacher');
-                $('#messageValidation').html('Requête enregistrée');
-                $('#messageValidation').removeClass('cacher');
-                setTimeout(function(){
-                    location.reload();
-                }, 500);
-            })
-            .fail(function($xhr, $status, $error) {
-                alert('Erreur ' + $error);
-                fin_attente();
-            });
-        }
-        return 0;
-    }
-	*/
-
-
     function closeRequest(){
 		removeShadow('popup');
 		activateLinks();
@@ -96,7 +57,7 @@
 		// Récupération de l'id de la requête à supprimer
         var $id_requete_selected = $("#selectRegPerso option:selected" ).val();
 		// Appel ajax de la fonction de suppression de requête personnelle
-		var $url_suppression_requete_personnelle = $('#selectRegPerso').attr('data-suppressionRequetePersonnelle') + '?id_requete=' + $id_requete_selected + '&page=listing';
+		var $url_suppression_requete_personnelle = $('#selectRegPerso').attr('data-suppressionRequetePersonnelle') + '?id_requete=' + $id_requete_selected + '&page=' + $page;
 		window.location.href = $url_suppression_requete_personnelle;
 	}
 

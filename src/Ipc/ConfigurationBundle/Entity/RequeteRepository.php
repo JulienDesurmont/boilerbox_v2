@@ -12,11 +12,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class RequeteRepository extends EntityRepository
 {
-	public function myfindByCreateur($createur) {
+	public function myFindByCreateur($createur, $page) {
 		return $this->createQueryBuilder('r')
 		->where('r.createur = :createur')
-		->andWhere('r.compte is null')
+		->andWhere('r.compte is null')	
+		->andWhere('r.type = :page')
 		->setParameter('createur', $createur)
+		->setParameter('page', strtolower($page))
+		->getQuery()
+		->getResult();
+	}
+
+	public function myFindByCompte($compte, $page)
+	{
+		return $this->createQueryBuilder('r')
+		->where('r.compte = :compte')
+		->andWhere('r.type = :type')
+		->setParameter('compte', $compte)
+		->setParameter('type', strtolower($page))
 		->getQuery()
 		->getResult();
 	}

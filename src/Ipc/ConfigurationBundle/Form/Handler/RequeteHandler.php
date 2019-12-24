@@ -62,7 +62,13 @@ class RequeteHandler {
 			$ent_requete->setUtilisateur($this->ent_utilisateur);
         }
 		$ent_requete->setType($this->type_requete);
-		$ent_requete->setRequete(json_encode($this->srv_session->get('liste_req')));
+		if ($this->type_requete == 'listing')
+		{
+			$ent_requete->setRequete(json_encode($this->srv_session->get('liste_req')));
+		} else {
+			$ent_requete->setRequete(json_encode($this->srv_session->get('liste_req_pour_graphique')));
+		}
+		
 		$ent_requete->setCreateur($this->srv_session->get('label'));
 		$em->persist($ent_requete);
 		$em->flush();

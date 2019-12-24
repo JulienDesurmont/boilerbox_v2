@@ -186,46 +186,6 @@ public function setAndGetChoixLocalisationAction() {
 	return new Response();
 }
 
-//	Permet d'enregistrer les requêtes des utilisateurs dans des fichiers textes pour ne pas avoir besoin de les rechercher ultérieurement
-public function saveRequestAction($page) {
-    $this->constructeur();
-	// On récupère le nom donné aux requêtes et on crée un fichier pour l'utilisateur courant : De la forme dateNom.json
-    $nomUtilisateur = '';
-    if (! $this->get('security.context')->isGranted('ROLE_TECHNICIEN')){
-        $nomUtilisateur = 'Client';
-    } else {
-        if ($this->session->get('label') == null) {
-            $nomUtilisateurt = str_replace(' ', '_nbsp_', $this->get('security.context')->getToken()->getUser());
-        } else {
-            $nomUtilisateur = str_replace(' ', '_nbsp_', $this->session->get('label'));
-        }
-    }
-	$nomRequetes = str_replace(' ', '_nbsp_', strtolower($_GET['nom']));
-	// Les clients n'ont pas les droits de création des fichiers :
-	// Si le paramètre $requeteClient = "true", le fichier est enregistré sous le compte client
-	$requeteClient = $_GET['requeteClient'];
-	if ($requeteClient == 'true') {
-		$nomUtilisateur = 'Client';
-	}
-	// Si le dossier de l'utilisateur n'existe pas : Création de celui-ci
-	$chemin_dossier_utilisateur =  __DIR__.'/../../../../web/uploads/requetes/'.$page.'/'.$nomUtilisateur;
-	if (! is_dir($chemin_dossier_utilisateur)) {
-		mkdir($chemin_dossier_utilisateur);		
-	}
-	$nomFichier = $chemin_dossier_utilisateur.'/'.$nomRequetes;
-	if ($page == 'listing') {
-		$liste_req = $this->session->get('liste_req');
-	} else {
-		$liste_req = $this->session->get('liste_req_pour_graphique');
-	}
-	if (! empty($liste_req)) {
-		$fichierHandle = fopen($nomFichier, 'w');
-		fputs($fichierHandle, json_encode($liste_req));
-		fclose($fichierHandle);
-	}
-	return new Response();
-}
-
 // Fonction qui permet de modifier la variable listing_requete_selected (ou graphique_requete_selected) avec l'id de la requête à afficher
 public function selectRequestAction($page) {
 	$this->constructeur();
@@ -310,7 +270,7 @@ public function getRequetesPersoAction() {
 		$this->session->remove('liste_req');
 	} else {
 		$this->session->remove('graphique_requete_selected');
-		$this->session->remove('liste_req');
+		$this->session->remove('liste_req_pour_graphique');
 	}
     return new Response();
 }

@@ -2286,43 +2286,6 @@ private function getIdSiteCourant($dbh) {
 }
 
 
-/* Permet d'enregistrer ou de supprimer les requêtes personnelles (visibles depuis les pages d'index Listing et Graphique)
-public function gestionRequetesPersonnellesAction() {
-	return new Response();
-	$this->initialisation();
-
-    // Création du formulaire des requêtes personnelles
-    $ent_requete = new Requete();
-    $form_requete = $this->createForm(new RequeteType(), $ent_requete, [
-    		'action' => $this->generateUrl('ipc_gestionRequete'),
-            'method' => 'POST'
-         ]
-    );
-
-    // Récupération de la requête
-    $request = $this->get('request');
-
-    // Récupération du handler de formulaire
-    $form_handler = new RequeteHandler($form_requete, $request);
-
-    // Execution de la méthode d'execution du handler
-    $process = $form_handler->process($this->em, $this->container->get('security.context')->getToken()->getUser(), $this->session);
-
-	//	echo gettype(json_encode($form_requete->createView()));
-    // Si les données ne sont pas validées par le handler (Soit le formulaire n'a pas encore été soumis, soit la validation des données est en echec
-	return $this->render('IpcConfigurationBundle:Configuration:popupNouvelleRequetePerso.html.twig', array(
-                'form_requete'  => $form_requete->createView(),
-                'hasError'      => $request->isMethod('POST') && !$form_requete->isValid()
-                )
-	);
-    return $this->render('IpcConfigurationBundle:Configuration:requete.html.twig', array(
-    			'form'  => $form_requete->createView(),
-                'hasError'      => $request->isMethod('POST') && !$form_requete->isValid()
-                )
-           );
-}
-*/
-
 // Fonction qui supprime une requête personnelle
 // On vérifie que l'utilisateur peut supprimer la requete : Il en est le createur ou il est administrateur
 public function deleteRequestPersoAction() {
@@ -2365,7 +2328,6 @@ public function removeListeReq($page) {
         $this->session->remove('liste_req');
         $this->session->remove('liste_req_pour_listing');
     } else {
-        $this->session->remove('liste_req');
         $this->session->remove('liste_req_pour_graphique');
     }
 }

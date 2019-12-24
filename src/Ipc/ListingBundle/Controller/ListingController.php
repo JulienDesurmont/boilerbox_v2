@@ -120,16 +120,16 @@ private function getRequetesPerso() {
 	$this->compteRequetePerso = $this->session->get('compte_requete_perso','');
 	if ($this->compteRequetePerso) {
 		if ($this->compteRequetePerso != 'Personnel') {
-			$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->findByCompte($this->compteRequetePerso);
+			$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCompte($this->compteRequetePerso, 'listing');
 		} else {
         	$this->compteRequetePerso = 'Personnel';
         	// Recherche de l'appelation des requêtes de l'utilisateur
-        	$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'));
+        	$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'), 'listing');
     	}
 	} else {	 
 		$this->compteRequetePerso = 'Personnel';
 		// Recherche de l'appelation des requêtes de l'utilisateur
-		$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->findByCreateur($this->session->get('label'));
+		$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'), 'listing');
 	}
 	return ($entities_requetes_perso);
 }

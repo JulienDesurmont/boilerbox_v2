@@ -9,14 +9,14 @@
 
     <div id="regRequest">
 		<div style='margin-bottom:5px'>
-		<input type='radio' name='requeteClient' value='Personnel' 	{% if compte_requete_perso|lower == 'personnel' %} 	checked {% endif %} onClick="addCompteRequest('listing','Personnel');">Requêtes personnelles
+		<input type='radio' name='requeteClient' value='Personnel' 		{% if compte_requete_perso|lower == 'personnel' %} 	checked {% endif %} onClick="addCompteRequest('listing','Personnel');">Requêtes personnelles
 		{% if is_granted('ROLE_ADMIN') %}
         	<input type='radio' name='requeteClient' value='Admin' 		{% if compte_requete_perso|lower == 'admin' %} 		checked {% endif %} onClick="addCompteRequest('listing','Admin');">Requêtes Admin
 		{% endif %}	
 		{% if is_granted('ROLE_TECHNICIEN') %}
         	<input type='radio' name='requeteClient' value='Technicien' {% if compte_requete_perso|lower == 'technicien' %} checked {% endif %} onClick="addCompteRequest('listing','Technicien');">Requêtes Techniciens
 		{% endif %}	
-        <input type='radio' name='requeteClient' value='Client' 	{% if compte_requete_perso|lower == 'client' %}		checked {% endif %} onClick="addCompteRequest('listing','Client');">Requêtes Clients
+        <input type='radio' name='requeteClient' value='Client' 		{% if compte_requete_perso|lower == 'client' %}		checked {% endif %} onClick="addCompteRequest('listing','Client');">Requêtes Clients
 		</div>
 
 
