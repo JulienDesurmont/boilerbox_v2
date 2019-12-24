@@ -72,10 +72,11 @@ select:
         heure: Heure
         jour: Jour
         mois: Mois
-    requetes_client:
-        titre:
-           listing: Requêtes listing du compte client
-           graphique: Requêtes graphiques du compte client
+    requetes_client: Requêtes du compte client
+    requetes_technicien: Requêtes du compte technicien
+    requetes_admin: Requêtes du compte admin
+    requetes_personnelles: Requêtes personnelles
+    
     requetes_perso:
         titre:
            listing: Requêtes personnelles

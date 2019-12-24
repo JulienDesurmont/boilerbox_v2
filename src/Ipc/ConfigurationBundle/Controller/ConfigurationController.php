@@ -48,6 +48,10 @@ use Ipc\ConfigurationBundle\Form\Type\FichierRapport2Type;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
 
+use Ipc\ConfigurationBundle\Entity\Requete;
+use Ipc\ConfigurationBundle\Form\Type\RequeteType;
+use Ipc\ConfigurationBundle\Form\Handler\RequeteHandler;
+
 
 
 class ConfigurationController extends Controller {
@@ -72,6 +76,7 @@ private $log;
 private $document_root;
 
 public function constructeur(){
+	$this->em = $this->getDoctrine()->getManager();
 	$this->fichier_log = 'parametresIpc.log';
 	$this->log = $this->container->get('ipc_prog.log');
     if (empty($this->session)) {
@@ -82,6 +87,7 @@ public function constructeur(){
 }
 
 private function initialisation() {
+	$this->constructeur();
 	$this->service_configuration = $this->get('ipc_prog.configuration');
 	$this->pageTitle = $this->session->get('pageTitle');
 	$this->pageActive = $this->session->get('page_active');
@@ -2279,5 +2285,89 @@ private function getIdSiteCourant($dbh) {
     return ($idSiteCourant);
 }
 
+
+/* Permet d'enregistrer ou de supprimer les requêtes personnelles (visibles depuis les pages d'index Listing et Graphique)
+public function gestionRequetesPersonnellesAction() {
+	return new Response();
+	$this->initialisation();
+
+    // Création du formulaire des requêtes personnelles
+    $ent_requete = new Requete();
+    $form_requete = $this->createForm(new RequeteType(), $ent_requete, [
+    		'action' => $this->generateUrl('ipc_gestionRequete'),
+            'method' => 'POST'
+         ]
+    );
+
+    // Récupération de la requête
+    $request = $this->get('request');
+
+    // Récupération du handler de formulaire
+    $form_handler = new RequeteHandler($form_requete, $request);
+
+    // Execution de la méthode d'execution du handler
+    $process = $form_handler->process($this->em, $this->container->get('security.context')->getToken()->getUser(), $this->session);
+
+	//	echo gettype(json_encode($form_requete->createView()));
+    // Si les données ne sont pas validées par le handler (Soit le formulaire n'a pas encore été soumis, soit la validation des données est en echec
+	return $this->render('IpcConfigurationBundle:Configuration:popupNouvelleRequetePerso.html.twig', array(
+                'form_requete'  => $form_requete->createView(),
+                'hasError'      => $request->isMethod('POST') && !$form_requete->isValid()
+                )
+	);
+    return $this->render('IpcConfigurationBundle:Configuration:requete.html.twig', array(
+    			'form'  => $form_requete->createView(),
+                'hasError'      => $request->isMethod('POST') && !$form_requete->isValid()
+                )
+           );
+}
+*/
+
+// Fonction qui supprime une requête personnelle
+// On vérifie que l'utilisateur peut supprimer la requete : Il en est le createur ou il est administrateur
+public function deleteRequestPersoAction() {
+    $this->constructeur();
+	$this->initialisation();
+	// Récupération de la page d'origine de la demande
+	$page = $_GET['page'];
+    // récupération de la requête à supprimer
+    $id_requete = $_GET['id_requete'];
+	if ($id_requete != 0) {
+    	$requete = $this->em->getRepository('IpcConfigurationBundle:Requete')->find($id_requete);
+		if ( ($requete->getCreateur() == $this->userLabel) || ($this->get('security.context')->isGranted('ROLE_ADMIN')) ) { 
+    		// Suppression de la requête personnelle
+    		$this->em->remove($requete);
+    		$this->em->flush();
+    		// Récupération de la page d'origine  pour
+    		// Supprimer la variable de session indiquant la requête selectionnée
+    		// ET
+    		// Retourner sur la bonne page d'accueil (le bon index.html)
+    		if ($page == 'listing') {
+    		    $this->removeListeReq('listing');
+    		    $this->session->set('listing_requete_selected', null);
+    		} else if ($page =='graphique') {
+    		    $this->removeListeReq('graphique');
+    		    $this->session->set('graphique_requete_selected', null);
+    		}
+		} else {
+			$this->getRequest()->getSession()->getFlashBag()->add('info', "Vous n'avez pas les autorisations pour supprimer cette requête");
+		}
+	}
+	if ($page == 'listing') {
+		return $this->redirect($this->generateUrl('ipc_accueilListing'));
+	} else if ($page =='graphique') {
+		return $this->redirect($this->generateUrl('ipc_accueilGraphique'));
+	}
+}
+
+public function removeListeReq($page) {
+    if ($page == 'listing') {
+        $this->session->remove('liste_req');
+        $this->session->remove('liste_req_pour_listing');
+    } else {
+        $this->session->remove('liste_req');
+        $this->session->remove('liste_req_pour_graphique');
+    }
+}
 
 }

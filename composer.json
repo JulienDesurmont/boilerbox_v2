@@ -23,7 +23,8 @@
         "friendsofsymfony/user-bundle": "1.3.7",
         "alexandresalome/doctrine-extra-bundle": "~0.3",
         "leafo/scssphp": "0.4.0",
-        "patchwork/jsqueeze": "~2.0"
+        "patchwork/jsqueeze": "~2.0",
+        "twbs/bootstrap": "^4.4"
     },
     "scripts": {
         "post-install-cmd": [

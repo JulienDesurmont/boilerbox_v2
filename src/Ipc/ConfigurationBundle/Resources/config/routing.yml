@@ -237,3 +237,11 @@ ipc_traduire:
     path: /ajax/traduire
     defaults: { _controller: IpcConfigurationBundle:Ajax:traduire }
 
+ipc_gestionRequete:
+    path: /gestionRequete
+    defaults: { _controller: IpcConfigurationBundle:Configuration:gestionRequetesPersonnelles }
+
+ipc_deleteRequestPerso:
+    path: /ajax/deleteRequestPerso
+    defaults: { _controller: IpcConfigurationBundle:Configuration:deleteRequestPerso }
+

@@ -9,8 +9,8 @@
     {# Permet d'indiquer que la page est chargée : permet de vérifier le chargement js spécifique à cette page #}
     <span id="pageGraphiqueIndex" class="cacher"></span>
     <div id="regRequest">
-        <select id='selectRegPerso' name='selectRegPerso' data-url="{{ path('ipc_selectRequest', {'page':'graphique'}) }}" onChange="selectRequest();" >
-            <option disabled selected style='color:blue'>{% if compte_requete_perso|lower == 'client' %}{{ 'select.requetes_client.titre.graphique'|trans }} {% else %}{{ 'select.requetes_perso.titre.graphique'|trans }}{% endif %}</option>
+        <select id='selectRegPerso' name='selectRegPerso' data-url="{{ path('ipc_selectRequest', {'page':'graphique'}) }}" onChange="selectRequestPerso();" >
+            <option value='0' disabled selected style='color:blue'>{% if compte_requete_perso|lower == 'client' %}{{ 'select.requetes_client.titre.graphique'|trans }} {% else %}{{ 'select.requetes_perso.titre.graphique'|trans }}{% endif %}</option>
             {% for key,requeteValue in tab_requetes_perso %}
                 <option value="{{ requeteValue }}">{{ requeteValue }}</option>
             {% endfor %}

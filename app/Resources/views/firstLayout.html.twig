@@ -3,8 +3,13 @@
 <head>
 {% block head %}
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	{# Bootstrap #}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="L'Interface de supervision des Chaudières Industrielles">
 	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 	<title>{% block title %}{% if service_session.get('pageTitle').affaire is defined %}{{ service_session.get('pageTitle').affaire }} - {% endif %}{% endblock title %}</title>
+
+
 
     {% stylesheets  filter="cssrewrite, scssphp" output="css/maincommun.css"
         'bundles/ipcprog/css/calendar.css'
@@ -33,6 +38,12 @@
 	{% endstylesheets %}
 	#}
 	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/print-export-01.css') }}" media="print" />
+
+
+    {% block stylecss %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('../vendor/twbs/bootstrap/dist/css/bootstrap.css') }}" />
+    {% endblock stylecss %}
+
 
 {% endblock head %}
 
@@ -445,6 +456,10 @@
 #}
 
 
+
+	<script type='text/javascript' src="{{ asset('../vendor/twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+
 	{% javascripts output='js/calendar.js' filter='jsqueeze'
 		'bundles/ipcprog/js/calendar.js'
 	%}
@@ -454,6 +469,8 @@
 
 	{% block verificationChargement %}
 	<script type='text/javascript'>
+
+
 		//	Vérifie si la page a bien chargée les fichiers javascript
 		function verificationLoad() {
 			// Vérification du chargement du fichier js principal
