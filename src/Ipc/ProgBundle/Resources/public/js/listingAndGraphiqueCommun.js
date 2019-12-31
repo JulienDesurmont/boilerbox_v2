@@ -33,7 +33,6 @@
 		removeShadow('popup');
 		activateLinks();
         $('#lightboxSmall').addClass('cacher');
-        $('#choixPage_requetePerso').val('');
 		$('#intituleRequetePerso').val('');
 		return;
 	}
@@ -87,7 +86,6 @@
         desactivateLinks();
         setTimeout(function(){
             $('#lightboxSmall').removeClass('cacher');
-            $('#choixPage_requetePerso').val($pageRequete);
         }, 100);
     }
 

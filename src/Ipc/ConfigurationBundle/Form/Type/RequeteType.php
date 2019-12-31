@@ -33,17 +33,9 @@ class RequeteType extends AbstractType
 					'mapped' => false	
 				))
 				->add('createur', 'hidden')
-				->add('requete_cliente', 'checkbox', array(
-					'label' 	=> 'Requête cliente',
-					'mapped' 	=> false,
-					'required'	=> false
-				))
-				->add('choixPage_requetePerso', 'hidden', array(
-					'mapped'	=> false
-				))
 				->add('compte', 'choice', array(
-						'label' => 'Compte utilisateur',
-						'placeholder' => "Choisir un compte d'utilisation",
+						'label' => 'Compte utilisateur : ',
+						'placeholder' => "Requête personnelle",
 						'required' => false,
 						'choices' => array(
 							'Admin' 		=> 'Admin',

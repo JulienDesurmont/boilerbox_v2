@@ -1304,9 +1304,33 @@ table.getSystemParam td {
 .validationPopupRequete {
   margin-top: 15px;
   display: block;
-  background: #EE921A;
-  cursor: pointer;
+  text-align: right;
+  height: 50px;
 }
+
+.validationPopupRequete button {
+  border-radius: 40px;
+  cursor: pointer;
+  height: 35px;
+  width: 150px;
+  background: white;
+  font-weight: bold;
+}
+.validationPopupRequete button:hover {
+  font-size: 1.1em;
+  height: 39px;
+}
+
+
+.validationPopupRequete button[type='submit'] {
+	color: blue;
+}
+.validationPopupRequete button[type='reset'] {
+	color: red;
+}
+
+
+/*
 .validationPopupRequete .bouton {
   width: auto;
   float: right;
@@ -1321,11 +1345,30 @@ table.getSystemParam td {
 .validationPopupRequete .bgbouton:hover {
   width: 80% !important;
 }
+*/
 .validationPopupRequete a {
   color: inherit;
   font-weight: bold;
   text-transform: uppercase;
 }
+div.zonedetexte label {
+	display: block;
+	text-align:left;
+}
+div.listederoulante {
+	margin-top: 15px;
+	text-align: left;
+}
+div.listederoulante label {
+	padding-right: 10px;
+}
+div.listederoulante select {
+	border-radius: 10px;
+	width: 250px;
+	border:1px solid gray;
+}
+
+
 .btn-disable {
   pointer-events: none;
 }
@@ -4409,9 +4452,6 @@ p.live_back_gray {
   border: 1px solid #000000;
   text-align: center;
 }
-#compteRequetePerso {
-  text-align: right;
-}
 #ajout_requete_perso {
   text-align: center;
 }
@@ -4665,4 +4705,27 @@ p.live_back_gray {
   position: fixed;
   top: 120px;
   z-index: 99;
+}
+
+#ajoutRequete {
+	padding-left: 20px;
+}
+
+#ajout_requete_perso h1 {
+	margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+
+#ajoutRequete label {
+    padding-left: 10px;
+}
+
+
+input.inputText {
+	border-radius: 40px;
+	width: 90%;
+	text-align: center;
+	margin-bottom: 30px;
+    border-color: gray;
 }

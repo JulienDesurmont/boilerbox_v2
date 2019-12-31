@@ -720,9 +720,8 @@ public function indexAction() {
     	// Récupération du handler de formulaire
     	$form_handler = new RequeteHandler($form_requete, $request);
 
-		$entity_client = $this->em->getRepository('IpcUserBundle:User')->findOneByUsername('Client');
     	// Execution de la méthode d'execution du handler : Retourne True si les données du formulaire sont validées
-    	$process = $form_handler->process($this->em, 'listing', $this->container->get('security.context')->getToken()->getUser(), $entity_client, $this->session);
+    	$process = $form_handler->process($this->em, 'listing', $this->container->get('security.context')->getToken()->getUser(), $this->session);
 
 		// Récupération de l'id de la requête personnelle 
 		$id_requete_perso = $this->session->get('listing_requete_selected', null);

@@ -1,5 +1,3 @@
-{% form_theme form_requete 'bootstrap_3_layout.html.twig' %}
-
 {% block popup %}
 	{{ form_start(form_requete, { 'attr': {'class': 'col-lg-12'} }) }}
 		<div id='messageValidation' class='cacher'>
@@ -7,26 +5,27 @@
 		<div id='ajout_requete_perso'>
 			<h1>{{ 'label.popup.titre.ajout_requete_personnelle'|trans|upper }}</h1>
 	
-			{{ form_widget(form_requete.choixPage_requetePerso) }}
-			{#		<input type="hidden" name="choixPage_requetePerso" id="choixPage_requetePerso" /> #}
-
-    		<div id='compteRequetePerso'>
-				{{ form_row(form_requete.requete_cliente, {label_attr: {class: 'switch-custom'} }) }}
-    		</div>
-
     		<div id='ajoutRequete'>
-				{{ form_errors(form_requete.appellation) }}
-        	    {{ form_widget(form_requete.appellation, {'attr': { 'class':'form_control'} }) }}
-				<br />
-				{{ form_errors(form_requete.description) }}<br />
-				{{ form_label(form_requete.description) }}<br />
-				{{ form_widget(form_requete.description) }}
+				<div>
+					{{ form_errors(form_requete.appellation) }}
+        	    	{{ form_widget(form_requete.appellation) }}
+				</div>
+				<div class='zonedetexte'>
+					{{ form_errors(form_requete.description) }}
+					{{ form_label(form_requete.description) }}
+					{{ form_widget(form_requete.description) }}
+				</div>
+				<div class='listederoulante'>
+					{{ form_label(form_requete.compte) }}
+                	{{ form_widget(form_requete.compte) }}
+				</div>
     		</div>
 
 			<div class='validationPopupRequete'>
 				{{ form_widget(form_requete.Enregistrer) }}  {{ form_widget(form_requete.Annuler) }}
 			</div>
-        	{{ form_widget(form_requete.type) }}
+
+			{{ form_widget(form_requete.type) }}
 			{{ form_rest(form_requete) }}
 		</div>
 	{{ form_end(form_requete) }}

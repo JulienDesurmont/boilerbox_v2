@@ -194,7 +194,7 @@ label:
             filtre: Filtrer les données
             mots_cle: Recherche par mots clé
             selection_message: Sélectionner un message
-            ajout_requete_personnelle: Ajouter une requête personnelle
+            ajout_requete_personnelle: Nouvelle requête
         filtre:
             superieur:
                 designation: Supérieure

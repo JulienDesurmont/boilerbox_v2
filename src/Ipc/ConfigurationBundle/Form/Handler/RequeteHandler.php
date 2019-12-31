@@ -14,7 +14,6 @@ class RequeteHandler {
   protected $form;
   protected $srv_session;
   protected $ent_utilisateur;
-  protected $ent_client;
   protected $type_requete;
 
 	public function __construct(Form $form, Request $request)
@@ -29,10 +28,9 @@ class RequeteHandler {
 	*
 	* return boolean
    */
-	public function process(EntityManagerInterface $em, $type, $ent_utilisateur, $ent_client, $srv_session) 
+	public function process(EntityManagerInterface $em, $type, $ent_utilisateur, $srv_session) 
 	{
 		$this->ent_utilisateur 	= $ent_utilisateur;
-		$this->ent_client 		= $ent_client;
 		$this->srv_session 		= $srv_session;
 		$this->type_requete 	= $type;
 	
@@ -55,12 +53,7 @@ class RequeteHandler {
 
 	public function onSuccess(EntityManagerInterface $em, Requete $ent_requete) 
 	{
-		if ($this->form->get('requete_cliente')->getData()) 
-		{
-			$ent_requete->setUtilisateur($this->ent_client);
-        } else {
-			$ent_requete->setUtilisateur($this->ent_utilisateur);
-        }
+		$ent_requete->setUtilisateur($this->ent_utilisateur);
 		$ent_requete->setType($this->type_requete);
 		if ($this->type_requete == 'listing')
 		{
