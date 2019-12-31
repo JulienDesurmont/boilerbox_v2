@@ -412,8 +412,6 @@ configperiode.vueRestreinte {
 configperiode.vueRestreinte .date {
   text-align: center;
 }
-configperiode.vueRestreinte .date
-
 menu_gauche {
   z-index: 80;
   position: absolute;
@@ -3199,14 +3197,14 @@ div.listederoulante select {
 }
 #title_header {
   position: absolute;
-  top: 0px;
+  top: 10px;
   right: 0px;
   left: 0px;
-  height: 100px;
+  height:150px;
 }
 #pagePrincipaleBody {
   position: absolute;
-  top: 100px;
+  top: 180px;
   left: 0px;
   right: 0px;
   bottom: 120px;
@@ -4666,8 +4664,8 @@ p.live_back_gray {
   background: #000000;
 }
 #headprint.vueRestreinte {
-  height: 120px;
-  min-height: 120px;
+  height: 140px;
+  min-height: 140px;
 }
 #etat1Affichage {
   display: table;
