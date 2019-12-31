@@ -2504,7 +2504,7 @@ div.listederoulante select {
   display: block;
 }
 #validation .bouton {
-  width: auto;
+  /*width: auto;*/
   float: right;
   font-size: 16px;
   text-align: center;
