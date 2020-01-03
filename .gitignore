@@ -5,3 +5,5 @@ web/uploads/
 app/cache/
 app/logs/
 app/spool/
+web/bundles/
+*~

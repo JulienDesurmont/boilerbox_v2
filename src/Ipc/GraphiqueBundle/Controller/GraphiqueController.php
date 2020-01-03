@@ -590,7 +590,7 @@ public function indexAction() {
 			'compte_requete_perso' 	=> $this->compteRequetePerso,
 		    'sessionCourante' 		=> $this->session->getSessionName(),
             'tabSessions' 			=> $this->session->getTabSessions(),
-			'form_requete'          => $form_requete->createView(),
+			'form_requete'          => $form_requete->createView()
 		));
 	}
 }
