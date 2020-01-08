@@ -1743,14 +1743,6 @@ public function ajaxGetDateAction() {
 	return new Response();
 }
 
-// Fonction appelée en ajax : Qui retourne la date de la dernière donnée enregistrée en base dans un format texte
-public function ajaxGetLastDataAction() {
-    $service_config = $this->container->get('ipc_prog.configuration');
-    $message_last_data = $service_config->getLastDataTime();
-	echo $message_last_data;
-    return new Response();
-}
-
 //	Fonction qui recoit une date (jj-mm-aaaa) et retourne un tableau contenant l'année et le mois
 function coupeDate($date) {
 	$tabRetourDate = array();

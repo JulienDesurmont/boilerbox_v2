@@ -149,7 +149,7 @@ label:
         nouveau_rapport: "Nouveau rapport d'intervention"
         vue_rapport: "Liste des rapports d'intervention"
         pas_de_donnee: Aucune donnée trouvée
-        page_inexistante: Page %page% inexistante
+        page_inexistante: Page %page% : Aucune donnée trouvée
         compression: COMPRESSION
     export_rapport: Exportation des rapports
     site: Site

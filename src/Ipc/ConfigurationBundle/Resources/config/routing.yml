@@ -28,10 +28,6 @@ ipc_get_date:
     requirements:
         _method: POST
 
-ipc_conf_ajax_get_lat_data:
-    path: /ajax/getLastData
-    defaults: { _controller: IpcConfigurationBundle:Configuration:ajaxGetLastData }
-
 ipc_prog_newPeriode:
     path: /periode/nouvelle
     defaults: { _controller: IpcProgBundle:Prog:newPeriode }
@@ -158,6 +154,10 @@ addFormCombustible:
 addFormEtatGen:
     path: /enTete/addFormEtatGen
     defaults: { _controller: IpcConfigurationBundle:ConfSupervision:addFormEtatGen }
+
+ipc_conf_ajax_get_last_data:
+    path: /ajax/getLastData
+    defaults: { _controller: IpcConfigurationBundle:Ajax:ajaxGetLastData }
 
 ajaxGetTuileLive:
     path: /ajax/getTuileLive
