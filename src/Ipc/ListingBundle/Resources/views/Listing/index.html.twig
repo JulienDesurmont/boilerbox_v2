@@ -22,33 +22,34 @@
 
         {# Select des requêtes personnelles #}
 		<div>
-        <select id='selectRegPerso' 
-				name='selectRegPerso' 
-				data-changeListeReq="{{ path('ipc_change_liste_req') }}" 
-				data-url="{{ path('ipc_selectRequest', {'page':'listing'}) }}" 
-				data-suppressionRequetePersonnelle="{{ path('ipc_deleteRequestPerso') }}"
-				onChange="selectRequestPerso();">
-			{# Titre placé en première ligne du SELECT #}
-            <option value='0' disabled {% if id_requete_perso is empty %}selected {% endif %}style='color:blue'>
-				{% if compte_requete_perso|lower == 'client' %}
-					{{ 'select.requetes_client'|trans }} 
-				{% elseif compte_requete_perso|lower == 'technicien' %}
-                    {{ 'select.requetes_technicien'|trans }}
-                {% elseif compte_requete_perso|lower == 'admin' %}
-                    {{ 'select.requetes_admin'|trans }}
-				{% else %}
-					{{ 'select.requetes_personnelles'|trans }}
-				{% endif %}
-			</option>
-			{% for ent_requete in entities_requetes_perso %}
-				<option value="{{ ent_requete.id }}" {% if ent_requete.id == id_requete_perso %}selected {% endif %}>{{ ent_requete.appellation }}</option>
-			{% endfor %}
-			{#
-            {% for key,requeteValue in tab_requetes_perso %}
-                <option value="{{ requeteValue }}">{{ requeteValue }}</option>
-            {% endfor %}
-			#}
-        </select>
+        	<select id='selectRegPerso' 
+					name='selectRegPerso' 
+					data-changeListeReq="{{ path('ipc_change_liste_req') }}" 
+					data-url="{{ path('ipc_selectRequest', {'page':'listing'}) }}" 
+					data-suppressionRequetePersonnelle="{{ path('ipc_deleteRequestPerso') }}"
+					onChange="selectRequestPerso();"
+			>
+				{# Titre placé en première ligne du SELECT #}
+            	<option value='0' disabled {% if id_requete_perso is empty %}selected {% endif %}style='color:blue'>
+					{% if compte_requete_perso|lower == 'client' %}
+						{{ 'select.requetes_client'|trans }} 
+					{% elseif compte_requete_perso|lower == 'technicien' %}
+                	    {{ 'select.requetes_technicien'|trans }}
+                	{% elseif compte_requete_perso|lower == 'admin' %}
+                	    {{ 'select.requetes_admin'|trans }}
+					{% else %}
+						{{ 'select.requetes_personnelles'|trans }}
+					{% endif %}
+				</option>
+				{% for ent_requete in entities_requetes_perso %}
+					<option value="{{ ent_requete.id }}" {% if ent_requete.id == id_requete_perso %}selected {% endif %}>{{ ent_requete.appellation }}</option>
+				{% endfor %}
+				{#
+            	{% for key,requeteValue in tab_requetes_perso %}
+            	    <option value="{{ requeteValue }}">{{ requeteValue }}</option>
+            	{% endfor %}
+				#}
+        	</select>
 		</div>
 		<div>
         {% if is_granted('ROLE_TECHNICIEN') %}

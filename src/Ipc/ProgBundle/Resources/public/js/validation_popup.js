@@ -207,7 +207,6 @@ function resetAjaxForm(page) {
 }
 
 function deleteAjaxForm(page, idForm) {
-	alert('delete');
 	attente();
 	setTimeout(function() {
 		xhr = getXHR();

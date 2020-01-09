@@ -25,6 +25,20 @@ select {
   color: #FFF;
 }
 
+h1 {
+	flex-grow: 1;
+  /*display: inline-block;*/
+  margin: 8px 0 0 0;
+  /*width: 100%;*/
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: lighter;
+  font-size: 40px;
+  color: #4b4b4b;
+}
+
+
+
+
 #siteIpc {
 	position: fixed;
 	top:0;
@@ -59,7 +73,7 @@ header {
 	color: #FFF;
 }
 header.vueRestreinte {
-  	min-height: 140px;
+  	height: 140px;
 	overflow: hidden;
 }
 /* *** Partie Haute de l'en-tête *** */
@@ -474,17 +488,6 @@ page {
 	justify-content: space-between;
 	overflow: hidden;
 	padding: 0 10px;
-  /*position: absolute;
-  top: 200px;
-  right: 200px;
-  bottom: 0px;
-  left: 200px;
-  display: block;
-  color: #4b4b4b;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-	border:2px solid red;
-*/
 }
 
 /* Bloc des menus de gauche et droite */
@@ -494,7 +497,6 @@ menu_gauche {
   	color: #000000;
   	text-align: center;
   	background: #FFF;
-    border:2px solid blue;
 }
 menu_droite {
     order: 3;
@@ -506,9 +508,6 @@ menu_droite {
     text-align: center;
     background: #FFF;
 }
-#menuDroite {
-	height: 100px;
-}
 
 div.pageDefaut {
     order: 2;
@@ -518,34 +517,93 @@ div.pageDefaut {
 	overflow-y: auto;
 	overflow-x: hidden
 }
-/*div.pageDefaut.vueRestreinte {
-  top: 120px;
-}*/
+
+/* BLOC DES MENUS */
+#validation {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: flex-end;
+}
+#validation .bouton {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+  	font-size: 16px;
+  	text-align: center;
+  	border-radius: 15px;
+  	line-height: 14px;
+  	min-width: 200px;
+	min-height: 40px;
+	margin-top: 15px;
+}
+#validation .bgbouton:hover {
+  width: 80% !important;
+}
+#validation a {
+  color: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+#validationMin .blue .bgbouton:hover {
+  color: #FFF;
+  background: #006AB3;
+  width: auto;
+  display: inline-block;
+  padding: 1px 8px 0px 8px;
+  margin: 2px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+/*
+.validationbouton div .bouton {
+  width: 130px;
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 15px;
+  border: #202a36 solid 3px;
+  font-size: 12px !important;
+  text-align: center;
+}
+.validationbouton div .bgbouton {
+  font-size: 12px !important;
+}
+.validationbouton a {
+  color: #FFF;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+*/
+/* \BLOC DES MENUS */
 
 #title_header {
 	padding: 5px 0;
 	display: flex;
 	flex-direction: row;
   	height: 130px;
+	position: relative;
 }
 
 #pagePrincipaleBody {
 	overflow: auto;
-	border: 3px groove gray;
-  /*position: absolute;
-  top: 180px;
-  left: 0px;
-  right: 0px;
-  bottom: 120px;
-  overflow: auto;
-    */
+	/*border: 3px groove black;*/
 }
 #page_footer {
 	height: 100px;
 }
+#page_footer.vueRestreinte {
+	display: none;
+}
+
+/*
 #pagePrincipaleBody.vueRestreinte {
   bottom: 0;
 }
+*/
 
 
 
@@ -573,9 +631,10 @@ page tbody .code {
   padding-top: 8px;
 }
 page table {
-  border-collapse: collapse;
-  margin: 6px 0 10px 0;
-  width: 100%;
+  	border-collapse: collapse;
+  	margin: 6px 0 10px 0;
+  	width: 100%;
+	overflow: hidden;
 }
 page th {
   height: 18px;
@@ -741,34 +800,25 @@ page a .disabled {
 
 
 
-div#blockPiedDePage {
+#blockPiedDePage {
     height: 120px;
     background: #000000;
     border-top: #000000 solid 1px;
 }
+
+#blockPiedDePage.big {
+    height: 220px;
+}
+#blockPiedDePage.vueRestreinte {
+  display: none;
+}
+
 
 footer {
 	height: 120px;
 	background: #000000;
 	border-top: #000000 solid 1px;
 	color: #FFF;
-
-
-/*
-  z-index: 86;
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  min-width: 1024px;
-  overflow: auto;
-  height: 120px;
-  padding: 2px 10% 0 10%;
-  background: #000000;
-  display: table-row;
-  border-top: #000000 solid 1px;
-  color: #FFF;
-*/
 }
 
 footer h2 {
@@ -987,6 +1037,132 @@ footer.big {
 
 
 /* /LISTING */
+
+
+
+/* GRAPHIQUE */
+#menu_graphique {
+	display: flex;
+	flex-direction: column;
+}
+
+#sectionOptionsGraphiques {
+  	font-size: 12px;
+  	display: flex;
+  	flex-direction: row;
+  	flex-wrap: wrap;
+	align-items: center;
+}
+#sectionOptionsGraphiques > * {
+	padding-left: 10px;
+	border-left: 2px solid black;
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+	height: 30px;
+
+}
+#sectionOptionsGraphiques input[type='text'] {
+  height: 15px;
+  margin: 0 10px 0 5px;
+  width: 30px;
+  font-size: 12px;
+  background-color: #FFF;
+  color: #000000;
+  border: 1px solid #000000;
+}
+#sectionOptionsGraphiques input[type='text'].pas {
+  width: 20px;
+}
+#sectionOptionsGraphiques div.finLigne {
+/*
+  text-align: right;
+  padding-right: 30px;
+	*/
+}
+#sectionOptionsGraphiques span {
+  padding-right: 10px;
+}
+
+
+
+
+
+#boutontitre {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-start;
+	font-size: 12px;
+	padding-top: 10px;
+}
+#boutontitre ul li {
+  display: inline-block;
+  position: relative;
+  width: 35px;
+  margin-left: 5px;
+  text-align: center;
+  list-style-type: none;
+}
+#boutontitre ul ul {
+  display: none;
+  position: absolute;
+  right: 0px;
+  top: 35px;
+  margin: 0px;
+  padding: 0px;
+  z-index: 1;
+  border: 1px solid #000000;
+  background-color: #4b4b4b;
+}
+#boutontitre ul ul li {
+  display: block;
+  position: relative;
+  height: 30px;
+  width: 240px;
+  margin: 0;
+  text-align: left;
+  line-height: 30px;
+  border-bottom: 1px solid #999;
+}
+#boutontitre ul ul li a {
+  display: block;
+  padding-left: 10px;
+  color: #FFF;
+}
+#boutontitre ul ul li a:hover {
+  background: #006AB3;
+}
+#boutontitre li:hover ul.niveau2,
+#boutontitre li li:hover ul.niveau3 {
+  display: block;
+}
+
+#container {
+  /*width: 100%;*/
+  height: 750px;
+}
+div#container.containerImpression {
+  width: 85%;
+  height: 600px;
+}
+
+/* GRAPHIQUE */
+
+
+
+div.gestion_parametres_ipc table tbody {
+	max-height: 200px;
+	overflow: hidden;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -1280,15 +1456,6 @@ footer .icone-info:hover help {
   border-radius: 3px;
   font-size: 12px;
 }
-h1 {
-  display: inline-block;
-  margin: 8px 0 0 0;
-  width: 100%;
-  font-family: Verdana, Geneva, sans-serif;
-  font-weight: lighter;
-  font-size: 40px;
-  color: #4b4b4b;
-}
 h2 {
   display: inline-block;
   margin: 10px 0 0 0;
@@ -1472,14 +1639,6 @@ div.etatFinPage {
 div.etatCompteur p>span:first-child {
   display: inline-block;
   width: 300px;
-}
-div#container {
-  width: 100%;
-  height: 750px;
-}
-div#container.containerImpression {
-  width: 85%;
-  height: 600px;
 }
 table.getSystemParam {
   color: #FFF;
@@ -1757,25 +1916,6 @@ table.getSystemParam td {
   opacity: 0.7;
   filter: alpha(opacity=30);
   z-index: 1;
-}
-.validationbouton div .bouton {
-  width: 130px;
-  display: inline-block;
-  vertical-align: middle;
-  padding-top: 5px;
-  padding-bottom: 3px;
-  border-radius: 15px;
-  border: #202a36 solid 3px;
-  font-size: 12px !important;
-  text-align: center;
-}
-.validationbouton div .bgbouton {
-  font-size: 12px !important;
-}
-.validationbouton a {
-  color: #FFF;
-  text-align: center;
-  text-transform: uppercase;
 }
 .bouton.black {
   background: #000000;
@@ -2574,54 +2714,6 @@ div.listederoulante select {
 #boutonInfoPeriode {
   text-decoration: underline;
 }
-#boutontitre {
-  display: inline-block;
-  float: right;
-  vertical-align: bottom;
-  margin-top: 10px;
-  font-size: 12px;
-}
-#boutontitre ul li {
-  display: inline-block;
-  position: relative;
-  width: 35px;
-  margin-left: 5px;
-  text-align: center;
-  list-style-type: none;
-}
-#boutontitre ul ul {
-  display: none;
-  position: absolute;
-  right: 0px;
-  top: 35px;
-  margin: 0px;
-  padding: 0px;
-  z-index: 1;
-  border: 1px solid #000000;
-  background-color: #4b4b4b;
-}
-#boutontitre ul ul li {
-  display: block;
-  position: relative;
-  height: 30px;
-  width: 240px;
-  margin: 0;
-  text-align: left;
-  line-height: 30px;
-  border-bottom: 1px solid #999;
-}
-#boutontitre ul ul li a {
-  display: block;
-  padding-left: 10px;
-  color: #FFF;
-}
-#boutontitre ul ul li a:hover {
-  background: #006AB3;
-}
-#boutontitre li:hover ul.niveau2,
-#boutontitre li li:hover ul.niveau3 {
-  display: block;
-}
 @media screen and (max-width: 1490px) {
   .titreBoilerInitial {
     font-size: 20px;
@@ -2733,28 +2825,6 @@ div.listederoulante select {
     position: absolute;
     bottom: 0px !important;
   }
-}
-#validation {
-  margin-top: 15px;
-  display: block;
-}
-#validation .bouton {
-  /*width: auto;*/
-  float: right;
-  font-size: 16px;
-  text-align: center;
-  margin-left: 10px;
-  border-radius: 15px;
-  line-height: 14px;
-  min-width: 150px;
-}
-#validation .bgbouton:hover {
-  width: 80% !important;
-}
-#validation a {
-  color: inherit;
-  font-weight: bold;
-  text-transform: uppercase;
 }
 #lightboxSmall {
   position: fixed;
@@ -3410,9 +3480,6 @@ div.listederoulante select {
 #boutontitre a:focus span {
   opacity: 1;
   transform: scale(1) rotate(0);
-}
-#blockPiedDePage.vueRestreinte {
-  display: none;
 }
 #boutonTitreCompress.vueRestreinte {
   display: none;
@@ -4574,47 +4641,6 @@ p.live_back_gray {
 #infoBulles {
   border: 2px solid #E42322;
 }
-#sectionOptionsGraphiques {
-  height: 30px;
-  font-size: 12px;
-  display: flex;
-  justify-content: 'left';
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  margin-top: 20px;
-  margin-bottom: -7px;
-  margin-left: 9px;
-}
-#sectionOptionsGraphiques input[type='text'] {
-  height: 15px;
-  margin: 0 10px 0 0;
-  width: 30px;
-  font-size: 12px;
-  background-color: #FFF;
-  color: #000000;
-  border: 1px solid #000000;
-}
-#sectionOptionsGraphiques input[type='text'].pas {
-  width: 20px;
-}
-#sectionOptionsGraphiques div.debutLigne {
-  width: 500px;
-  height: 24px;
-}
-#sectionOptionsGraphiques div.milieuLigne {
-  width: 500px;
-  height: 30px;
-}
-#sectionOptionsGraphiques div.finLigne {
-  height: 30px;
-  text-align: right;
-  padding-right: 30px;
-  flex: 1;
-}
-#sectionOptionsGraphiques span {
-  padding-right: 10px;
-}
 #intituleRequetePerso {
   width: 600px;
   margin-top: 10px;
@@ -4758,43 +4784,6 @@ p.live_back_gray {
   text-align: right;
 }
 #etatAuto div.champs_etat {
-  text-align: center;
-}
-#validationMin {
-  display: inline-block;
-}
-#validationMin .bouton {
-  width: 100px;
-  height: 18px;
-  text-align: center;
-  margin-left: 10px;
-  border-radius: 15px;
-  min-width: 50px;
-}
-#validationMin .bgbouton {
-  background: none;
-  width: auto;
-  display: inline-block;
-  vertical-align: middle;
-  padding: 1px 8px 1px 8px;
-  margin: 2px;
-  border-radius: 15px;
-  font-size: 11px;
-  text-align: center;
-}
-#validationMin a {
-  color: inherit;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-#validationMin .blue .bgbouton:hover {
-  color: #FFF;
-  background: #006AB3;
-  width: auto;
-  display: inline-block;
-  padding: 1px 8px 0px 8px;
-  margin: 2px;
-  border-radius: 15px;
   text-align: center;
 }
 #message_404 {
