@@ -59,16 +59,13 @@
 	</div>
 {% endblock title_header %}
 
-{% block right_menu %}
-{% endblock right_menu %}
-
 {% block body %}
 	<div id='listingmessage'>
 		<form name="myForm" method="get" action="{{ path('ipc_listing') }}" onSubmit="attente()" >
 			{% if tempMax %}
 				<p>{{ 'label.requete_timeout'|trans }}</p>
 			{% else %}
-				{# variable indiquant qu'un refresh est effectué #}
+				<!- variable indiquant qu'un refresh est effectué -->
 				<input type='hidden' id='refresh_listing' name='refresh_listing' value='' />
 				<input type='hidden' name='impression' value='yes' id='impression' />
 				<div id='listingDeDonnees'>
@@ -118,28 +115,28 @@
 										{% if donnee['numero_genre'] == 6 %}
 											<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_parametre.png') }}" alt='parametre' /></div>
                                         {% endif %}
-										{# Si le numéro de la donnée est composée de 3 chiffres on récupère et indiquons le dernier digit #}
+										<!--  Si le numéro de la donnée est composée de 3 chiffres on récupère et indiquons le dernier digit -->
 										{% if donnee['numero_genre']|length == 3 %}
 											{% if ( donnee['numero_genre'] >= 100 ) and ( donnee['numero_genre'] <= 114 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_critique.png') }}" alt='critique' /></div>
 											{% endif %}
-											{# Défaut   Non acquittable #}
+											<!-- Défaut   Non acquittable -->
 											{% if ( donnee['numero_genre'] >= 115 ) and ( donnee['numero_genre'] <= 119 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_critique.png') }}" alt='critique' /></div>
 											{% endif %}
-											{# Alarme   Acquittable #}
+											<!-- Alarme   Acquittable -->
 											{% if ( donnee['numero_genre'] >= 120 ) and ( donnee['numero_genre'] <= 124 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_critique.png') }}" alt='critique' /></div>
 											{% endif %}
-											{# Alarme   Non acquittable #}
+											<!-- Alarme   Non acquittable -->
 											{% if ( donnee['numero_genre'] >= 125 ) and ( donnee['numero_genre'] <= 129 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_alarme.png') }}" alt='alarme' /></div>
 											{% endif %}
-											{# Evènement        Acquittable #}
+											<!-- Evènement        Acquittable -->
 											{% if ( donnee['numero_genre'] >= 130 ) and ( donnee['numero_genre'] <= 134 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_evenement.png') }}" alt='événement' /></div>
 											{% endif %}
-											{# Evènement        Non acquittable #}
+											<!-- Evènement        Non acquittable -->
 											{% if ( donnee['numero_genre'] >= 135 ) and ( donnee['numero_genre'] <= 139 ) %}
 												<div class='genrebox'><img src="{{ asset('bundles/ipcprog/images/ipcWeb/genre_evenement.png') }}" alt='événement' /></div>
 											{% endif %}
@@ -148,7 +145,6 @@
 									</td>
 									<td class="localisation"><div class="txtlocalisation">{{ donnee['numero_localisation'] }}</div></td>
 									<td class="code">{{ donnee['codeModule'] }}</td>
-									{#<td class="designation"><strong>{{ donnee['intitule_module'] | trim | trans | raw }}</strong><br  />#}
 									<td class="designation">
 										<strong>
 											{% if donnee['erreur'] is defined %}
