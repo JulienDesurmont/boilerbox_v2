@@ -127,7 +127,7 @@ for (j = 0; j < nombreCourbes; j++) {
 		var i = {{ i-1 }};
 		if (i == j) {
 			var nb_donnees  = {{ liste_req_pour_graphique[i-1]['MaxDonnees'] }};
-			if (nb_donnees != 0) {
+			if (nb_donnees > 1) {
 				nb_de_requetes++;
 			}
 		}
