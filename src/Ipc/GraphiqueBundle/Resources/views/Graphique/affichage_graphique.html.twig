@@ -13,7 +13,7 @@
     {% if tempMax %}
         <p>{{ 'label.requete_timeout'|trans }}</p>
     {% else %}
-        <h1>{{ 'label.titre.courbe'|trans }}</h1>
+        <h1 class='notToBePrinted'>{{ 'label.titre.courbe'|trans }}</h1>
 		<div id='menu_graphique'>
             <div id="boutontitre" class='notToBePrinted'>
                 <form name='myForm2' method='post' action="{{ path('ipc_graphAnalyse') }}">

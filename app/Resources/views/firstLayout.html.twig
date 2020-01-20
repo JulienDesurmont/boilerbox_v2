@@ -17,27 +17,21 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
     {% endstylesheets %}
-    {# <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> #}
 
 
-	{#
 	{% stylesheets  filter="cssrewrite, scssphp" output="css/mainscreen.css" 
-		'bundles/ipcprog/css/screen-export-01.css' 
+		'bundles/ipcprog/css/boilerbox-commun.css' 
 	%}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
 	{% endstylesheets %} 
-	#}
-	{#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/screen-export-01.css') }}" media="screen" />#}
-	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/boilerbox-commun.css') }}" media="screen" />
+	{#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/boilerbox-commun.css') }}" media="screen" />#}
 
-	{#
 	{% stylesheets  filter="cssrewrite, scssphp" output="css/mainprint.css" 
 		'bundles/ipcprog/css/print-export-01.css' 
 	%}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="print" />
 	{% endstylesheets %}
-	#}
-	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/print-export-01.css') }}" media="print" />
+	{#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/ipcprog/css/print-export-01.css') }}" media="print" />#}
 
 
     {% block stylecss %}
@@ -108,7 +102,7 @@
 								<img src="{{ asset('bundles/ipcprog/images/ipcWeb/Layout_IPC.png') }}" alt='IPC' />
 							</a>
 						</div>
-						<div id='texte-du-logo'>
+						<div id='texte-du-logo' class='notToBePrinted'>
 							<div>	<span class='bleu'>I</span><span class='grandScreen'>NDUSTRIAL<br /></span>
 									<span class='bleu'>B</span><span class='grandScreen'>OILER<br /></span>
 									<span class='bleu'>C</span><span class='grandScreen'>ONTROL<br /></span>
@@ -475,13 +469,7 @@
 
 
 
-
-
-
-
-
 	<!-- ------------------ -->
-	{#
     {% javascripts output='js/main.js' filter='jsqueeze'
         'bundles/ipcprog/js/jquery.js'
         'bundles/ipcprog/js/jquery.mCustomScrollbar.concat.min.js'
@@ -490,10 +478,9 @@
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-	#}
 
-	{# Décommenter pour le DEVELOPPEMENT DU FICHIER functions_boilerbox.js #}
-        {% javascripts output='js/main_test.js' filter='jsqueeze'
+	{# DEV : Décommenter pour le DEVELOPPEMENT DU FICHIER functions_boilerbox.js 
+        {% javascripts output='js/main_dev.js' filter='jsqueeze'
             'bundles/ipcprog/js/jquery.js'
             'bundles/ipcprog/js/jquery.mCustomScrollbar.concat.min.js'
             'bundles/ipcprog/js/jquery-ui-min_1.12.1.js'
@@ -501,9 +488,8 @@
             <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
         <script type='text/javascript' src="{{ asset('bundles/ipcprog/js/functions_boilerbox.js') }}"></script>
+	#}
 	
-	<!-- ------------------ -->
-	<script type='text/javascript' src="{{ asset('../vendor/twbs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
 	<!-- ------------------ -->
     {% javascripts output='js/calendar.js' filter='jsqueeze'
