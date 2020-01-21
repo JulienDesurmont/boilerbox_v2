@@ -1,3 +1,52 @@
+/* *** partie haute de l'en-tête *** */
+#header-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100px;
+    background: #000000;
+}
+
+/* Bloc de connexion */
+#bloc-de-connexion {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 250px;
+}
+#bloc-de-connexion div#headerUser {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: 50px;
+}
+#bloc-de-connexion div#bloc-infos-user{
+    padding-top: 18px;
+}
+
+#bloc-de-connexion div#headerUser span {
+    padding-top: 19px;
+}
+#bloc-de-connexion div#headerUser span:nth-child(2) {
+    padding-top: 25px;
+    font-size: 11px;
+}
+#bloc-de-connexion div.box {
+    display: flex;
+    justify-content: flex-end;
+    width: 40px;
+    height: 40px;
+    margin: 10px 10px 0 10px;
+}
+#bloc-de-connexion div.box div img {
+    padding-left: 3px;
+    padding-top: 2px;
+    background: #1f2930;
+    border-radius: 10px;
+}
+
+
+
 .border-bouton {
   width: auto;
   display: inline-block;
@@ -357,7 +406,7 @@ configperiode {
   height: 23px;
   display: block;
   border-bottom: #000 solid 1px;
-  margin-left: 40px;
+  margin-left: 220px;
   white-space: nowrap;
 }
 configperiode a {
