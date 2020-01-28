@@ -127,9 +127,16 @@ private function getRequetesPerso() {
         	$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'), 'listing');
     	}
 	} else {	 
-		$this->compteRequetePerso = 'Personnel';
-		// Recherche de l'appelation des requêtes de l'utilisateur
-		$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'), 'listing');
+		//	 Le compte personnel n'est accessible qu'a partir des ROLES TECHNICIENS (donc pas pour les CLIENTS)
+		if ($this->get('security.context')->isGranted('ROLE_TECHNICIEN')) {
+			$this->compteRequetePerso = 'Personnel';
+			// Recherche de l'appelation des requêtes de l'utilisateur
+			$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCreateur($this->session->get('label'), 'listing');
+		} else if ($this->get('security.context')->isGranted('ROLE_CLIENT')) {
+			$this->compteRequetePerso = 'Client';
+        	// Recherche de l'appelation des requêtes de l'utilisateur
+        	$entities_requetes_perso = $this->em->getRepository('IpcConfigurationBundle:Requete')->myFindByCompte($this->compteRequetePerso, 'listing');
+		}	
 	}
 	return ($entities_requetes_perso);
 }

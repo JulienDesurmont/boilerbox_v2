@@ -29,7 +29,7 @@ class SecurityController extends BaseController {
 		/*
         $session = $this->container->get('session');
         $firewall = 'secured_area';
-        $token = new UsernamePasswordToken('admin', null, $firewall, array('ROLE_ADMIN'));
+        $token = new UsernamePasswordToken('admin', null, $firewall, array('ROLE_ADMIN_LTS'));
         $session->set('_security_'.$firewall, serialize($token));
         $session->save();
         $cookie = new Cookie($session->getName(), $session->getId());

@@ -24,6 +24,8 @@ use Ipc\ConfigurationBundle\Form\Type\EnteteLive\LiveEtatGenerateurType;
 use Ipc\ProgBundle\Form\Type\ReadLocalisationType;
 use Symfony\Component\Form\FormBuilder;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 class ConfSupervisionController extends Controller {
 private $liste_localisations;
 private $last_loc_graph_id;
@@ -109,7 +111,11 @@ public function addTuileLiveAction($idLocalisation = null) {
 	));
 }
 
-// DONNEES LIVE EN TETE
+/**
+ * Require ROLE_ADMIN for only this controller method.
+ *
+ * @Security("is_granted('ROLE_ADMIN')")
+*/
 public function addDonneeLiveAction() {
 	$this->constructeur();
 	$this->initialisationListe();

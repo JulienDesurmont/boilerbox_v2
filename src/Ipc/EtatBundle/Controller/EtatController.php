@@ -17,6 +17,8 @@ use Ipc\EtatBundle\Form\Type\EtatAutoType;
 use Ipc\ProgBundle\Entity\EtatDate;
 use Ipc\EtatBundle\Form\Type\EtatDateType;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 
 class EtatController extends Controller {
 
@@ -1993,6 +1995,10 @@ private function getIdModule($trigramme_module, $entity_mode){
 }
 
 // Fonction qui retourne la page de création d'un état par importation d'un fichier au format csv
+/**
+ *
+ * @Security("is_granted('ROLE_ADMIN_LTS')")
+*/
 public function creationAutoAction(){
     // Récupération de la liste de calcul possible ( = Listes des différents états existants )
     $this->constructeur();

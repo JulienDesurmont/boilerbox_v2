@@ -89,7 +89,7 @@ public function interventionsAction($idIntervention) {
         $rapport->setLogin($this->userLabel);
         $rapport->setNomTechnicien($this->userLabel);
     } else {
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
             $rapport->setLogin('Administrateur local');
         } else if ($this->get('security.context')->isGranted('ROLE_SUPERVISEUR')) {
 			$rapport->setLogin('Superviseur local');

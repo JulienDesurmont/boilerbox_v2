@@ -28,7 +28,7 @@ private function initialisation() {
 	$this->pageActive = $this->session->get('page_active');
 	$this->userLabel = $this->session->get('label');
     if ($this->userLabel == '' ) {
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
             $this->userLabel = 'Administrateur';
         } elseif ($this->get('security.context')->isGranted('ROLE_SUPERVISEUR')) {
             $this->userLabel = 'Superviseur';

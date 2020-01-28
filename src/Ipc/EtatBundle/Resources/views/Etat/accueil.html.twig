@@ -21,7 +21,7 @@
 
 {% block menu_droite %}
 	<div class='notToBePrinted'>
-		{% if is_granted('ROLE_SUPERVISEUR') %}
+		{% if is_granted('ROLE_ADMIN_LTS') %}
 			<section id='menud_etat'>
     			<ul class='menu-flex-container'>
     			    <li class='menu-flex-item menu-flex-start'></li>
