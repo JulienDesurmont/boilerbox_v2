@@ -98,12 +98,16 @@ private function initialisation() {
 	$this->fillnumbers = $this->get('ipc_prog.fillnumbers');
 	$this->tab_modules = array();
     if ($this->userLabel == '' ) {
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $this->userLabel = 'Admin'
+        } elseif ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
             $this->userLabel = 'Administrateur';
         } elseif ($this->get('security.context')->isGranted('ROLE_SUPERVISEUR')) {
             $this->userLabel = 'Superviseur';
-        } elseif ($this->get('security.context')->isGranted('ROLE_TECHNICIEN')) {
+        } elseif ($this->get('security.context')->isGranted('ROLE_TECHNICIEN_LTS')) {
             $this->userLabel = 'Technicien';
+        } elseif ($this->get('security.context')->isGranted('ROLE_TECHNICIEN')) {
+            $this->userLabel = 'Tech';
         } elseif ($this->get('security.context')->isGranted('ROLE_USER')) {
             $this->userLabel = 'Client';
         }
