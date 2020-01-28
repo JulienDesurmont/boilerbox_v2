@@ -501,8 +501,6 @@ public function indexAction() {
 			// Si la recherche est permise 
 			if ($reg == true) {
 				$em = $this->getDoctrine()->getManager();
-				// Vérification que le nombre de requêtes ne dépasse pas la limite définie par le parametre 'listing_nbmax_requetes' pour les droits TECHNICIEN
-				// et par le parametre 'autorisation_listing_nbmax_requetes' pour les droits CLIENT
 				$message_error = null;
 				$message_error_precision = null;
 				// Un Genre Ou un Intitulé de Module Correspondent à plusieurs Id de module

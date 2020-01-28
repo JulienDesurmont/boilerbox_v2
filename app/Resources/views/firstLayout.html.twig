@@ -139,13 +139,17 @@
 					<div id='headerUser' class='user'>
 						{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 							<div id='bloc-infos-user' class='notToBePrinted'>
-								<span id='userLabel' data-label={{ service_session.get('label') }} >{{ service_session.get('label') }}</span>
+								<span id='userLabel' data-label={{ service_session.get('label') }} ><span {% if service_session.get('label') == 'anon.' %} class='cacher' {% endif %}>{{ service_session.get('label') }}</span>
 								{% if is_granted('ROLE_ADMIN') %}
-									<span> ( Administrateur ) </span>
+									<span> ( Admin ) </span>
+								{% elseif is_granted('ROLE_ADMIN_LTS') %}
+                                    <span> ( Administrateur ) </span>
 								{% elseif is_granted('ROLE_SUPERVISEUR') %}
 									<span>( Superviseur ) </span>
+								{% elseif is_granted('ROLE_TECHNICIEN_LTS') %}
+                                    <span> ( Technicien ) </span>
 								{% elseif is_granted('ROLE_TECHNICIEN') %}
-									<span> ( Technicien ) </span>
+									<span> ( Tech ) </span>
 								{% else %}
 									<span> ( Client ) </span>
 								{% endif %}
@@ -215,7 +219,7 @@
 	                	    <li>
 	                	       <a 	href="{{ path('ipc_analyse_bruleurs') }}" 
 									id="Bruleurs" 
-									title="Bruleurs" i
+									title="Bruleurs" 
 									onMouseOver="switchActive(this.id,'{{ pageActive }}');"  
 									onMouseOut="switchInactive(this.id,'{{ pageActive }}');" 
 									onClick='stopPing();actionMenu(this.href,this.title);return false;'

@@ -637,7 +637,7 @@ public function configurationAuto($type) {
 		$liste_conf['live_modules_nb']['value'] = 4;
 		$liste_conf['live_modules_nb']['parametreAdmin'] = true;
 		$liste_conf['live_automate_nb']['description'] = "Nombre d'automates affichés";
-		$liste_conf['live_automate_nb']['value'] = 2;
+		$liste_conf['live_automate_nb']['value'] = 1;
 		$liste_conf['live_automate_nb']['parametreAdmin'] = true;
 		$liste_conf['live_automate_1']['description'] = "Paramètres de l'automate 1 (adresse ip;numéro de la première série à afficher)";
 		$liste_conf['live_automate_1']['value'] = "192.168.0.110;1;2;3;4";
@@ -718,7 +718,7 @@ public function configurationAuto($type) {
         $liste_conf['seuil_alerte_filesystem']['value'] = 80;
         $liste_conf['seuil_alerte_filesystem']['parametreAdmin'] = true;
         // Paramètres modbus
-        $liste_conf['activation_modbus']['description'] = "Activation de la fonction modbus (0:Non 1:Oui(défaut)).";
+        $liste_conf['activation_modbus']['description'] = "Activation de la fonction modbus - 0:Non 1:Oui(défaut).";
         $liste_conf['activation_modbus']['value'] = "1";
         $liste_conf['activation_modbus']['parametreAdmin'] = false;
 	}
@@ -728,10 +728,10 @@ public function configurationAuto($type) {
 		$liste_conf['ecart_max']['value'] = 90;
 		$liste_conf['ecart_max']['parametreAdmin'] = false;
 		$liste_conf['listing_nbmax_requetes']['description'] = 'Compte Technicien : Nombre maximum de requêtes listing';
-		$liste_conf['listing_nbmax_requetes']['value'] = 3;
+		$liste_conf['listing_nbmax_requetes']['value'] = 10;
 		$liste_conf['listing_nbmax_requetes']['parametreAdmin'] = false;
 		$liste_conf['graphique_nbmax_requetes']['description'] = 'Compte Technicien : Nombre maximum de requêtes graphique';
-		$liste_conf['graphique_nbmax_requetes']['value'] = 3;
+		$liste_conf['graphique_nbmax_requetes']['value'] = 10;
 		$liste_conf['graphique_nbmax_requetes']['parametreAdmin'] = false;
 		// Paramètres Client	-----------------------------------
 		$liste_conf['autorisation_ecart_max']['description'] = 'Compte Client : Nombre de jours maximum de la période';
@@ -755,7 +755,7 @@ public function configurationAuto($type) {
 		$liste_conf['maximum_execution_time']['value'] = 120;
 		$liste_conf['maximum_execution_time']['parametreAdmin'] = false;
     	// Paramètres pour le module GRAPHIQUE
-    	$liste_conf['graphique_max_points']['description'] = "CRITIQUE : Nombre de points maximum par courbe (4000 par défaut. !!!  Augmenter cette limite peut entrainer un blocage applicatif)";
+    	$liste_conf['graphique_max_points']['description'] = "CRITIQUE : Nombre de points maximum par courbe (4000 par défaut). !!!  Augmenter cette limite peut entrainer un blocage applicatif)";
     	$liste_conf['graphique_max_points']['value'] = 4000;
 		$liste_conf['graphique_max_points']['parametreAdmin'] = false;
 		$liste_conf['graphique_max_points']['parametreTechnicien'] = true;
@@ -802,10 +802,10 @@ public function configurationAuto($type) {
     	$liste_conf['duree_periode_analyse_bruleur']['description'] = "Durée de la période Analyse Bruleur (en seconde)";
     	$liste_conf['duree_periode_analyse_bruleur']['value'] = 30;
     	$liste_conf['duree_periode_analyse_bruleur']['parametreAdmin'] = true;
-    	$liste_conf['envoi_rapports_journaliers']['description'] = "Envoi systématique du rapport journalier (même si aucune erreur détectée) (0:Non(défaut)  1:Oui).";
+    	$liste_conf['envoi_rapports_journaliers']['description'] = "Envoi systématique du rapport journalier (même si aucune erreur détectée) - 0:Non(défaut)  1:Oui.";
     	$liste_conf['envoi_rapports_journaliers']['value'] = false;
     	$liste_conf['envoi_rapports_journaliers']['parametreAdmin'] = true;
-    	$liste_conf['sauvegarde_rapports_journaliers']['description'] = "Sauvegarde du rapport journalier au format html (0:Non  1:Oui(défaut)).";
+    	$liste_conf['sauvegarde_rapports_journaliers']['description'] = "Sauvegarde du rapport journalier au format html - 0:Non  1:Oui(défaut).";
     	$liste_conf['sauvegarde_rapports_journaliers']['value'] = true;
     	$liste_conf['sauvegarde_rapports_journaliers']['parametreAdmin'] = true;
     	$liste_conf['autorisation_mails']['description'] = "Autorisation de l'envoi des mails";

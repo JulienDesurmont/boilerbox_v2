@@ -3693,13 +3693,14 @@ div.listederoulante select {
   width: 530px;
 }
 #etatPage {
-  position: absolute;
+  /*position: absolute;
   margin-left: 5px;
   top: 0px;
   right: 0px;
   bottom: 0px;
   left: 0px;
   overflow: auto;
+	*/
 }
 #etat {
   padding-left: 200px;
