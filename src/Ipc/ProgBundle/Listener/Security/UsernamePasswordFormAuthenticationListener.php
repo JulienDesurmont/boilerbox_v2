@@ -29,7 +29,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 
-
 use Ipc\ProgBundle\Entity\Configuration;
 use \PDO;
 use \PDOException;
@@ -102,6 +101,7 @@ class UsernamePasswordFormAuthenticationListener extends AbstractAuthenticationL
                 throw new InvalidCsrfTokenException('Invalid CSRF token.');
             }
         }
+
         if ($this->options['post_only']) {
             $username = trim($request->request->get($this->options['username_parameter'], null, true));
             $password = $request->request->get($this->options['password_parameter'], null, true);
@@ -109,22 +109,29 @@ class UsernamePasswordFormAuthenticationListener extends AbstractAuthenticationL
         } else {
             $username = trim($request->get($this->options['username_parameter'], null, true));
             $password = $request->get($this->options['password_parameter'], null, true);
-	    	$label = $request->request->get($this->options['label_parameter'], null, true);
+	    	$label = $request->get($this->options['label_parameter'], null, true);
         }
         $request->getSession()->set(SecurityContextInterface::LAST_USERNAME, $username);
-        // Définition de la variable de session 'label'
-		$request->getSession()->set('label', $label);
-        $_SESSION['label'] = $label;
+
         // Inscription de l'utilisateur connecté au fichier de log
         $urlFichierConnexion = getenv("DOCUMENT_ROOT").'/web/logs/tokenIpcWeb.txt';
         $fichierConnexion = fopen($urlFichierConnexion, 'a+');
         $date = new \Datetime();
 		if (empty($label)) {
-	    	fwrite($fichierConnexion, $date->format('Y-m-d H:i:s').";Tentative de connexion locale : compte [$username]\n");
+	    	fwrite($fichierConnexion, $date->format('Y-m-d H:i:s').";Tentative de connexion locale : compte [$username : $label]\n");
         } else {
             fwrite($fichierConnexion, $date->format('Y-m-d H:i:s').";Tentative de connexion de $label\n");
 		}
        	fclose($fichierConnexion);
+
+
+		// Définition de la variable de session 'label'
+        if (empty($label)) {
+            $label = $username;
+        }
+        $request->getSession()->set('label', $label);
+        $_SESSION['label'] = $label;
+
         return $this->authenticationManager->authenticate(new UsernamePasswordToken($username, $password, $this->providerKey));
     }
 }

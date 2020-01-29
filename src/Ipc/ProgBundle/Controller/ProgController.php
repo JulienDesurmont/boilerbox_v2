@@ -19,6 +19,7 @@ private $messagePeriode;
 private $connexion;
 private $urlFichierToken;
 private $dbh;
+private $userLabel;
 
 public function constructeur(){
 	$this->urlFichierToken = getenv("DOCUMENT_ROOT").'/web/logs/tokenIpcWeb.txt';
@@ -26,6 +27,25 @@ public function constructeur(){
 		$service_session = $this->container->get('ipc_prog.session');
 		$this->session = $service_session;
 	}
+
+    $this->userLabel = $this->session->get('label');
+	//echo "requete ".$this->get('request')->getSession()->get('label');
+    if (($this->userLabel == 'anon.') || ($this->userLabel == '' )) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $this->userLabel = 'Admin';
+        } elseif ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
+            $this->userLabel = 'Administrateur';
+        } elseif ($this->get('security.context')->isGranted('ROLE_SUPERVISEUR')) {
+            $this->userLabel = 'Superviseur';
+        } elseif ($this->get('security.context')->isGranted('ROLE_TECHNICIEN_LTS')) {
+            $this->userLabel = 'Technicien';
+        } elseif ($this->get('security.context')->isGranted('ROLE_TECHNICIEN')) {
+            $this->userLabel = 'Tech';
+        } elseif ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $this->userLabel = 'Client';
+        }
+		$this->session->set('label', $this->userLabel);
+    }
 }
 
 // Constructeur de l'objet : Instancie le nom du fichier de log - Initialisation du tableau des modules présents en base de donnée
@@ -38,11 +58,11 @@ public function initialisation() {
 	$this->messagePeriode = $translator->trans('periode.info.none');
 	$entity_config_ping = $this->container->get('doctrine')->getManager()->getRepository('IpcProgBundle:Configuration')->findOneByParametre('ping_intervalle');
 	if ($entity_config_ping === null) {
-                $configuration = new Configuration();
-                $configuration->setParametre('ping_intervalle');
-                $configuration->setDesignation('Delais entre les pings');
-                $configuration->setValeur(20000);
-                $configuration->setParametreAdmin(true);
+        $configuration = new Configuration();
+        $configuration->setParametre('ping_intervalle');
+        $configuration->setDesignation('Delais entre les pings');
+        $configuration->setValeur(20000);
+        $configuration->setParametreAdmin(true);
 		$this->container->get('doctrine')->getManager()->persist($configuration);
 		$this->container->get('doctrine')->getManager()->flush();
 		$entity_config_ping = $this->container->get('doctrine')->getManager()->getRepository('IpcProgBundle:Configuration')->findOneByParametre('ping_intervalle');
@@ -52,14 +72,14 @@ public function initialisation() {
 	}
 	$entity_config_timeout = $this->container->get('doctrine')->getManager()->getRepository('IpcProgBundle:Configuration')->findOneByParametre('ping_timeout');
 	if ($entity_config_timeout === null) {
-                $configuration = new Configuration();
-                $configuration->setParametre('ping_timeout');
-                $configuration->setDesignation('Durée en millisecondes avant timeout du ping');
-                $configuration->setValeur(5000);
-                $configuration->setParametreAdmin(true);
-                $this->container->get('doctrine')->getManager()->persist($configuration);
-                $this->container->get('doctrine')->getManager()->flush();
-                $entity_config_timeout = $this->container->get('doctrine')->getManager()->getRepository('IpcProgBundle:Configuration')->findOneByParametre('ping_timeout');
+        $configuration = new Configuration();
+    	$configuration->setParametre('ping_timeout');
+        $configuration->setDesignation('Durée en millisecondes avant timeout du ping');
+        $configuration->setValeur(5000);
+        $configuration->setParametreAdmin(true);
+        $this->container->get('doctrine')->getManager()->persist($configuration);
+        $this->container->get('doctrine')->getManager()->flush();
+        $entity_config_timeout = $this->container->get('doctrine')->getManager()->getRepository('IpcProgBundle:Configuration')->findOneByParametre('ping_timeout');
 		//throw $this->createNotFoundException('Le paramètre [ping_timeout] n\'existe pas.');
 	} else {
 		$this->session->set('ping_timeout', $entity_config_timeout->getValeur());

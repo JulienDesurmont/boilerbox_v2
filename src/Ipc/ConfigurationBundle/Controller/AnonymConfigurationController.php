@@ -27,9 +27,9 @@ private function initialisation() {
 	$this->pageTitle = $this->session->get('pageTitle');
 	$this->pageActive = $this->session->get('page_active');
 	$this->userLabel = $this->session->get('label');
-    if ($this->userLabel == '' ) {
+    if (($this->userLabel == 'anon.') || ($this->userLabel == '' )) {
 		if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-			$this->userLabel = 'Admin'
+			$this->userLabel = 'Admin';
 		} elseif ($this->get('security.context')->isGranted('ROLE_ADMIN_LTS')) {
             $this->userLabel = 'Administrateur';
         } elseif ($this->get('security.context')->isGranted('ROLE_SUPERVISEUR')) {
@@ -41,6 +41,7 @@ private function initialisation() {
         } elseif ($this->get('security.context')->isGranted('ROLE_USER')) {
             $this->userLabel = 'Client';
         }
+		$this->session->set('label', $this->userLabel);
     }
 }
 
