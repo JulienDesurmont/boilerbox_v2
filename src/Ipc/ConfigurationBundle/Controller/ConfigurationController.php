@@ -426,6 +426,7 @@ public function voiripcAction(Fichier $fichier) {
 // Fonction qui retourne le formulaire permettant de paramétrer la configuration de l'IPC
 // Cette fonction est également utilisée lors de la modification de paramètres
 public function parametresipcAction(Request $requete) {
+	$message_tmp = '';
 	$this->constructeur();
 	$this->initialisation();
 	$service_password = $this->get('ipc_prog.password');
