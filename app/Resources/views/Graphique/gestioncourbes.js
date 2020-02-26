@@ -46,15 +46,14 @@ var $tabLegende = [$titreLegende];
 var $objLegend;
 var $objScrollbar;
 
-var chart1;
-
 var $opacity;
 if ($('#infoOpacite').is(':checked')) {
-       $opacity = 0.3;
+	$opacity = 0.3;
 } else {
-       $opacity = 1;
+	$opacity = 1;
 }
 
+var chart1;
 
 function afficheChart(chartOptions) {
     var saveSerie = chartOptions.series;
@@ -68,6 +67,12 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
     var laxe;
     if ($position == 'left') {
         laxe = {
+			minorTickInterval: 'auto',
+        	lineColor: '#000',
+        	lineWidth: 1,
+        	tickWidth: 1,
+        	tickColor: '#000',
+
             allowDecimals: $allowDecimal,
             endOnTick: true,
             maxPadding: 0.2,
@@ -76,7 +81,8 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
             labels: {
                 x: -20 * ($numAxe - 1),
                 style:{
-                    color: les_couleurs[$numGraphique]
+                    color: les_couleurs[$numGraphique],
+					font: '11px Trebuchet MS, Verdana, sans-serif'
                 }
             },
             title: {
@@ -85,6 +91,9 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
                 text: graphData[$numGraphique]['unite'],
                 x: -20 * ($numAxe - 1),
                 style: {
+					fontWeight: 'bold',
+                	fontSize: '12px',
+                	fontFamily: 'Trebuchet MS, Verdana, sans-serif',
                     color: les_couleurs[$numGraphique]
                 }
             },
@@ -93,6 +102,12 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
     }
     if ($position == 'right') {
         laxe = {
+			minorTickInterval: 'auto',
+            lineColor: '#000',
+            lineWidth: 1,
+            tickWidth: 1,
+            tickColor: '#000',
+
             allowDecimals: $allowDecimal,
             endOnTick: true,
             maxPadding: 0.2,
@@ -101,7 +116,8 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
             labels: {
                 x: 25 * ($numAxe - 2),
                 style:{
-                    color: les_couleurs[$numGraphique]
+                    color: les_couleurs[$numGraphique],
+					font: '11px Trebuchet MS, Verdana, sans-serif'
                 }
             },
             title: {
@@ -111,6 +127,9 @@ function setAxe($numGraphique, $numAxe, $allowDecimal, $position) {
                 text: graphData[$numGraphique]['unite'],
                 x: 25 * ($numAxe - 2),
                 style: {
+					fontWeight: 'bold',
+                    fontSize: '12px',
+                    fontFamily: 'Trebuchet MS, Verdana, sans-serif',
                     color: les_couleurs[$numGraphique]
                 }
             },
@@ -278,7 +297,6 @@ if (axes_y.length % 2 == 0) {
 var $chartMarginRight = parseInt(axes_y.length/2,10)*$margeParUnite+1;
 
 $(function() {
-	var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 	Highcharts.setOptions({
 		lang: {
 			months:	["Janvier "," Février "," Mars "," Avril "," Mai "," Juin "," Juillet "," Août ","Septembre "," Octobre "," Novembre "," Décembre"],
@@ -307,6 +325,10 @@ $(function() {
 			marginTop: 10,
 			panning: true,
         	panKey: 'shift',
+			backgroundColor: null,
+			style: {
+				fontFamily: "Dosis, sans-serif"
+			},
 			events:	{
 				load: function (e) {
                     var chart = this,
@@ -481,7 +503,16 @@ $(function() {
 			enabled: false
 		},
 		xAxis: {
+			gridLineWidth: 1,
+        	lineColor: '#000',
+        	tickColor: '#000',
 			minTickInterval: 2,
+			labels: {
+            	style: {
+            	    color: '#000',
+            	    font: '11px Trebuchet MS, Verdana, sans-serif'
+            	}
+        	},
 			type: 'datetime',
 			// Espacement entre les points afin de garder une distance réelle entre 2 points
 			ordinal: false
@@ -980,6 +1011,16 @@ function changeLegende() {
 	rechargeGraphique();
 }
 
+function changeOpacite() {
+    if ($('#infoOpacite').is(':checked')) {
+        resetOpacite('opaque');
+    } else {
+        resetOpacite('none');
+    }
+    rechargeGraphique();
+}
+
+
 function minimiseInfoTooltip() {
 	if ($('#infoTooltip').is(':checked')) {
 		if ($('#infoTooltipSize').is(':checked')) {
@@ -1015,7 +1056,6 @@ function refreshInfoTooltip() {
         }
     };
 }
-
 /* Fonction qui récupére la liste des points de chaque courbe à une heure donnée
 // Utilisée au survol de la courbe par tooltip
 // Pour les courbes compressée par highChart,on n'affiche que la valeur du point lors du survol (car nous n'avons pas la liste des points dans une variable)
@@ -1789,6 +1829,16 @@ function resetLegende($type) {
 	}
 }
 
+// Met ou enleve l'opacité sur les courbe lors du survol par la sourie
+function resetOpacite($type) {
+    if ($type == 'opaque') {
+		chartOptions.plotOptions.series.states.inactive.opacity = 0.3;
+    }
+    if ($type == 'none') {
+		chartOptions.plotOptions.series.states.inactive.opacity = 1;
+    }
+}
+
 // Fonction qui supprime l'information tooltip si la checkbox n'est pas cochée.
 function checkTooltip() {
     if (! $('#infoTooltip').is(':checked') ) {
@@ -1892,9 +1942,9 @@ function isEntier(nombre) {
     // Transformation de la virgule en point
     pattern_virgule = /,/;
     nombre = nombre.replace(pattern_virgule, '\.');
-    // Suppression des espaces
-    pattern_espace = /\s/;
-    nombre = nombre.replace(pattern_espace, '');
+	// Suppression des espaces
+	pattern_espace = /\s/;
+	nombre = nombre.replace(pattern_espace, '');
     var entier = parseInt(nombre);
     var result = parseFloat(nombre) - entier;
     if (result == 0) {
@@ -1903,28 +1953,5 @@ function isEntier(nombre) {
        return nombre;
    }
 }
-
-function changeOpacite() {
-    if ($('#infoOpacite').is(':checked')) {
-        resetOpacite('opaque');
-    } else {
-        resetOpacite('none');
-    }
-    rechargeGraphique();
-}
-
-
-// Met ou enleve l'opacité sur les courbe lors du survol par la sourie
-function resetOpacite($type) {
-    if ($type == 'opaque') {
-               chartOptions.plotOptions.series.states.inactive.opacity = 0.3;
-    }
-    if ($type == 'none') {
-               chartOptions.plotOptions.series.states.inactive.opacity = 1;
-    }
-}
-
-
-
 
 </script>
