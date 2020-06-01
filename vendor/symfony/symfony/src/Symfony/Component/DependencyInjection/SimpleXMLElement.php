@@ -18,8 +18,6 @@ use Symfony\Component\ExpressionLanguage\Expression;
  * SimpleXMLElement class.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @deprecated Deprecated since version 2.5, to be removed in 3.0.
  */
 class SimpleXMLElement extends \SimpleXMLElement
 {
@@ -38,8 +36,8 @@ class SimpleXMLElement extends \SimpleXMLElement
     /**
      * Returns arguments as valid PHP types.
      *
-     * @param string $name
-     * @param bool   $lowercase
+     * @param string  $name
+     * @param bool    $lowercase
      *
      * @return mixed
      */

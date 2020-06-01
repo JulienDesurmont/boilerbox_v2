@@ -25,7 +25,7 @@ final class PersistentToken implements PersistentTokenInterface
     private $lastUsed;
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @param string    $class
      * @param string    $username
@@ -40,7 +40,7 @@ final class PersistentToken implements PersistentTokenInterface
         if (empty($class)) {
             throw new \InvalidArgumentException('$class must not be empty.');
         }
-        if ('' === $username || null === $username) {
+        if (empty($username)) {
             throw new \InvalidArgumentException('$username must not be empty.');
         }
         if (empty($series)) {

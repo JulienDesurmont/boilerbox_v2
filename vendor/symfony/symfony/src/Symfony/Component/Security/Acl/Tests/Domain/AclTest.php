@@ -12,6 +12,7 @@
 namespace Symfony\Component\Security\Acl\Tests\Domain;
 
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\PermissionGrantingStrategy;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;

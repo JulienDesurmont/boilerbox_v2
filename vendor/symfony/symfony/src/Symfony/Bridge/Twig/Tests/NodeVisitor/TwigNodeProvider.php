@@ -29,14 +29,12 @@ class TwigNodeProvider
         );
     }
 
-    public static function getTransFilter($message, $domain = null, $arguments = null)
+    public static function getTransFilter($message, $domain = null)
     {
-        if (!$arguments) {
-            $arguments = $domain ? array(
-                new \Twig_Node_Expression_Array(array(), 0),
-                new \Twig_Node_Expression_Constant($domain, 0),
-            ) : array();
-        }
+        $arguments = $domain ? array(
+            new \Twig_Node_Expression_Array(array(), 0),
+            new \Twig_Node_Expression_Constant($domain, 0),
+        ) : array();
 
         return new \Twig_Node_Expression_Filter(
             new \Twig_Node_Expression_Constant($message, 0),
@@ -46,15 +44,13 @@ class TwigNodeProvider
         );
     }
 
-    public static function getTransChoiceFilter($message, $domain = null, $arguments = null)
+    public static function getTransChoiceFilter($message, $domain = null)
     {
-        if (!$arguments) {
-            $arguments = $domain ? array(
-                new \Twig_Node_Expression_Constant(0, 0),
-                new \Twig_Node_Expression_Array(array(), 0),
-                new \Twig_Node_Expression_Constant($domain, 0),
-            ) : array();
-        }
+        $arguments = $domain ? array(
+            new \Twig_Node_Expression_Constant(0, 0),
+            new \Twig_Node_Expression_Array(array(), 0),
+            new \Twig_Node_Expression_Constant($domain, 0),
+        ) : array();
 
         return new \Twig_Node_Expression_Filter(
             new \Twig_Node_Expression_Constant($message, 0),

@@ -37,7 +37,7 @@ class PhpExecutableFinder
     {
         // HHVM support
         if (defined('HHVM_VERSION')) {
-            return (getenv('PHP_BINARY') ?: PHP_BINARY).($includeArgs ? ' '.implode(' ', $this->findArguments()) : '');
+            return (false !== ($hhvm = getenv('PHP_BINARY')) ? $hhvm : PHP_BINARY).($includeArgs ? ' '.implode(' ', $this->findArguments()) : '');
         }
 
         // PHP_BINARY return the current sapi executable
@@ -60,7 +60,7 @@ class PhpExecutableFinder
         }
 
         $dirs = array(PHP_BINDIR);
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $dirs[] = 'C:\xampp\php\\';
         }
 

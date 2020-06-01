@@ -12,10 +12,10 @@
 namespace Symfony\Bundle\FrameworkBundle\Templating;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * GlobalVariables is the entry point for Symfony global variables in Twig templates.
@@ -37,7 +37,6 @@ class GlobalVariables
     /**
      * Returns the security context service.
      *
-     * @deprecated Deprecated since version 2.6, to be removed in 3.0.
      * @return SecurityContext|null The security context
      */
     public function getSecurity()
@@ -56,13 +55,11 @@ class GlobalVariables
      */
     public function getUser()
     {
-        if (!$this->container->has('security.token_storage')) {
+        if (!$security = $this->getSecurity()) {
             return;
         }
 
-        $tokenStorage = $this->container->get('security.token_storage');
-
-        if (!$token = $tokenStorage->getToken()) {
+        if (!$token = $security->getToken()) {
             return;
         }
 
@@ -111,7 +108,7 @@ class GlobalVariables
     /**
      * Returns the current app debug mode.
      *
-     * @return bool The current debug mode
+     * @return bool    The current debug mode
      */
     public function getDebug()
     {

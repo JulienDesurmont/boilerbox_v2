@@ -12,10 +12,10 @@
 namespace Symfony\Component\OptionsResolver\Exception;
 
 /**
- * Thrown when two lazy options have a cyclic dependency.
+ * Thrown when an option definition is invalid.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class OptionDefinitionException extends \LogicException implements ExceptionInterface
+class OptionDefinitionException extends \RuntimeException implements ExceptionInterface
 {
 }

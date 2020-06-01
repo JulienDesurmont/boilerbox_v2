@@ -52,12 +52,12 @@ services:
         class: "%configuration.class%"
         arguments: ["@ipc_prog.connectbd", "@security.context", "@doctrine", "@ipc_prog.session"]
     ipc_user.detect.login:
-         class: "Ipc\UserBundle\Services\detectLogin"
+        class: "%detectLogin.class%"
     ipc_outil.getNbDBDonnees:
         class: "%getNbDBDonnees.class%"
         arguments: ["@doctrine", "@ipc_prog.connectbd", "%database_name%", "@ipc_prog.log"]
     ipc_user.detect.login.listener:
-        class: "Ipc\UserBundle\Services\detectLoginListener"
+        class: "%detectLoginListener.class%"
         arguments: ["@ipc_user.detect.login"]
         tags:
             - { name:kernel.event_listener, event:security.authentication.success, method:successLogin, priority:2 }
@@ -65,7 +65,7 @@ services:
     ipc_prog.fichiers:
         class: "%service_fichiers.class%"
     kernel.listener.TwigExceptionListener:
-        class: 'Ipc\ProgBundle\Listener\Security\ExceptionListener'
+        class: "%twigExceptionListener.class%"
         arguments: ["@templating"]
         tags:
             - { name:kernel.event_listener, event:kernel.exception, method:onKernelException }

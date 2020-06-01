@@ -12,20 +12,21 @@
 namespace Symfony\Component\Validator\Mapping\Loader;
 
 /**
- * Base loader for loading validation metadata from a list of files.
+ * Creates mapping loaders for array of files.
+ *
+ * Abstract class, used by
  *
  * @author Bulat Shakirzyanov <mallluhuct@gmail.com>
- * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @see YamlFilesLoader
- * @see XmlFilesLoader
+ * @see    Symfony\Component\Validator\Mapping\Loader\YamlFileLoader
+ * @see    Symfony\Component\Validator\Mapping\Loader\XmlFileLoader
  */
 abstract class FilesLoader extends LoaderChain
 {
     /**
-     * Creates a new loader.
+     * Array of mapping files.
      *
-     * @param array $paths An array of file paths
+     * @param array $paths Array of file paths
      */
     public function __construct(array $paths)
     {
@@ -33,16 +34,15 @@ abstract class FilesLoader extends LoaderChain
     }
 
     /**
-     * Returns an array of file loaders for the given file paths.
+     * Array of mapping files.
      *
-     * @param array $paths An array of file paths
+     * @param array $paths Array of file paths
      *
-     * @return LoaderInterface[] The metadata loaders
+     * @return LoaderInterface[] Array of metadata loaders
      */
     protected function getFileLoaders($paths)
     {
         $loaders = array();
-
         foreach ($paths as $path) {
             $loaders[] = $this->getFileLoaderInstance($path);
         }
@@ -51,11 +51,11 @@ abstract class FilesLoader extends LoaderChain
     }
 
     /**
-     * Creates a loader for the given file path.
+     * Takes mapping file path.
      *
-     * @param string $path The file path
+     * @param string $file
      *
-     * @return LoaderInterface The created loader
+     * @return LoaderInterface
      */
-    abstract protected function getFileLoaderInstance($path);
+    abstract protected function getFileLoaderInstance($file);
 }

@@ -11,10 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
-use Symfony\Component\Form\Test\TypeTestCase as TestCase;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 
-class MoneyTypeTest extends TestCase
+class MoneyTypeTest extends TypeTestCase
 {
     protected function setUp()
     {

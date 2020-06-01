@@ -12,6 +12,7 @@
 namespace Symfony\Component\Templating\Tests\Loader;
 
 use Symfony\Component\Templating\Loader\FilesystemLoader;
+use Symfony\Component\Templating\Storage\FileStorage;
 use Symfony\Component\Templating\TemplateReference;
 
 class FilesystemLoaderTest extends \PHPUnit_Framework_TestCase

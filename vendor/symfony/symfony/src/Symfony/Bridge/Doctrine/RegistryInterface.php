@@ -12,6 +12,7 @@
 namespace Symfony\Bridge\Doctrine;
 
 use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -38,7 +39,7 @@ interface RegistryInterface extends ManagerRegistryInterface
     public function getEntityManager($name = null);
 
     /**
-     * Gets an array of all registered entity managers.
+     * Gets an array of all registered entity managers
      *
      * @return array An array of EntityManager instances
      */

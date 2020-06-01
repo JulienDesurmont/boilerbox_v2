@@ -137,7 +137,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         // the Route has a cache of its own and is not recompiled as long as it does not get modified
         $compiledRoute = $route->compile();
 
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $referenceType, $compiledRoute->getHostTokens(), $route->getSchemes());
+        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $referenceType, $compiledRoute->getHostTokens());
     }
 
     /**
@@ -145,7 +145,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
      *                                             it does not match the requirement
      */
-    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
+    protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens)
     {
         $variables = array_flip($variables);
         $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
@@ -204,23 +204,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         $schemeAuthority = '';
         if ($host = $this->context->getHost()) {
             $scheme = $this->context->getScheme();
-
-            if ($requiredSchemes) {
-                $schemeMatched = false;
-                foreach ($requiredSchemes as $requiredScheme) {
-                    if ($scheme === $requiredScheme) {
-                        $schemeMatched = true;
-
-                        break;
-                    }
-                }
-
-                if (!$schemeMatched) {
-                    $referenceType = self::ABSOLUTE_URL;
-                    $scheme = current($requiredSchemes);
-                }
-            } elseif (isset($requirements['_scheme']) && ($req = strtolower($requirements['_scheme'])) && $scheme !== $req) {
-                // We do this for BC; to be removed if _scheme is not supported anymore
+            if (isset($requirements['_scheme']) && ($req = strtolower($requirements['_scheme'])) && $scheme !== $req) {
                 $referenceType = self::ABSOLUTE_URL;
                 $scheme = $req;
             }
@@ -229,7 +213,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
                 $routeHost = '';
                 foreach ($hostTokens as $token) {
                     if ('variable' === $token[0]) {
-                        if (null !== $this->strictRequirements && !preg_match('#^'.$token[2].'$#i', $mergedParams[$token[3]])) {
+                        if (null !== $this->strictRequirements && !preg_match('#^'.$token[2].'$#', $mergedParams[$token[3]])) {
                             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
 
                             if ($this->strictRequirements) {
@@ -279,9 +263,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         // add a query string if needed
         $extra = array_diff_key($parameters, $variables, $defaults);
         if ($extra && $query = http_build_query($extra, '', '&')) {
-            // "/" and "?" can be left decoded for better user experience, see
-            // http://tools.ietf.org/html/rfc3986#section-3.4
-            $url .= '?'.strtr($query, array('%2F' => '/'));
+            $url .= '?'.$query;
         }
 
         return $url;

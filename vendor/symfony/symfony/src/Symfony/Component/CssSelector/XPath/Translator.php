@@ -21,7 +21,7 @@ use Symfony\Component\CssSelector\Parser\ParserInterface;
 /**
  * XPath expression translator interface.
  *
- * This component is a port of the Python cssselect library,
+ * This component is a port of the Python cssselector library,
  * which is copyright Ian Bicking, @see https://github.com/SimonSapin/cssselect.
  *
  * @author Jean-François Simon <jeanfrancois.simon@sensiolabs.com>
@@ -123,15 +123,17 @@ class Translator implements TranslatorInterface
         $selectors = $this->parseSelectors($cssExpr);
 
         /** @var SelectorNode $selector */
-        foreach ($selectors as $index => $selector) {
+        foreach ($selectors as $selector) {
             if (null !== $selector->getPseudoElement()) {
                 throw new ExpressionErrorException('Pseudo-elements are not supported.');
             }
-
-            $selectors[$index] = $this->selectorToXPath($selector, $prefix);
         }
 
-        return implode(' | ', $selectors);
+        $translator = $this;
+
+        return implode(' | ', array_map(function (SelectorNode $selector) use ($translator, $prefix) {
+            return $translator->selectorToXPath($selector, $prefix);
+        }, $selectors));
     }
 
     /**
@@ -227,7 +229,7 @@ class Translator implements TranslatorInterface
     }
 
     /**
-     * @param XPathExpr    $xpath
+     * @param XPathExpr $xpath
      * @param FunctionNode $function
      *
      * @return XPathExpr

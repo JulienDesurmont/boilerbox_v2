@@ -36,7 +36,7 @@ class EntryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ace->isAuditSuccess());
         $ace->setAuditSuccess(false);
         $this->assertFalse($ace->isAuditSuccess());
-        $ace->setAuditSuccess(true);
+        $ace->setAuditsuccess(true);
         $this->assertTrue($ace->isAuditSuccess());
     }
 

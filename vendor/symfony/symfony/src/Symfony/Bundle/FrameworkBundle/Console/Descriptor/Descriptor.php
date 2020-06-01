@@ -12,20 +12,17 @@
 namespace Symfony\Bundle\FrameworkBundle\Console\Descriptor;
 
 use Symfony\Component\Console\Descriptor\DescriptorInterface;
-use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * @author Jean-François Simon <jeanfrancois.simon@sensiolabs.com>
- *
- * @internal
  */
 abstract class Descriptor implements DescriptorInterface
 {
@@ -69,32 +66,16 @@ abstract class Descriptor implements DescriptorInterface
             case $object instanceof Alias:
                 $this->describeContainerAlias($object, $options);
                 break;
-            case $object instanceof EventDispatcherInterface:
-                $this->describeEventDispatcherListeners($object, $options);
-                break;
-            case is_callable($object):
-                $this->describeCallable($object, $options);
-                break;
             default:
                 throw new \InvalidArgumentException(sprintf('Object of type "%s" is not describable.', get_class($object)));
         }
     }
 
     /**
-     * Returns the output.
-     *
-     * @return OutputInterface The output
-     */
-    protected function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
      * Writes content to output.
      *
-     * @param string $content
-     * @param bool   $decorated
+     * @param string  $content
+     * @param bool    $decorated
      */
     protected function write($content, $decorated = false)
     {
@@ -104,18 +85,17 @@ abstract class Descriptor implements DescriptorInterface
     /**
      * Writes content to output.
      *
-     * @param Table $table
-     * @param bool  $decorated
+     * @param TableHelper $table
+     * @param bool        $decorated
      */
-    protected function renderTable(Table $table, $decorated = false)
+    protected function renderTable(TableHelper $table, $decorated = false)
     {
         if (!$decorated) {
-            $table->getStyle()->setCellRowFormat('%s');
-            $table->getStyle()->setCellRowContentFormat('%s');
-            $table->getStyle()->setCellHeaderFormat('%s');
+            $table->setCellRowFormat('%s');
+            $table->setCellHeaderFormat('%s');
         }
 
-        $table->render();
+        $table->render($this->output);
     }
 
     /**
@@ -133,6 +113,17 @@ abstract class Descriptor implements DescriptorInterface
      * @param array $options
      */
     abstract protected function describeRoute(Route $route, array $options = array());
+
+    /**
+     * Describes a specific container parameter.
+     *
+     * @param mixed $parameterValue
+     * @param array $options
+     */
+    protected function describeContainerParameter($parameterValue, array $options = array())
+    {
+        $this->write($this->formatParameter($parameterValue));
+    }
 
     /**
      * Describes container parameters.
@@ -187,33 +178,6 @@ abstract class Descriptor implements DescriptorInterface
      * @param array $options
      */
     abstract protected function describeContainerAlias(Alias $alias, array $options = array());
-
-    /**
-     * Describes a container parameter.
-     *
-     * @param string $parameter
-     * @param array  $options
-     */
-    abstract protected function describeContainerParameter($parameter, array $options = array());
-
-    /**
-     * Describes event dispatcher listeners.
-     *
-     * Common options are:
-     * * name: name of listened event
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param array                    $options
-     */
-    abstract protected function describeEventDispatcherListeners(EventDispatcherInterface $eventDispatcher, array $options = array());
-
-    /**
-     * Describes a callable.
-     *
-     * @param callable $callable
-     * @param array    $options
-     */
-    abstract protected function describeCallable($callable, array $options = array());
 
     /**
      * Formats a value as string.

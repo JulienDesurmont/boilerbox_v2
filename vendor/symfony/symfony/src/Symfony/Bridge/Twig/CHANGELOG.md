@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-2.5.0
------
-
- * moved command `twig:lint` from `TwigBundle`
-
 2.4.0
 -----
 

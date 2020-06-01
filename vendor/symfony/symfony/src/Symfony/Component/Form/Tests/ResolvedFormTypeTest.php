@@ -14,6 +14,7 @@ namespace Symfony\Component\Form\Tests;
 use Symfony\Component\Form\ResolvedFormType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -57,6 +58,10 @@ class ResolvedFormTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetOptionsResolver()
     {
+        if (version_compare(\PHPUnit_Runner_Version::id(), '3.7', '<')) {
+            $this->markTestSkipped('This test requires PHPUnit 3.7.');
+        }
+
         $test = $this;
         $i = 0;
 
@@ -100,6 +105,10 @@ class ResolvedFormTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateBuilder()
     {
+        if (version_compare(\PHPUnit_Runner_Version::id(), '3.7', '<')) {
+            $this->markTestSkipped('This test requires PHPUnit 3.7.');
+        }
+
         $givenOptions = array('a' => 'a_custom', 'c' => 'c_custom');
         $resolvedOptions = array('a' => 'a_custom', 'b' => 'b_default', 'c' => 'c_custom', 'd' => 'd_default');
         $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
@@ -128,6 +137,10 @@ class ResolvedFormTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateBuilderWithDataClassOption()
     {
+        if (version_compare(\PHPUnit_Runner_Version::id(), '3.7', '<')) {
+            $this->markTestSkipped('This test requires PHPUnit 3.7.');
+        }
+
         $givenOptions = array('data_class' => 'Foo');
         $resolvedOptions = array('data_class' => '\stdClass');
         $optionsResolver = $this->getMock('Symfony\Component\OptionsResolver\OptionsResolverInterface');
@@ -156,6 +169,10 @@ class ResolvedFormTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildForm()
     {
+        if (version_compare(\PHPUnit_Runner_Version::id(), '3.7', '<')) {
+            $this->markTestSkipped('This test requires PHPUnit 3.7.');
+        }
+
         $test = $this;
         $i = 0;
 
@@ -332,7 +349,7 @@ class ResolvedFormTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return FormBuilder
      */

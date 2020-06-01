@@ -26,9 +26,6 @@ namespace Symfony\Component\Validator;
  * </ul>
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @deprecated Deprecated since version 2.5, to be removed in Symfony 3.0.
- *             Use {@link Context\ExecutionContextInterface} instead.
  */
 interface GlobalExecutionContextInterface
 {
@@ -44,7 +41,7 @@ interface GlobalExecutionContextInterface
      *
      * @return mixed The root value.
      *
-     * @see ExecutionContextInterface::getRoot()
+     * @see ExecutionContextInterface::getRoot
      */
     public function getRoot();
 

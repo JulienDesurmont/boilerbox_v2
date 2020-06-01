@@ -18,18 +18,14 @@ use Symfony\Component\Form\Guess\Guess;
 class PropelTypeGuesserTest extends Propel1TestCase
 {
     const CLASS_NAME = 'Symfony\Bridge\Propel1\Tests\Fixtures\Item';
+
     const UNKNOWN_CLASS_NAME = 'Symfony\Bridge\Propel1\Tests\Fixtures\UnknownItem';
 
     private $guesser;
 
-    protected function setUp()
+    public function setUp()
     {
         $this->guesser = new PropelTypeGuesser();
-    }
-
-    protected function tearDown()
-    {
-        $this->guesser = null;
     }
 
     public function testGuessMaxLengthWithText()

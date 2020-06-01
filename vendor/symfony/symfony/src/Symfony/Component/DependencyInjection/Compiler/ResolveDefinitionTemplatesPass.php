@@ -39,7 +39,7 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
         $this->compiler = $container->getCompiler();
         $this->formatter = $this->compiler->getLoggingFormatter();
 
-        foreach ($container->getDefinitions() as $id => $definition) {
+        foreach (array_keys($container->getDefinitions()) as $id) {
             // yes, we are specifically fetching the definition from the
             // container to ensure we are not operating on stale data
             $definition = $container->getDefinition($id);
@@ -52,7 +52,7 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
     }
 
     /**
-     * Resolves the definition.
+     * Resolves the definition
      *
      * @param string              $id         The definition identifier
      * @param DefinitionDecorator $definition
@@ -84,7 +84,6 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
         $def->setFactoryClass($parentDef->getFactoryClass());
         $def->setFactoryMethod($parentDef->getFactoryMethod());
         $def->setFactoryService($parentDef->getFactoryService());
-        $def->setFactory($parentDef->getFactory());
         $def->setConfigurator($parentDef->getConfigurator());
         $def->setFile($parentDef->getFile());
         $def->setPublic($parentDef->isPublic());
@@ -104,9 +103,6 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
         if (isset($changes['factory_service'])) {
             $def->setFactoryService($definition->getFactoryService());
         }
-        if (isset($changes['factory'])) {
-            $def->setFactory($definition->getFactory());
-        }
         if (isset($changes['configurator'])) {
             $def->setConfigurator($definition->getConfigurator());
         }
@@ -118,14 +114,6 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
         }
         if (isset($changes['lazy'])) {
             $def->setLazy($definition->isLazy());
-        }
-        if (isset($changes['decorated_service'])) {
-            $decoratedService = $definition->getDecoratedService();
-            if (null === $decoratedService) {
-                $def->setDecoratedService($decoratedService);
-            } else {
-                $def->setDecoratedService($decoratedService[0], $decoratedService[1]);
-            }
         }
 
         // merge arguments

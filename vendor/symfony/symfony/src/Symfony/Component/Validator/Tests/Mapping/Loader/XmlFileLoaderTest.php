@@ -13,13 +13,11 @@ namespace Symfony\Component\Validator\Tests\Mapping\Loader;
 
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Exception\MappingException;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Mapping\Loader\XmlFileLoader;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintA;
@@ -71,8 +69,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             'choices' => array('A', 'B'),
         )));
         $expected->addGetterConstraint('lastName', new NotNull());
-        $expected->addGetterConstraint('valid', new IsTrue());
-        $expected->addGetterConstraint('permissions', new IsTrue());
 
         $this->assertEquals($expected, $metadata);
     }
@@ -106,28 +102,15 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $metadata);
     }
 
-    public function testThrowExceptionIfDocTypeIsSet()
-    {
-        $loader = new XmlFileLoader(__DIR__.'/withdoctype.xml');
-        $metadata = new ClassMetadata('Symfony\Component\Validator\Tests\Fixtures\Entity');
-
-        $this->setExpectedException('\Symfony\Component\Validator\Exception\MappingException');
-        $loader->loadClassMetadata($metadata);
-    }
-
     /**
-     * @see https://github.com/symfony/symfony/pull/12158
+     * @expectedException        \Symfony\Component\Validator\Exception\MappingException
+     * @expectedExceptionMessage Document types are not allowed.
      */
-    public function testDoNotModifyStateIfExceptionIsThrown()
+    public function testDocTypeIsNotAllowed()
     {
         $loader = new XmlFileLoader(__DIR__.'/withdoctype.xml');
         $metadata = new ClassMetadata('Symfony\Component\Validator\Tests\Fixtures\Entity');
 
-        try {
-            $loader->loadClassMetadata($metadata);
-        } catch (MappingException $e) {
-            $this->setExpectedException('\Symfony\Component\Validator\Exception\MappingException');
-            $loader->loadClassMetadata($metadata);
-        }
+        $loader->loadClassMetadata($metadata);
     }
 }

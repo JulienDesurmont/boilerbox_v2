@@ -13,18 +13,12 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\CountValidator;
-use Symfony\Component\Validator\Validation;
 
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 abstract class CountValidatorTest extends AbstractConstraintValidatorTest
 {
-    protected function getApiVersion()
-    {
-        return Validation::API_VERSION_2_5;
-    }
-
     protected function createValidator()
     {
         return new CountValidator();
@@ -62,6 +56,14 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         return array(
             array($this->createCollection(array(1, 2, 3, 4))),
             array($this->createCollection(array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4))),
+        );
+    }
+
+    public function getNotFourElements()
+    {
+        return array_merge(
+            $this->getThreeOrLessElements(),
+            $this->getFiveOrMoreElements()
         );
     }
 
@@ -110,7 +112,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
     /**
      * @dataProvider getFiveOrMoreElements
      */
-    public function testTooManyValues($value)
+    public function testInvalidValuesMax($value)
     {
         $constraint = new Count(array(
             'max' => 4,
@@ -124,14 +126,13 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->setParameter('{{ limit }}', 4)
             ->setInvalidValue($value)
             ->setPlural(4)
-            ->setCode(Count::TOO_MANY_ERROR)
             ->assertRaised();
     }
 
     /**
      * @dataProvider getThreeOrLessElements
      */
-    public function testTooFewValues($value)
+    public function testInvalidValuesMin($value)
     {
         $constraint = new Count(array(
             'min' => 4,
@@ -145,14 +146,13 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->setParameter('{{ limit }}', 4)
             ->setInvalidValue($value)
             ->setPlural(4)
-            ->setCode(Count::TOO_FEW_ERROR)
             ->assertRaised();
     }
 
     /**
-     * @dataProvider getFiveOrMoreElements
+     * @dataProvider getNotFourElements
      */
-    public function testTooManyValuesExact($value)
+    public function testInvalidValuesExact($value)
     {
         $constraint = new Count(array(
             'min' => 4,
@@ -167,29 +167,6 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->setParameter('{{ limit }}', 4)
             ->setInvalidValue($value)
             ->setPlural(4)
-            ->setCode(Count::TOO_MANY_ERROR)
-            ->assertRaised();
-    }
-
-    /**
-     * @dataProvider getThreeOrLessElements
-     */
-    public function testTooFewValuesExact($value)
-    {
-        $constraint = new Count(array(
-            'min' => 4,
-            'max' => 4,
-            'exactMessage' => 'myMessage',
-        ));
-
-        $this->validator->validate($value, $constraint);
-
-        $this->buildViolation('myMessage')
-            ->setParameter('{{ count }}', count($value))
-            ->setParameter('{{ limit }}', 4)
-            ->setInvalidValue($value)
-            ->setPlural(4)
-            ->setCode(Count::TOO_FEW_ERROR)
             ->assertRaised();
     }
 

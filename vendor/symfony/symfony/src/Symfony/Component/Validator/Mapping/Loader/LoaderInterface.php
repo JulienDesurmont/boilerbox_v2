@@ -13,19 +13,14 @@ namespace Symfony\Component\Validator\Mapping\Loader;
 
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
-/**
- * Loads validation metadata into {@link ClassMetadata} instances.
- *
- * @author Bernhard Schussek <bschussek@gmail.com>
- */
 interface LoaderInterface
 {
     /**
-     * Loads validation metadata into a {@link ClassMetadata} instance.
+     * Load a Class Metadata.
      *
-     * @param ClassMetadata $metadata The metadata to load
+     * @param ClassMetadata $metadata A metadata
      *
-     * @return bool Whether the loader succeeded
+     * @return bool
      */
     public function loadClassMetadata(ClassMetadata $metadata);
 }

@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -34,11 +33,14 @@ class YamlFileLoader extends FileLoader
     private $yamlParser;
 
     /**
-     * {@inheritdoc}
+     * Loads a Yaml file.
+     *
+     * @param mixed  $file The resource
+     * @param string $type The resource type
      */
-    public function load($resource, $type = null)
+    public function load($file, $type = null)
     {
-        $path = $this->locator->locate($resource);
+        $path = $this->locator->locate($file);
 
         $content = $this->loadFile($path);
 
@@ -55,7 +57,7 @@ class YamlFileLoader extends FileLoader
         // parameters
         if (isset($content['parameters'])) {
             if (!is_array($content['parameters'])) {
-                throw new InvalidArgumentException(sprintf('The "parameters" key should contain an array in %s. Check your YAML syntax.', $resource));
+                throw new InvalidArgumentException(sprintf('The "parameters" key should contain an array in %s. Check your YAML syntax.', $file));
             }
 
             foreach ($content['parameters'] as $key => $value) {
@@ -67,19 +69,24 @@ class YamlFileLoader extends FileLoader
         $this->loadFromExtensions($content);
 
         // services
-        $this->parseDefinitions($content, $resource);
+        $this->parseDefinitions($content, $file);
     }
 
     /**
-     * {@inheritdoc}
+     * Returns true if this class supports the given resource.
+     *
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
+     *
+     * @return bool    true if this class supports the given resource, false otherwise
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yml', 'yaml'), true);
+        return is_string($resource) && 'yml' === pathinfo($resource, PATHINFO_EXTENSION);
     }
 
     /**
-     * Parses all imports.
+     * Parses all imports
      *
      * @param array  $content
      * @param string $file
@@ -105,7 +112,7 @@ class YamlFileLoader extends FileLoader
     }
 
     /**
-     * Parses definitions.
+     * Parses definitions
      *
      * @param array  $content
      * @param string $file
@@ -187,19 +194,6 @@ class YamlFileLoader extends FileLoader
             $definition->setAbstract($service['abstract']);
         }
 
-        if (isset($service['factory'])) {
-            if (is_string($service['factory'])) {
-                if (strpos($service['factory'], ':') !== false && strpos($service['factory'], '::') === false) {
-                    $parts = explode(':', $service['factory']);
-                    $definition->setFactory(array($this->resolveServices('@'.$parts[0]), $parts[1]));
-                } else {
-                    $definition->setFactory($service['factory']);
-                }
-            } else {
-                $definition->setFactory(array($this->resolveServices($service['factory'][0]), $service['factory'][1]));
-            }
-        }
-
         if (isset($service['factory_class'])) {
             $definition->setFactoryClass($service['factory_class']);
         }
@@ -270,11 +264,6 @@ class YamlFileLoader extends FileLoader
             }
         }
 
-        if (isset($service['decorates'])) {
-            $renameId = isset($service['decoration_inner_name']) ? $service['decoration_inner_name'] : null;
-            $definition->setDecoratedService($service['decorates'], $renameId);
-        }
-
         $this->container->setDefinition($id, $definition);
     }
 
@@ -289,10 +278,6 @@ class YamlFileLoader extends FileLoader
      */
     protected function loadFile($file)
     {
-        if (!class_exists('Symfony\Component\Yaml\Parser')) {
-            throw new RuntimeException('Unable to load YAML config files as the Symfony Yaml Component is not installed.');
-        }
-
         if (!stream_is_local($file)) {
             throw new InvalidArgumentException(sprintf('This is not a local file "%s".', $file));
         }
@@ -328,7 +313,7 @@ class YamlFileLoader extends FileLoader
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid. It should contain an array. Check your YAML syntax.', $file));
         }
 
-        foreach ($content as $namespace => $data) {
+        foreach (array_keys($content) as $namespace) {
             if (in_array($namespace, array('imports', 'parameters', 'services'))) {
                 continue;
             }
@@ -389,7 +374,7 @@ class YamlFileLoader extends FileLoader
     }
 
     /**
-     * Loads from Extensions.
+     * Loads from Extensions
      *
      * @param array $content
      */

@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Symfony Validator Component",
     "keywords": [],
-    "homepage": "https://symfony.com",
+    "homepage": "http://symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -12,36 +12,30 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
+            "homepage": "http://symfony.com/contributors"
         }
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/translation": "~2.0,>=2.0.5"
+        "symfony/translation": "~2.0",
+        "symfony/property-access": "~2.2"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~2.7",
-        "doctrine/common": "~2.3",
         "symfony/http-foundation": "~2.1",
         "symfony/intl": "~2.3",
-        "symfony/yaml": "~2.0,>=2.0.5",
+        "symfony/yaml": "~2.0",
         "symfony/config": "~2.2",
-        "symfony/property-access": "~2.3",
         "symfony/expression-language": "~2.4",
         "doctrine/annotations": "~1.0",
-        "doctrine/cache": "~1.0",
-        "egulias/email-validator": "~1.2,>=1.2.1"
+        "doctrine/cache": "~1.0"
     },
     "suggest": {
         "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
-        "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+        "doctrine/cache": "For using the default cached annotation reader",
         "symfony/http-foundation": "",
         "symfony/intl": "",
         "symfony/yaml": "",
-        "symfony/config": "",
-        "egulias/email-validator": "Strict (RFC compliant) email validation",
-        "symfony/property-access": "For using the 2.4 Validator API",
-        "symfony/expression-language": "For using the 2.4 Expression validator"
+        "symfony/config": ""
     },
     "autoload": {
         "psr-0": { "Symfony\\Component\\Validator\\": "" }
@@ -50,7 +44,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

@@ -393,10 +393,8 @@ class FormTypeCsrfExtensionTest extends TypeTestCase
         ));
 
         $errors = $form->getErrors();
-        $expected = new FormError('[trans]Foobar[/trans]');
-        $expected->setOrigin($form);
 
         $this->assertGreaterThan(0, count($errors));
-        $this->assertEquals($expected, $errors[0]);
+        $this->assertEquals(new FormError('[trans]Foobar[/trans]'), $errors[0]);
     }
 }

@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Locale\Tests;
 
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Locale\Locale;
 
@@ -23,8 +24,6 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        $this->iniSet('error_reporting', -1 & ~E_USER_DEPRECATED);
-
         // Locale extends \Locale, so intl must be present
         IntlTestHelper::requireIntl($this);
     }
@@ -35,22 +34,10 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Brazil', $countries['BR']);
     }
 
-    public function testGetDisplayCountriesForSwitzerland()
-    {
-        $countries = Locale::getDisplayCountries('de_CH');
-        $this->assertEquals('Schweiz', $countries['CH']);
-    }
-
     public function testGetCountries()
     {
         $countries = Locale::getCountries();
-        $this->assertContains('BR', $countries);
-    }
-
-    public function testGetCountriesForSwitzerland()
-    {
-        $countries = Locale::getCountries();
-        $this->assertContains('CH', $countries);
+        $this->assertTrue(in_array('BR', $countries));
     }
 
     public function testGetDisplayLanguages()
@@ -62,7 +49,7 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     public function testGetLanguages()
     {
         $languages = Locale::getLanguages();
-        $this->assertContains('pt_BR', $languages);
+        $this->assertTrue(in_array('pt_BR', $languages));
     }
 
     public function testGetDisplayLocales()
@@ -74,6 +61,6 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     public function testGetLocales()
     {
         $locales = Locale::getLocales();
-        $this->assertContains('pt', $locales);
+        $this->assertTrue(in_array('pt', $locales));
     }
 }

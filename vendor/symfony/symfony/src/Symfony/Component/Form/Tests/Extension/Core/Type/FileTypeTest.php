@@ -44,25 +44,6 @@ class FileTypeTest extends \Symfony\Component\Form\Test\TypeTestCase
         $this->assertNull($form->getData());
     }
 
-    public function testSubmitMultiple()
-    {
-        $form = $this->factory->createBuilder('file', null, array(
-            'multiple' => true,
-        ))->getForm();
-
-        $data = array(
-            $this->createUploadedFileMock('abcdef', 'first.jpg', true),
-            $this->createUploadedFileMock('zyxwvu', 'second.jpg', true),
-        );
-
-        $form->submit($data);
-        $this->assertSame($data, $form->getData());
-
-        $view = $form->createView();
-        $this->assertSame('file[]', $view->vars['full_name']);
-        $this->assertArrayHasKey('multiple', $view->vars['attr']);
-    }
-
     public function testDontPassValueToView()
     {
         $form = $this->factory->create('file');

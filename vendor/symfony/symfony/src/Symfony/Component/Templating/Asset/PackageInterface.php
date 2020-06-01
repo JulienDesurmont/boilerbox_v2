@@ -28,10 +28,9 @@ interface PackageInterface
     /**
      * Returns an absolute or root-relative public path.
      *
-     * @param string           $path    A path
-     * @param string|bool|null $version A specific version for the path
+     * @param string $path A path
      *
      * @return string The public path
      */
-    public function getUrl($path, $version = null);
+    public function getUrl($path);
 }

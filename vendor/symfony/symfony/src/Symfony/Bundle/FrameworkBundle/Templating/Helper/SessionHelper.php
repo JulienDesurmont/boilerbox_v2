@@ -13,7 +13,6 @@ namespace Symfony\Bundle\FrameworkBundle\Templating\Helper;
 
 use Symfony\Component\Templating\Helper\Helper;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * SessionHelper provides read-only access to the session attributes.
@@ -23,28 +22,19 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SessionHelper extends Helper
 {
     protected $session;
-    protected $requestStack;
 
     /**
      * Constructor.
      *
-     * @param Request|RequestStack $requestStack A RequestStack instance or a Request instance
-     *
-     * @deprecated since 2.5, passing a Request instance is deprecated and support for it will be removed in 3.0
+     * @param Request $request A Request instance
      */
-    public function __construct($requestStack)
+    public function __construct(Request $request)
     {
-        if ($requestStack instanceof Request) {
-            $this->session = $requestStack->getSession();
-        } elseif ($requestStack instanceof RequestStack) {
-            $this->requestStack = $requestStack;
-        } else {
-            throw new \InvalidArgumentException('RequestHelper only accepts a Request or a RequestStack instance.');
-        }
+        $this->session = $request->getSession();
     }
 
     /**
-     * Returns an attribute.
+     * Returns an attribute
      *
      * @param string $name    The attribute name
      * @param mixed  $default The default value
@@ -53,39 +43,28 @@ class SessionHelper extends Helper
      */
     public function get($name, $default = null)
     {
-        return $this->getSession()->get($name, $default);
+        return $this->session->get($name, $default);
     }
 
     public function getFlash($name, array $default = array())
     {
-        return $this->getSession()->getFlashBag()->get($name, $default);
+        return $this->session->getFlashBag()->get($name, $default);
     }
 
     public function getFlashes()
     {
-        return $this->getSession()->getFlashBag()->all();
+        return $this->session->getFlashBag()->all();
     }
 
     public function hasFlash($name)
     {
-        return $this->getSession()->getFlashBag()->has($name);
-    }
-
-    private function getSession()
-    {
-        if (null === $this->session) {
-            if (!$this->requestStack->getMasterRequest()) {
-                throw new \LogicException('A Request must be available.');
-            }
-
-            $this->session = $this->requestStack->getMasterRequest()->getSession();
-        }
-
-        return $this->session;
+        return $this->session->getFlashBag()->has($name);
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the canonical name of this helper.
+     *
+     * @return string The canonical name
      */
     public function getName()
     {

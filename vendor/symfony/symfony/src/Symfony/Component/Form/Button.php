@@ -184,9 +184,9 @@ class Button implements \IteratorAggregate, FormInterface
     /**
      * {@inheritdoc}
      */
-    public function getErrors($deep = false, $flatten = true)
+    public function getErrors()
     {
-        return new FormErrorIterator($this, array());
+        return array();
     }
 
     /**
@@ -194,7 +194,9 @@ class Button implements \IteratorAggregate, FormInterface
      *
      * This method should not be invoked.
      *
-     * @param mixed $modelData
+     * @param string $modelData
+     *
+     * @throws BadMethodCallException
      */
     public function setData($modelData)
     {
@@ -204,6 +206,8 @@ class Button implements \IteratorAggregate, FormInterface
 
     /**
      * Unsupported method.
+     *
+     * @return null Always returns null.
      */
     public function getData()
     {
@@ -211,6 +215,8 @@ class Button implements \IteratorAggregate, FormInterface
 
     /**
      * Unsupported method.
+     *
+     * @return null Always returns null.
      */
     public function getNormData()
     {
@@ -218,6 +224,8 @@ class Button implements \IteratorAggregate, FormInterface
 
     /**
      * Unsupported method.
+     *
+     * @return null Always returns null.
      */
     public function getViewData()
     {
@@ -265,6 +273,8 @@ class Button implements \IteratorAggregate, FormInterface
 
     /**
      * Unsupported method.
+     *
+     * @return null Always returns null.
      */
     public function getPropertyPath()
     {
@@ -307,11 +317,7 @@ class Button implements \IteratorAggregate, FormInterface
      */
     public function isDisabled()
     {
-        if (null === $this->parent || !$this->parent->isDisabled()) {
-            return $this->config->getDisabled();
-        }
-
-        return true;
+        return $this->config->getDisabled();
     }
 
     /**
@@ -332,15 +338,6 @@ class Button implements \IteratorAggregate, FormInterface
     public function isSynchronized()
     {
         return true;
-    }
-
-    /**
-     * Unsupported method.
-     *
-     * @return null Always returns null
-     */
-    public function getTransformationFailure()
-    {
     }
 
     /**

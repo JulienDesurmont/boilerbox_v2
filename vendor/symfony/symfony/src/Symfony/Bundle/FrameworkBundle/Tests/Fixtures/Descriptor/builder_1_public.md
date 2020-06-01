@@ -11,11 +11,6 @@ definition_1
 - Scope: `container`
 - Public: yes
 - Synthetic: no
-- Lazy: yes
-- Synchronized: yes
-- Abstract: yes
-- Factory Class: `Full\Qualified\FactoryClass`
-- Factory Method: `get`
 
 
 Aliases

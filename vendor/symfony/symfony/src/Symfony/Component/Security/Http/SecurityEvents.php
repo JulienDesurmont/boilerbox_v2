@@ -20,8 +20,6 @@ final class SecurityEvents
      * The event listener method receives a
      * Symfony\Component\Security\Http\Event\InteractiveLoginEvent instance.
      *
-     * @Event
-     *
      * @var string
      */
     const INTERACTIVE_LOGIN = 'security.interactive_login';
@@ -32,8 +30,6 @@ final class SecurityEvents
      *
      * The event listener method receives a
      * Symfony\Component\Security\Http\Event\SwitchUserEvent instance.
-     *
-     * @Event
      *
      * @var string
      */

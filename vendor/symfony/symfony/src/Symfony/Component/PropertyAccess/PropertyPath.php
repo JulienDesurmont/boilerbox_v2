@@ -24,28 +24,24 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
 {
     /**
      * Character used for separating between plural and singular of an element.
-     *
      * @var string
      */
     const SINGULAR_SEPARATOR = '|';
 
     /**
-     * The elements of the property path.
-     *
+     * The elements of the property path
      * @var array
      */
     private $elements = array();
 
     /**
      * The singular forms of the elements in the property path.
-     *
      * @var array
      */
     private $singulars = array();
 
     /**
-     * The number of elements in the property path.
-     *
+     * The number of elements in the property path
      * @var int
      */
     private $length;
@@ -53,14 +49,12 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
     /**
      * Contains a Boolean for each property in $elements denoting whether this
      * element is an index. It is a property otherwise.
-     *
      * @var array
      */
     private $isIndex = array();
 
     /**
-     * String representation of the path.
-     *
+     * String representation of the path
      * @var string
      */
     private $pathAsString;
@@ -76,7 +70,7 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
     public function __construct($propertyPath)
     {
         // Can be used as copy constructor
-        if ($propertyPath instanceof self) {
+        if ($propertyPath instanceof PropertyPath) {
             /* @var PropertyPath $propertyPath */
             $this->elements = $propertyPath->elements;
             $this->singulars = $propertyPath->singulars;
@@ -109,7 +103,8 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
                 $element = $matches[3];
                 $this->isIndex[] = true;
             }
-
+            // Disabled this behaviour as the syntax is not yet final
+            //$pos = strpos($element, self::SINGULAR_SEPARATOR);
             $pos = false;
             $singular = null;
 
@@ -123,7 +118,7 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
 
             $position += strlen($matches[1]);
             $remaining = $matches[4];
-            $pattern = '/^(\.([^\.|\[]+)|\[([^\]]+)\])(.*)/';
+            $pattern = '/^(\.(\w+)|\[([^\]]+)\])(.*)/';
         }
 
         if ('' !== $remaining) {
@@ -175,7 +170,7 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
     }
 
     /**
-     * Returns a new iterator for this path.
+     * Returns a new iterator for this path
      *
      * @return PropertyPathIteratorInterface
      */

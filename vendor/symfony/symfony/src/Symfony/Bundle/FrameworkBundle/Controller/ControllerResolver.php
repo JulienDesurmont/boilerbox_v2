@@ -48,7 +48,7 @@ class ControllerResolver extends BaseControllerResolver
      *
      * @return mixed A PHP callable
      *
-     * @throws \LogicException           When the name could not be parsed
+     * @throws \LogicException When the name could not be parsed
      * @throws \InvalidArgumentException When the controller class does not exist
      */
     protected function createController($controller)
@@ -63,8 +63,6 @@ class ControllerResolver extends BaseControllerResolver
                 list($service, $method) = explode(':', $controller, 2);
 
                 return array($this->container->get($service), $method);
-            } elseif ($this->container->has($controller) && method_exists($service = $this->container->get($controller), '__invoke')) {
-                return $service;
             } else {
                 throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
             }
@@ -76,7 +74,7 @@ class ControllerResolver extends BaseControllerResolver
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        $controller = $this->instantiateController($class);
+        $controller = new $class();
         if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($this->container);
         }

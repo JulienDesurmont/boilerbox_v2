@@ -74,6 +74,10 @@ class AppKernel extends Kernel
         return include $filename;
     }
 
+    public function init()
+    {
+    }
+
     public function getRootDir()
     {
         return __DIR__;
@@ -101,8 +105,7 @@ class AppKernel extends Kernel
 
     public function unserialize($str)
     {
-        $a = unserialize($str);
-        $this->__construct($a[0], $a[1], $a[2], $a[3]);
+        call_user_func_array(array($this, '__construct'), unserialize($str));
     }
 
     protected function getKernelParameters()

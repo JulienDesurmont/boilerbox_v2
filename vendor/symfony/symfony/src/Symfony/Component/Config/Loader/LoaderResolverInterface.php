@@ -21,10 +21,10 @@ interface LoaderResolverInterface
     /**
      * Returns a loader able to load the resource.
      *
-     * @param mixed       $resource A resource
-     * @param string|null $type     The resource type or null if unknown
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
-     * @return LoaderInterface|false The loader or false if none is able to load the resource
+     * @return LoaderInterface A LoaderInterface instance
      */
     public function resolve($resource, $type = null);
 }

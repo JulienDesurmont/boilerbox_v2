@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Symfony DependencyInjection Component",
     "keywords": [],
-    "homepage": "https://symfony.com",
+    "homepage": "http://symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -12,20 +12,16 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
+            "homepage": "http://symfony.com/contributors"
         }
     ],
     "require": {
         "php": ">=5.3.3"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~2.7",
-        "symfony/yaml": "~2.1",
+        "symfony/yaml": "~2.0",
         "symfony/config": "~2.2",
-        "symfony/expression-language": "~2.6"
-    },
-    "conflict": {
-        "symfony/expression-language": "<2.6"
+        "symfony/expression-language": "~2.4"
     },
     "suggest": {
         "symfony/yaml": "",
@@ -39,7 +35,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

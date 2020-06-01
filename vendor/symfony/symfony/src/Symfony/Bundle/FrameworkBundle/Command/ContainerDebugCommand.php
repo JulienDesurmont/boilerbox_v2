@@ -19,10 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * A console command for retrieving information about services.
+ * A console command for retrieving information about services
  *
  * @author Ryan Weaver <ryan@thatsquality.com>
  */
@@ -39,14 +38,11 @@ class ContainerDebugCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('debug:container')
-            ->setAliases(array(
-                'container:debug',
-            ))
+            ->setName('container:debug')
             ->setDefinition(array(
                 new InputArgument('name', InputArgument::OPTIONAL, 'A service name (foo)'),
-                new InputOption('show-private', null, InputOption::VALUE_NONE, 'Used to show public *and* private services'),
-                new InputOption('tag', null, InputOption::VALUE_REQUIRED, 'Shows all services with a specific tag'),
+                new InputOption('show-private', null, InputOption::VALUE_NONE, 'Use to show public *and* private services'),
+                new InputOption('tag', null, InputOption::VALUE_REQUIRED, 'Show all services with a specific tag'),
                 new InputOption('tags', null, InputOption::VALUE_NONE, 'Displays tagged services for an application'),
                 new InputOption('parameter', null, InputOption::VALUE_REQUIRED, 'Displays a specific parameter for an application'),
                 new InputOption('parameters', null, InputOption::VALUE_NONE, 'Displays parameters for an application'),
@@ -64,7 +60,7 @@ To get specific information about a service, specify its name:
   <info>php %command.full_name% validator</info>
 
 By default, private services are hidden. You can display all services by
-using the <info>--show-private</info> flag:
+using the --show-private flag:
 
   <info>php %command.full_name% --show-private</info>
 
@@ -72,18 +68,17 @@ Use the --tags option to display tagged <comment>public</comment> services group
 
   <info>php %command.full_name% --tags</info>
 
-Find all services with a specific tag by specifying the tag name with the <info>--tag</info> option:
+Find all services with a specific tag by specifying the tag name with the --tag option:
 
   <info>php %command.full_name% --tag=form.type</info>
 
-Use the <info>--parameters</info> option to display all parameters:
+Use the --parameters option to display all parameters:
 
   <info>php %command.full_name% --parameters</info>
 
-Display a specific parameter by specifying his name with the <info>--parameter</info> option:
+Display a specific parameter by specifying his name with the --parameter option:
 
   <info>php %command.full_name% --parameter=kernel.debug</info>
-
 EOF
             )
         ;
@@ -91,6 +86,8 @@ EOF
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \LogicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -110,7 +107,6 @@ EOF
             $options = array('tag' => $tag, 'show_private' => $input->getOption('show-private'));
         } elseif ($name = $input->getArgument('name')) {
             $object = $this->getContainerBuilder();
-            $name = $this->findProperServiceName($input, $output, $object, $name);
             $options = array('id' => $name);
         } else {
             $object = $this->getContainerBuilder();
@@ -121,10 +117,6 @@ EOF
         $options['format'] = $input->getOption('format');
         $options['raw_text'] = $input->getOption('raw');
         $helper->describe($output, $object, $options);
-
-        if (!$input->getArgument('name') && $input->isInteractive()) {
-            $output->writeln('To search for a service, re-run this command with a search term. <comment>debug:container log</comment>');
-        }
     }
 
     /**
@@ -141,7 +133,7 @@ EOF
         $optionsCount = 0;
         foreach ($options as $option) {
             if ($input->getOption($option)) {
-                ++$optionsCount;
+                $optionsCount++;
             }
         }
 
@@ -162,10 +154,6 @@ EOF
      */
     protected function getContainerBuilder()
     {
-        if ($this->containerBuilder) {
-            return $this->containerBuilder;
-        }
-
         if (!$this->getApplication()->getKernel()->isDebug()) {
             throw new \LogicException(sprintf('Debug information about the container is only available in debug mode.'));
         }
@@ -179,38 +167,6 @@ EOF
         $loader = new XmlFileLoader($container, new FileLocator());
         $loader->load($cachedFile);
 
-        return $this->containerBuilder = $container;
-    }
-
-    private function findProperServiceName(InputInterface $input, OutputInterface $output, ContainerBuilder $builder, $name)
-    {
-        if ($builder->has($name) || !$input->isInteractive()) {
-            return $name;
-        }
-
-        $matchingServices = $this->findServiceIdsContaining($builder, $name);
-        if (empty($matchingServices)) {
-            throw new \InvalidArgumentException(sprintf('No services found that match "%s".', $name));
-        }
-
-        $question = new ChoiceQuestion('Choose a number for more information on the service', $matchingServices);
-        $question->setErrorMessage('Service %s is invalid.');
-
-        return $this->getHelper('question')->ask($input, $output, $question);
-    }
-
-    private function findServiceIdsContaining(ContainerBuilder $builder, $name)
-    {
-        $serviceIds = $builder->getServiceIds();
-        $foundServiceIds = array();
-        $name = strtolower($name);
-        foreach ($serviceIds as $serviceId) {
-            if (false === strpos($serviceId, $name)) {
-                continue;
-            }
-            $foundServiceIds[] = $serviceId;
-        }
-
-        return $foundServiceIds;
+        return $container;
     }
 }

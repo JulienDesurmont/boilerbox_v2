@@ -13,8 +13,7 @@ namespace Symfony\Component\Form\Extension\Validator\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Validator\ViolationMapper\ViolationMapperInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Validator\Constraints\Form;
@@ -36,16 +35,8 @@ class ValidationListener implements EventSubscriberInterface
         return array(FormEvents::POST_SUBMIT => 'validateForm');
     }
 
-    /**
-     * @param ValidatorInterface|LegacyValidatorInterface $validator
-     * @param ViolationMapperInterface                    $violationMapper
-     */
-    public function __construct($validator, ViolationMapperInterface $violationMapper)
+    public function __construct(ValidatorInterface $validator, ViolationMapperInterface $violationMapper)
     {
-        if (!$validator instanceof ValidatorInterface && !$validator instanceof LegacyValidatorInterface) {
-            throw new \InvalidArgumentException('Validator must be instance of Symfony\Component\Validator\Validator\ValidatorInterface or Symfony\Component\Validator\ValidatorInterface');
-        }
-
         $this->validator = $validator;
         $this->violationMapper = $violationMapper;
     }
@@ -66,8 +57,7 @@ class ValidationListener implements EventSubscriberInterface
             foreach ($violations as $violation) {
                 // Allow the "invalid" constraint to be put onto
                 // non-synchronized forms
-                // ConstraintViolation::getConstraint() must not expect to provide a constraint as long as Symfony\Component\Validator\ExecutionContext exists (before 3.0)
-                $allowNonSynchronized = (null === $violation->getConstraint() || $violation->getConstraint() instanceof Form) && Form::NOT_SYNCHRONIZED_ERROR === $violation->getCode();
+                $allowNonSynchronized = Form::ERR_INVALID === $violation->getCode();
 
                 $this->violationMapper->mapViolation($violation, $form, $allowNonSynchronized);
             }

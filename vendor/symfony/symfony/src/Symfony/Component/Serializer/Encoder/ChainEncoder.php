@@ -80,7 +80,6 @@ class ChainEncoder implements EncoderInterface
      * @param string $format
      *
      * @return EncoderInterface
-     *
      * @throws RuntimeException if no encoder is found
      */
     private function getEncoder($format)

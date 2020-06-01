@@ -128,8 +128,7 @@ class ViolationMapper implements ViolationMapperInterface
                 $violation->getMessage(),
                 $violation->getMessageTemplate(),
                 $violation->getMessageParameters(),
-                $violation->getMessagePluralization(),
-                $violation
+                $violation->getMessagePluralization()
             ));
         }
     }
@@ -229,8 +228,8 @@ class ViolationMapper implements ViolationMapperInterface
     /**
      * Reconstructs a property path from a violation path and a form tree.
      *
-     * @param ViolationPath $violationPath The violation path.
-     * @param FormInterface $origin        The root form of the tree.
+     * @param  ViolationPath $violationPath The violation path.
+     * @param  FormInterface $origin        The root form of the tree.
      *
      * @return RelativePath The reconstructed path.
      */
@@ -292,9 +291,6 @@ class ViolationMapper implements ViolationMapperInterface
      */
     private function acceptsErrors(FormInterface $form)
     {
-        // Ignore non-submitted forms. This happens, for example, in PATCH
-        // requests.
-        // https://github.com/symfony/symfony/pull/10567
-        return $form->isSubmitted() && ($this->allowNonSynchronized || $form->isSynchronized());
+        return $this->allowNonSynchronized || $form->isSynchronized();
     }
 }

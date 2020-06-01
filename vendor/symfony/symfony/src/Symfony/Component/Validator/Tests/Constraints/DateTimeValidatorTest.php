@@ -13,15 +13,9 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\DateTimeValidator;
-use Symfony\Component\Validator\Validation;
 
 class DateTimeValidatorTest extends AbstractConstraintValidatorTest
 {
-    protected function getApiVersion()
-    {
-        return Validation::API_VERSION_2_5;
-    }
-
     protected function createValidator()
     {
         return new DateTimeValidator();
@@ -78,7 +72,7 @@ class DateTimeValidatorTest extends AbstractConstraintValidatorTest
     /**
      * @dataProvider getInvalidDateTimes
      */
-    public function testInvalidDateTimes($dateTime, $code)
+    public function testInvalidDateTimes($dateTime)
     {
         $constraint = new DateTime(array(
             'message' => 'myMessage',
@@ -88,23 +82,22 @@ class DateTimeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', '"'.$dateTime.'"')
-            ->setCode($code)
             ->assertRaised();
     }
 
     public function getInvalidDateTimes()
     {
         return array(
-            array('foobar', DateTime::INVALID_FORMAT_ERROR),
-            array('2010-01-01', DateTime::INVALID_FORMAT_ERROR),
-            array('00:00:00', DateTime::INVALID_FORMAT_ERROR),
-            array('2010-01-01 00:00', DateTime::INVALID_FORMAT_ERROR),
-            array('2010-13-01 00:00:00', DateTime::INVALID_DATE_ERROR),
-            array('2010-04-32 00:00:00', DateTime::INVALID_DATE_ERROR),
-            array('2010-02-29 00:00:00', DateTime::INVALID_DATE_ERROR),
-            array('2010-01-01 24:00:00', DateTime::INVALID_TIME_ERROR),
-            array('2010-01-01 00:60:00', DateTime::INVALID_TIME_ERROR),
-            array('2010-01-01 00:00:60', DateTime::INVALID_TIME_ERROR),
+            array('foobar'),
+            array('2010-01-01'),
+            array('00:00:00'),
+            array('2010-01-01 00:00'),
+            array('2010-13-01 00:00:00'),
+            array('2010-04-32 00:00:00'),
+            array('2010-02-29 00:00:00'),
+            array('2010-01-01 24:00:00'),
+            array('2010-01-01 00:60:00'),
+            array('2010-01-01 00:00:60'),
         );
     }
 }

@@ -13,6 +13,7 @@ namespace Symfony\Component\Templating\Tests\Loader;
 
 use Symfony\Component\Templating\Loader\ChainLoader;
 use Symfony\Component\Templating\Loader\FilesystemLoader;
+use Symfony\Component\Templating\Storage\FileStorage;
 use Symfony\Component\Templating\TemplateReference;
 
 class ChainLoaderTest extends \PHPUnit_Framework_TestCase

@@ -11,6 +11,7 @@
 
 namespace Symfony\Bridge\Propel1\Tests\Form\DataTransformer;
 
+use \PropelObjectCollection;
 use Symfony\Bridge\Propel1\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Bridge\Propel1\Tests\Propel1TestCase;
 
@@ -25,7 +26,7 @@ class CollectionToArrayTransformerTest extends Propel1TestCase
 
     public function testTransform()
     {
-        $result = $this->transformer->transform(new \PropelObjectCollection());
+        $result = $this->transformer->transform(new PropelObjectCollection());
 
         $this->assertTrue(is_array($result));
         $this->assertCount(0, $result);
@@ -49,7 +50,7 @@ class CollectionToArrayTransformerTest extends Propel1TestCase
 
     public function testTransformWithData()
     {
-        $coll = new \PropelObjectCollection();
+        $coll = new PropelObjectCollection();
         $coll->setData(array('foo', 'bar'));
 
         $result = $this->transformer->transform($coll);
@@ -86,10 +87,10 @@ class CollectionToArrayTransformerTest extends Propel1TestCase
 
     public function testReverseTransformWithData()
     {
-        $inputData = array('foo', 'bar');
+        $inputData  = array('foo', 'bar');
 
-        $result = $this->transformer->reverseTransform($inputData);
-        $data = $result->getData();
+        $result     = $this->transformer->reverseTransform($inputData);
+        $data       = $result->getData();
 
         $this->assertInstanceOf('\PropelObjectCollection', $result);
 

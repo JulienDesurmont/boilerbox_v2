@@ -19,5 +19,5 @@ provided by the HttpKernel component.
 You can run the unit tests with the following command:
 
     $ cd path/to/Symfony/Component/BrowserKit/
-    $ composer install
+    $ composer.phar install
     $ phpunit

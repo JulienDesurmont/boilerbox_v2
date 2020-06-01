@@ -114,7 +114,7 @@ class SigchildEnabledProcessTest extends AbstractProcessTest
 
     public function testStartAfterATimeout()
     {
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('Restarting a timed-out process on Windows is not supported in sigchild environment');
         }
         parent::testStartAfterATimeout();
@@ -138,9 +138,9 @@ class SigchildEnabledProcessTest extends AbstractProcessTest
     /**
      * {@inheritdoc}
      */
-    protected function getProcess($commandline, $cwd = null, array $env = null, $input = null, $timeout = 60, array $options = array())
+    protected function getProcess($commandline, $cwd = null, array $env = null, $stdin = null, $timeout = 60, array $options = array())
     {
-        $process = new ProcessInSigchildEnvironment($commandline, $cwd, $env, $input, $timeout, $options);
+        $process = new ProcessInSigchildEnvironment($commandline, $cwd, $env, $stdin, $timeout, $options);
         $process->setEnhanceSigchildCompatibility(true);
 
         return $process;

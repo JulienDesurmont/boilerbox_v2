@@ -22,18 +22,19 @@ class NodeBuilder implements NodeParentInterface
     protected $nodeMapping;
 
     /**
-     * Constructor.
+     * Constructor
+     *
      */
     public function __construct()
     {
         $this->nodeMapping = array(
-            'variable' => __NAMESPACE__.'\\VariableNodeDefinition',
-            'scalar' => __NAMESPACE__.'\\ScalarNodeDefinition',
-            'boolean' => __NAMESPACE__.'\\BooleanNodeDefinition',
-            'integer' => __NAMESPACE__.'\\IntegerNodeDefinition',
-            'float' => __NAMESPACE__.'\\FloatNodeDefinition',
-            'array' => __NAMESPACE__.'\\ArrayNodeDefinition',
-            'enum' => __NAMESPACE__.'\\EnumNodeDefinition',
+            'variable'    => __NAMESPACE__.'\\VariableNodeDefinition',
+            'scalar'      => __NAMESPACE__.'\\ScalarNodeDefinition',
+            'boolean'     => __NAMESPACE__.'\\BooleanNodeDefinition',
+            'integer'     => __NAMESPACE__.'\\IntegerNodeDefinition',
+            'float'       => __NAMESPACE__.'\\FloatNodeDefinition',
+            'array'       => __NAMESPACE__.'\\ArrayNodeDefinition',
+            'enum'        => __NAMESPACE__.'\\EnumNodeDefinition',
         );
     }
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Templating\Tests\Storage;
 
+use Symfony\Component\Templating\Storage\Storage;
 use Symfony\Component\Templating\Storage\StringStorage;
 
 class StringStorageTest extends \PHPUnit_Framework_TestCase

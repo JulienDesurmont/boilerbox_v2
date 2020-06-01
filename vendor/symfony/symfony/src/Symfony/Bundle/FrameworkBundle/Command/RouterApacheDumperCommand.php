@@ -21,10 +21,6 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * RouterApacheDumperCommand.
  *
- * @deprecated Deprecated since version 2.5, to be removed in 3.0.
- *             The performance gains are minimal and it's very hard to replicate
- *             the behavior of PHP implementation.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RouterApacheDumperCommand extends ContainerAwareCommand
@@ -53,7 +49,7 @@ class RouterApacheDumperCommand extends ContainerAwareCommand
         $this
             ->setName('router:dump-apache')
             ->setDefinition(array(
-                new InputArgument('script_name', InputArgument::OPTIONAL, 'The script name of the application\'s front controller'),
+                new InputArgument('script_name', InputArgument::OPTIONAL, 'The script name of the application\'s front controller.'),
                 new InputOption('base-uri', null, InputOption::VALUE_REQUIRED, 'The base URI'),
             ))
             ->setDescription('Dumps all routes as Apache rewrite rules')
@@ -63,7 +59,6 @@ These can then be used with the ApacheUrlMatcher to use Apache for route
 matching.
 
   <info>php %command.full_name%</info>
-
 EOF
             )
         ;

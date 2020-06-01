@@ -32,7 +32,6 @@ class ChoiceType extends AbstractType
 {
     /**
      * Caches created choice lists.
-     *
      * @var array
      */
     private $choiceListCache = array();
@@ -58,10 +57,11 @@ class ChoiceType extends AbstractType
 
             // Check if the choices already contain the empty value
             // Only add the empty value option if this is not the case
-            if (null !== $options['placeholder'] && 0 === count($options['choice_list']->getChoicesForValues(array('')))) {
-                $placeholderView = new ChoiceView(null, '', $options['placeholder']);
+            if (null !== $options['empty_value'] && 0 === count($options['choice_list']->getChoicesForValues(array('')))) {
+                $placeholderView = new ChoiceView(null, '', $options['empty_value']);
 
                 // "placeholder" is a reserved index
+                // see also ChoiceListInterface::getIndicesForChoices()
                 $this->addSubForms($builder, array('placeholder' => $placeholderView), $options);
             }
 
@@ -96,12 +96,12 @@ class ChoiceType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars = array_replace($view->vars, array(
-            'multiple' => $options['multiple'],
-            'expanded' => $options['expanded'],
+            'multiple'          => $options['multiple'],
+            'expanded'          => $options['expanded'],
             'preferred_choices' => $options['choice_list']->getPreferredViews(),
-            'choices' => $options['choice_list']->getRemainingViews(),
-            'separator' => '-------------------',
-            'placeholder' => null,
+            'choices'           => $options['choice_list']->getRemainingViews(),
+            'separator'         => '-------------------',
+            'empty_value'       => null,
         ));
 
         // The decision, whether a choice is selected, is potentially done
@@ -110,7 +110,7 @@ class ChoiceType extends AbstractType
         // avoid making the type check inside the closure.
         if ($options['multiple']) {
             $view->vars['is_selected'] = function ($choice, array $values) {
-                return in_array($choice, $values, true);
+                return false !== array_search($choice, $values, true);
             };
         } else {
             $view->vars['is_selected'] = function ($choice, $value) {
@@ -119,22 +119,18 @@ class ChoiceType extends AbstractType
         }
 
         // Check if the choices already contain the empty value
-        $view->vars['placeholder_in_choices'] = 0 !== count($options['choice_list']->getChoicesForValues(array('')));
+        $view->vars['empty_value_in_choices'] = 0 !== count($options['choice_list']->getChoicesForValues(array('')));
 
         // Only add the empty value option if this is not the case
-        if (null !== $options['placeholder'] && !$view->vars['placeholder_in_choices']) {
-            $view->vars['placeholder'] = $options['placeholder'];
+        if (null !== $options['empty_value'] && !$view->vars['empty_value_in_choices']) {
+            $view->vars['empty_value'] = $options['empty_value'];
         }
-
-        // BC
-        $view->vars['empty_value'] = $view->vars['placeholder'];
-        $view->vars['empty_value_in_choices'] = $view->vars['placeholder_in_choices'];
 
         if ($options['multiple'] && !$options['expanded']) {
             // Add "[]" to the name in case a select tag with multiple options is
             // displayed. Otherwise only one of the selected options is sent in the
             // POST request.
-            $view->vars['full_name'] .= '[]';
+            $view->vars['full_name'] = $view->vars['full_name'].'[]';
         }
     }
 
@@ -163,14 +159,14 @@ class ChoiceType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $choiceListCache = &$this->choiceListCache;
+        $choiceListCache = & $this->choiceListCache;
 
         $choiceList = function (Options $options) use (&$choiceListCache) {
             // Harden against NULL values (like in EntityType and ModelType)
             $choices = null !== $options['choices'] ? $options['choices'] : array();
 
             // Reuse existing choice lists in order to increase performance
-            $hash = hash('sha256', serialize(array($choices, $options['preferred_choices'])));
+            $hash = hash('sha256', json_encode(array($choices, $options['preferred_choices'])));
 
             if (!isset($choiceListCache[$hash])) {
                 $choiceListCache[$hash] = new SimpleChoiceList($choices, $options['preferred_choices']);
@@ -191,25 +187,20 @@ class ChoiceType extends AbstractType
             return $options['required'] ? null : '';
         };
 
-        // for BC with the "empty_value" option
-        $placeholder = function (Options $options) {
-            return $options['empty_value'];
-        };
-
-        $placeholderNormalizer = function (Options $options, $placeholder) {
+        $emptyValueNormalizer = function (Options $options, $emptyValue) {
             if ($options['multiple']) {
                 // never use an empty value for this case
                 return;
-            } elseif (false === $placeholder) {
+            } elseif (false === $emptyValue) {
                 // an empty value should be added but the user decided otherwise
                 return;
-            } elseif ($options['expanded'] && '' === $placeholder) {
+            } elseif ($options['expanded'] && '' === $emptyValue) {
                 // never use an empty label for radio buttons
                 return 'None';
             }
 
             // empty value has been set explicitly
-            return $placeholder;
+            return $emptyValue;
         };
 
         $compound = function (Options $options) {
@@ -217,25 +208,23 @@ class ChoiceType extends AbstractType
         };
 
         $resolver->setDefaults(array(
-            'multiple' => false,
-            'expanded' => false,
-            'choice_list' => $choiceList,
-            'choices' => array(),
+            'multiple'          => false,
+            'expanded'          => false,
+            'choice_list'       => $choiceList,
+            'choices'           => array(),
             'preferred_choices' => array(),
-            'empty_data' => $emptyData,
-            'empty_value' => $emptyValue, // deprecated
-            'placeholder' => $placeholder,
-            'error_bubbling' => false,
-            'compound' => $compound,
+            'empty_data'        => $emptyData,
+            'empty_value'       => $emptyValue,
+            'error_bubbling'    => false,
+            'compound'          => $compound,
             // The view data is always a string, even if the "data" option
             // is manually set to an object.
             // See https://github.com/symfony/symfony/pull/5582
-            'data_class' => null,
+            'data_class'        => null,
         ));
 
         $resolver->setNormalizers(array(
-            'empty_value' => $placeholderNormalizer,
-            'placeholder' => $placeholderNormalizer,
+            'empty_value' => $emptyValueNormalizer,
         ));
 
         $resolver->setAllowedTypes(array(
@@ -269,7 +258,6 @@ class ChoiceType extends AbstractType
                     'value' => $choiceView->value,
                     'label' => $choiceView->label,
                     'translation_domain' => $options['translation_domain'],
-                    'block_name' => 'entry',
                 );
 
                 if ($options['multiple']) {

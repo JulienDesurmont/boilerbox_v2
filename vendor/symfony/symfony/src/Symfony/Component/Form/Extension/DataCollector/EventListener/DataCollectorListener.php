@@ -76,7 +76,8 @@ class DataCollectorListener implements EventSubscriberInterface
             $this->dataCollector->collectSubmittedData($event->getForm());
 
             // Assemble a form tree
-            // This is done again after the view is built, but we need it here as the view is not always created.
+            // This is done again in collectViewVariables(), but that method
+            // is not guaranteed to be called (i.e. when no view is created)
             $this->dataCollector->buildPreliminaryFormTree($event->getForm());
         }
     }

@@ -12,22 +12,19 @@
 namespace Symfony\Bundle\TwigBundle\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\RequestContext;
 
 /**
- * Twig extension for Symfony assets helper.
+ * Twig extension for Symfony assets helper
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class AssetsExtension extends \Twig_Extension
 {
     private $container;
-    private $context;
 
-    public function __construct(ContainerInterface $container, RequestContext $requestContext = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->context = $requestContext;
     }
 
     /**
@@ -48,22 +45,14 @@ class AssetsExtension extends \Twig_Extension
      *
      * Absolute paths (i.e. http://...) are returned unmodified.
      *
-     * @param string           $path        A public path
-     * @param string           $packageName The name of the asset package to use
-     * @param bool             $absolute    Whether to return an absolute URL or a relative one
-     * @param string|bool|null $version     A specific version
+     * @param string $path        A public path
+     * @param string $packageName The name of the asset package to use
      *
      * @return string A public path which takes into account the base path and URL path
      */
-    public function getAssetUrl($path, $packageName = null, $absolute = false, $version = null)
+    public function getAssetUrl($path, $packageName = null)
     {
-        $url = $this->container->get('templating.helper.assets')->getUrl($path, $packageName, $version);
-
-        if (!$absolute) {
-            return $url;
-        }
-
-        return $this->ensureUrlIsAbsolute($url);
+        return $this->container->get('templating.helper.assets')->getUrl($path, $packageName);
     }
 
     /**
@@ -79,45 +68,12 @@ class AssetsExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
      */
     public function getName()
     {
         return 'assets';
-    }
-
-    /**
-     * Ensures an URL is absolute, if possible.
-     *
-     * @param string $url The URL that has to be absolute
-     *
-     * @throws \RuntimeException
-     *
-     * @return string The absolute URL
-     */
-    private function ensureUrlIsAbsolute($url)
-    {
-        if (false !== strpos($url, '://') || 0 === strpos($url, '//')) {
-            return $url;
-        }
-
-        if (!$this->context) {
-            throw new \RuntimeException('To generate an absolute URL for an asset, the Symfony Routing component is required.');
-        }
-
-        if ('' === $host = $this->context->getHost()) {
-            return $url;
-        }
-
-        $scheme = $this->context->getScheme();
-        $port = '';
-
-        if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
-            $port = ':'.$this->context->getHttpPort();
-        } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
-            $port = ':'.$this->context->getHttpsPort();
-        }
-
-        return $scheme.'://'.$host.$port.$url;
     }
 }

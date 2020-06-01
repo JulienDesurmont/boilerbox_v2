@@ -15,9 +15,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\Tests\Fixtures\TestClass;
 use Symfony\Component\PropertyAccess\Tests\Fixtures\TestClassMagicCall;
 use Symfony\Component\PropertyAccess\Tests\Fixtures\TestClassMagicGet;
-use Symfony\Component\PropertyAccess\Tests\Fixtures\Ticket5775Object;
-use Symfony\Component\PropertyAccess\Tests\Fixtures\TestClassSetValue;
-use Symfony\Component\PropertyAccess\Tests\Fixtures\TestClassIsWritable;
 
 class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,17 +28,35 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
         $this->propertyAccessor = new PropertyAccessor();
     }
 
-    public function getPathsWithUnexpectedType()
+    public function getValidPropertyPaths()
     {
         return array(
-            array('', 'foobar'),
-            array('foo', 'foobar'),
-            array(null, 'foobar'),
-            array(123, 'foobar'),
-            array((object) array('prop' => null), 'prop.foobar'),
-            array((object) array('prop' => (object) array('subProp' => null)), 'prop.subProp.foobar'),
-            array(array('index' => null), '[index][foobar]'),
-            array(array('index' => array('subIndex' => null)), '[index][subIndex][foobar]'),
+            array(array('Bernhard', 'Schussek'), '[0]', 'Bernhard'),
+            array(array('Bernhard', 'Schussek'), '[1]', 'Schussek'),
+            array(array('firstName' => 'Bernhard'), '[firstName]', 'Bernhard'),
+            array(array('index' => array('firstName' => 'Bernhard')), '[index][firstName]', 'Bernhard'),
+            array((object) array('firstName' => 'Bernhard'), 'firstName', 'Bernhard'),
+            array((object) array('property' => array('firstName' => 'Bernhard')), 'property[firstName]', 'Bernhard'),
+            array(array('index' => (object) array('firstName' => 'Bernhard')), '[index].firstName', 'Bernhard'),
+            array((object) array('property' => (object) array('firstName' => 'Bernhard')), 'property.firstName', 'Bernhard'),
+
+            // Accessor methods
+            array(new TestClass('Bernhard'), 'publicProperty', 'Bernhard'),
+            array(new TestClass('Bernhard'), 'publicAccessor', 'Bernhard'),
+            array(new TestClass('Bernhard'), 'publicIsAccessor', 'Bernhard'),
+            array(new TestClass('Bernhard'), 'publicHasAccessor', 'Bernhard'),
+
+            // Methods are camelized
+            array(new TestClass('Bernhard'), 'public_accessor', 'Bernhard'),
+
+            // Missing indices
+            array(array('index' => array()), '[index][firstName]', null),
+            array(array('root' => array('index' => array())), '[root][index][firstName]', null),
+
+            // Special chars
+            array(array('%!@$§.' => 'Bernhard'), '[%!@$§.]', 'Bernhard'),
+            array(array('index' => array('%!@$§.' => 'Bernhard')), '[index][%!@$§.]', 'Bernhard'),
+            array((object) array('%!@$§' => 'Bernhard'), '%!@$§', 'Bernhard'),
         );
     }
 
@@ -112,7 +127,7 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchIndexException
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testGetValueThrowsExceptionIfNotArrayAccess()
     {
@@ -154,13 +169,27 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getPathsWithUnexpectedType
      * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object or array"
      */
-    public function testGetValueThrowsExceptionIfNotObjectOrArray($objectOrArray, $path)
+    public function testGetValueThrowsExceptionIfNotObjectOrArray()
     {
-        $this->propertyAccessor->getValue($objectOrArray, $path);
+        $this->propertyAccessor->getValue('baz', 'foobar');
+    }
+
+    /**
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
+     */
+    public function testGetValueThrowsExceptionIfNull()
+    {
+        $this->propertyAccessor->getValue(null, 'foobar');
+    }
+
+    /**
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
+     */
+    public function testGetValueThrowsExceptionIfEmpty()
+    {
+        $this->propertyAccessor->getValue('', 'foobar');
     }
 
     /**
@@ -204,7 +233,7 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchIndexException
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testSetValueThrowsExceptionIfNotArrayAccess()
     {
@@ -218,14 +247,6 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
         $this->propertyAccessor->setValue($author, 'magicProperty', 'Updated');
 
         $this->assertEquals('Updated', $author->__get('magicProperty'));
-    }
-
-    /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     */
-    public function testSetValueThrowsExceptionIfThereAreMissingParameters()
-    {
-        $this->propertyAccessor->setValue(new TestClass('Bernhard'), 'publicAccessorWithMoreRequiredParameters', 'Updated');
     }
 
     /**
@@ -250,243 +271,32 @@ class PropertyAccessorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getPathsWithUnexpectedType
      * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "object or array"
      */
-    public function testSetValueThrowsExceptionIfNotObjectOrArray($objectOrArray, $path)
+    public function testSetValueThrowsExceptionIfNotObjectOrArray()
     {
-        $this->propertyAccessor->setValue($objectOrArray, $path, 'value');
-    }
+        $value = 'baz';
 
-    public function testGetValueWhenArrayValueIsNull()
-    {
-        $this->propertyAccessor = new PropertyAccessor(false, true);
-        $this->assertNull($this->propertyAccessor->getValue(array('index' => array('nullable' => null)), '[index][nullable]'));
+        $this->propertyAccessor->setValue($value, 'foobar', 'bam');
     }
 
     /**
-     * @dataProvider getValidPropertyPaths
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
      */
-    public function testIsReadable($objectOrArray, $path)
+    public function testSetValueThrowsExceptionIfNull()
     {
-        $this->assertTrue($this->propertyAccessor->isReadable($objectOrArray, $path));
+        $value = null;
+
+        $this->propertyAccessor->setValue($value, 'foobar', 'bam');
     }
 
     /**
-     * @dataProvider getPathsWithMissingProperty
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
      */
-    public function testIsReadableReturnsFalseIfPropertyNotFound($objectOrArray, $path)
+    public function testSetValueThrowsExceptionIfEmpty()
     {
-        $this->assertFalse($this->propertyAccessor->isReadable($objectOrArray, $path));
+        $value = '';
+
+        $this->propertyAccessor->setValue($value, 'foobar', 'bam');
     }
-
-    /**
-     * @dataProvider getPathsWithMissingIndex
-     */
-    public function testIsReadableReturnsTrueIfIndexNotFound($objectOrArray, $path)
-    {
-        // Non-existing indices can be read. In this case, null is returned
-        $this->assertTrue($this->propertyAccessor->isReadable($objectOrArray, $path));
-    }
-
-    /**
-     * @dataProvider getPathsWithMissingIndex
-     */
-    public function testIsReadableReturnsFalseIfIndexNotFoundAndIndexExceptionsEnabled($objectOrArray, $path)
-    {
-        $this->propertyAccessor = new PropertyAccessor(false, true);
-
-        // When exceptions are enabled, non-existing indices cannot be read
-        $this->assertFalse($this->propertyAccessor->isReadable($objectOrArray, $path));
-    }
-
-    public function testIsReadableRecognizesMagicGet()
-    {
-        $this->assertTrue($this->propertyAccessor->isReadable(new TestClassMagicGet('Bernhard'), 'magicProperty'));
-    }
-
-    public function testIsReadableDoesNotRecognizeMagicCallByDefault()
-    {
-        $this->assertFalse($this->propertyAccessor->isReadable(new TestClassMagicCall('Bernhard'), 'magicCallProperty'));
-    }
-
-    public function testIsReadableRecognizesMagicCallIfEnabled()
-    {
-        $this->propertyAccessor = new PropertyAccessor(true);
-
-        $this->assertTrue($this->propertyAccessor->isReadable(new TestClassMagicCall('Bernhard'), 'magicCallProperty'));
-    }
-
-    /**
-     * @dataProvider getPathsWithUnexpectedType
-     */
-    public function testIsReadableReturnsFalseIfNotObjectOrArray($objectOrArray, $path)
-    {
-        $this->assertFalse($this->propertyAccessor->isReadable($objectOrArray, $path));
-    }
-
-    /**
-     * @dataProvider getValidPropertyPaths
-     */
-    public function testIsWritable($objectOrArray, $path)
-    {
-        $this->assertTrue($this->propertyAccessor->isWritable($objectOrArray, $path));
-    }
-
-    /**
-     * @dataProvider getPathsWithMissingProperty
-     */
-    public function testIsWritableReturnsFalseIfPropertyNotFound($objectOrArray, $path)
-    {
-        $this->assertFalse($this->propertyAccessor->isWritable($objectOrArray, $path));
-    }
-
-    /**
-     * @dataProvider getPathsWithMissingIndex
-     */
-    public function testIsWritableReturnsTrueIfIndexNotFound($objectOrArray, $path)
-    {
-        // Non-existing indices can be written. Arrays are created on-demand.
-        $this->assertTrue($this->propertyAccessor->isWritable($objectOrArray, $path));
-    }
-
-    /**
-     * @dataProvider getPathsWithMissingIndex
-     */
-    public function testIsWritableReturnsTrueIfIndexNotFoundAndIndexExceptionsEnabled($objectOrArray, $path)
-    {
-        $this->propertyAccessor = new PropertyAccessor(false, true);
-
-        // Non-existing indices can be written even if exceptions are enabled
-        $this->assertTrue($this->propertyAccessor->isWritable($objectOrArray, $path));
-    }
-
-    public function testIsWritableRecognizesMagicSet()
-    {
-        $this->assertTrue($this->propertyAccessor->isWritable(new TestClassMagicGet('Bernhard'), 'magicProperty'));
-    }
-
-    public function testIsWritableDoesNotRecognizeMagicCallByDefault()
-    {
-        $this->assertFalse($this->propertyAccessor->isWritable(new TestClassMagicCall('Bernhard'), 'magicCallProperty'));
-    }
-
-    public function testIsWritableRecognizesMagicCallIfEnabled()
-    {
-        $this->propertyAccessor = new PropertyAccessor(true);
-
-        $this->assertTrue($this->propertyAccessor->isWritable(new TestClassMagicCall('Bernhard'), 'magicCallProperty'));
-    }
-
-    /**
-     * @dataProvider getPathsWithUnexpectedType
-     */
-    public function testIsWritableReturnsFalseIfNotObjectOrArray($objectOrArray, $path)
-    {
-        $this->assertFalse($this->propertyAccessor->isWritable($objectOrArray, $path));
-    }
-
-    public function getValidPropertyPaths()
-    {
-        return array(
-            array(array('Bernhard', 'Schussek'), '[0]', 'Bernhard'),
-            array(array('Bernhard', 'Schussek'), '[1]', 'Schussek'),
-            array(array('firstName' => 'Bernhard'), '[firstName]', 'Bernhard'),
-            array(array('index' => array('firstName' => 'Bernhard')), '[index][firstName]', 'Bernhard'),
-            array((object) array('firstName' => 'Bernhard'), 'firstName', 'Bernhard'),
-            array((object) array('property' => array('firstName' => 'Bernhard')), 'property[firstName]', 'Bernhard'),
-            array(array('index' => (object) array('firstName' => 'Bernhard')), '[index].firstName', 'Bernhard'),
-            array((object) array('property' => (object) array('firstName' => 'Bernhard')), 'property.firstName', 'Bernhard'),
-
-            // Accessor methods
-            array(new TestClass('Bernhard'), 'publicProperty', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicAccessor', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicAccessorWithDefaultValue', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicAccessorWithRequiredAndDefaultValue', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicIsAccessor', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicHasAccessor', 'Bernhard'),
-            array(new TestClass('Bernhard'), 'publicGetSetter', 'Bernhard'),
-
-            // Methods are camelized
-            array(new TestClass('Bernhard'), 'public_accessor', 'Bernhard'),
-            array(new TestClass('Bernhard'), '_public_accessor', 'Bernhard'),
-
-            // Missing indices
-            array(array('index' => array()), '[index][firstName]', null),
-            array(array('root' => array('index' => array())), '[root][index][firstName]', null),
-
-            // Special chars
-            array(array('%!@$§.' => 'Bernhard'), '[%!@$§.]', 'Bernhard'),
-            array(array('index' => array('%!@$§.' => 'Bernhard')), '[index][%!@$§.]', 'Bernhard'),
-            array((object) array('%!@$§' => 'Bernhard'), '%!@$§', 'Bernhard'),
-            array((object) array('property' => (object) array('%!@$§' => 'Bernhard')), 'property.%!@$§', 'Bernhard'),
-
-            // nested objects and arrays
-            array(array('foo' => new TestClass('bar')), '[foo].publicGetSetter', 'bar'),
-            array(new TestClass(array('foo' => 'bar')), 'publicGetSetter[foo]', 'bar'),
-            array(new TestClass(new TestClass('bar')), 'publicGetter.publicGetSetter', 'bar'),
-            array(new TestClass(array('foo' => new TestClass('bar'))), 'publicGetter[foo].publicGetSetter', 'bar'),
-            array(new TestClass(new TestClass(new TestClass('bar'))), 'publicGetter.publicGetter.publicGetSetter', 'bar'),
-            array(new TestClass(array('foo' => array('baz' => new TestClass('bar')))), 'publicGetter[foo][baz].publicGetSetter', 'bar'),
-        );
-    }
-
-    public function testTicket5755()
-    {
-        $object = new Ticket5775Object();
-
-        $this->propertyAccessor->setValue($object, 'property', 'foobar');
-
-        $this->assertEquals('foobar', $object->getProperty());
-    }
-
-    public function testSetValueDeepWithMagicGetter()
-    {
-        $obj = new TestClassMagicGet('foo');
-        $obj->publicProperty = array('foo' => array('bar' => 'some_value'));
-        $this->propertyAccessor->setValue($obj, 'publicProperty[foo][bar]', 'Updated');
-        $this->assertSame('Updated', $obj->publicProperty['foo']['bar']);
-    }
-
-    public function getReferenceChainObjectsForSetValue()
-    {
-        return array(
-            array(array('a' => array('b' => array('c' => 'old-value'))), '[a][b][c]', 'new-value'),
-            array(new TestClassSetValue(new TestClassSetValue('old-value')), 'value.value', 'new-value'),
-            array(new TestClassSetValue(array('a' => array('b' => array('c' => new TestClassSetValue('old-value'))))), 'value[a][b][c].value', 'new-value'),
-            array(new TestClassSetValue(array('a' => array('b' => 'old-value'))), 'value[a][b]', 'new-value'),
-            array(new \ArrayIterator(array('a' => array('b' => array('c' => 'old-value')))), '[a][b][c]', 'new-value'),
-        );
-
-    }
-
-    /**
-     * @dataProvider getReferenceChainObjectsForSetValue
-     */
-    public function testSetValueForReferenceChainIssue($object, $path, $value)
-    {
-        $this->propertyAccessor->setValue($object, $path, $value);
-
-        $this->assertEquals($value, $this->propertyAccessor->getValue($object, $path));
-    }
-
-    public function getReferenceChainObjectsForIsWritable()
-    {
-        return array(
-            array(new TestClassIsWritable(array('a' => array('b' => 'old-value'))), 'value[a][b]', false),
-            array(new TestClassIsWritable(new \ArrayIterator(array('a' => array('b' => 'old-value')))), 'value[a][b]', true),
-            array(new TestClassIsWritable(array('a' => array('b' => array('c' => new TestClassSetValue('old-value'))))), 'value[a][b][c].value', true),
-        );
-
-    }
-
-    /**
-     * @dataProvider getReferenceChainObjectsForIsWritable
-     */
-    public function testIsWritableForReferenceChainIssue($object, $path, $value)
-    {
-        $this->assertEquals($value, $this->propertyAccessor->isWritable($object, $path));
-    }
-
 }

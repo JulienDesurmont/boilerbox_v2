@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 
@@ -95,7 +96,8 @@ EOF;
                     // TODO
                 } else {
                     eval('$expected = '.trim($test['php']).';');
-                    $this->assertSame($expected, $this->parser->parse($this->dumper->dump($expected, 10)), $test['test']);
+
+                    $this->assertEquals($expected, $this->parser->parse($this->dumper->dump($expected, 10)), $test['test']);
                 }
             }
         }

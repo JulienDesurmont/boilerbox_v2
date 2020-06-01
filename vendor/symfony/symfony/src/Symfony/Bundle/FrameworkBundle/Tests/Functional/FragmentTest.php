@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+/**
+ * @group functional
+ */
 class FragmentTest extends WebTestCase
 {
     /**

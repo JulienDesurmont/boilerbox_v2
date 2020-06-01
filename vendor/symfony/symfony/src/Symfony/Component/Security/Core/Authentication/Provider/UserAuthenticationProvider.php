@@ -62,19 +62,19 @@ abstract class UserAuthenticationProvider implements AuthenticationProviderInter
         }
 
         $username = $token->getUsername();
-        if ('' === $username || null === $username) {
+        if (empty($username)) {
             $username = 'NONE_PROVIDED';
         }
 
         try {
             $user = $this->retrieveUser($username, $token);
-        } catch (UsernameNotFoundException $e) {
+        } catch (UsernameNotFoundException $notFound) {
             if ($this->hideUserNotFoundExceptions) {
-                throw new BadCredentialsException('Bad credentials.', 0, $e);
+                throw new BadCredentialsException('Bad credentials', 0, $notFound);
             }
-            $e->setUsername($username);
+            $notFound->setUsername($username);
 
-            throw $e;
+            throw $notFound;
         }
 
         if (!$user instanceof UserInterface) {
@@ -87,7 +87,7 @@ abstract class UserAuthenticationProvider implements AuthenticationProviderInter
             $this->userChecker->checkPostAuth($user);
         } catch (BadCredentialsException $e) {
             if ($this->hideUserNotFoundExceptions) {
-                throw new BadCredentialsException('Bad credentials.', 0, $e);
+                throw new BadCredentialsException('Bad credentials', 0, $e);
             }
 
             throw $e;
@@ -113,7 +113,7 @@ abstract class UserAuthenticationProvider implements AuthenticationProviderInter
      * @param UserInterface  $user  The user
      * @param TokenInterface $token The token
      *
-     * @return array The user roles
+     * @return Role[] The user roles
      */
     private function getRoles(UserInterface $user, TokenInterface $token)
     {

@@ -27,13 +27,17 @@ use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\InstantiatorInt
 class RuntimeInstantiator implements InstantiatorInterface
 {
     /**
-     * @var LazyLoadingValueHolderFactory
+     * @var \ProxyManager\Factory\LazyLoadingValueHolderFactory
      */
     private $factory;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $config = new Configuration();
+
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
 
         $this->factory = new LazyLoadingValueHolderFactory($config);

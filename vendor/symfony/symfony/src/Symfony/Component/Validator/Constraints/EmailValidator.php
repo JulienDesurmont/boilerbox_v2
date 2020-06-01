@@ -13,7 +13,6 @@ namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\RuntimeException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
@@ -24,24 +23,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class EmailValidator extends ConstraintValidator
 {
     /**
-     * @var bool
-     */
-    private $isStrict;
-
-    public function __construct($strict = false)
-    {
-        $this->isStrict = $strict;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof Email) {
-            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Email');
-        }
-
         if (null === $value || '' === $value) {
             return;
         }
@@ -51,54 +36,23 @@ class EmailValidator extends ConstraintValidator
         }
 
         $value = (string) $value;
+        $valid = filter_var($value, FILTER_VALIDATE_EMAIL);
 
-        if (null === $constraint->strict) {
-            $constraint->strict = $this->isStrict;
+        if ($valid) {
+            $host = substr($value, strpos($value, '@') + 1);
+
+            // Check for host DNS resource records
+            if ($valid && $constraint->checkMX) {
+                $valid = $this->checkMX($host);
+            } elseif ($valid && $constraint->checkHost) {
+                $valid = $this->checkHost($host);
+            }
         }
 
-        if ($constraint->strict) {
-            if (!class_exists('\Egulias\EmailValidator\EmailValidator')) {
-                throw new RuntimeException('Strict email validation requires egulias/email-validator');
-            }
-
-            $strictValidator = new \Egulias\EmailValidator\EmailValidator();
-
-            if (!$strictValidator->isValid($value, false, true)) {
-                $this->buildViolation($constraint->message)
-                    ->setParameter('{{ value }}', $this->formatValue($value))
-                    ->setCode(Email::INVALID_FORMAT_ERROR)
-                    ->addViolation();
-
-                return;
-            }
-        } elseif (!preg_match('/^.+\@\S+\.\S+$/', $value)) {
-            $this->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $this->formatValue($value))
-                ->setCode(Email::INVALID_FORMAT_ERROR)
-                ->addViolation();
-
-            return;
-        }
-
-        $host = substr($value, strpos($value, '@') + 1);
-
-        // Check for host DNS resource records
-        if ($constraint->checkMX) {
-            if (!$this->checkMX($host)) {
-                $this->buildViolation($constraint->message)
-                    ->setParameter('{{ value }}', $this->formatValue($value))
-                    ->setCode(Email::MX_CHECK_FAILED_ERROR)
-                    ->addViolation();
-            }
-
-            return;
-        }
-
-        if ($constraint->checkHost && !$this->checkHost($host)) {
-            $this->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $this->formatValue($value))
-                ->setCode(Email::HOST_CHECK_FAILED_ERROR)
-                ->addViolation();
+        if (!$valid) {
+            $this->context->addViolation($constraint->message, array(
+                '{{ value }}' => $this->formatValue($value),
+            ));
         }
     }
 
@@ -123,6 +77,6 @@ class EmailValidator extends ConstraintValidator
      */
     private function checkHost($host)
     {
-        return $this->checkMX($host) || (checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA'));
+        return $this->checkMX($host) || (checkdnsrr($host, "A") || checkdnsrr($host, "AAAA"));
     }
 }

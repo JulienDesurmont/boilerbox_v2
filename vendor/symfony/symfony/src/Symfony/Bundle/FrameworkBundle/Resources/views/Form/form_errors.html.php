@@ -1,4 +1,4 @@
-<?php if (count($errors) > 0): ?>
+<?php if ($errors): ?>
     <ul>
         <?php foreach ($errors as $error): ?>
             <li><?php echo $error->getMessage() ?></li>

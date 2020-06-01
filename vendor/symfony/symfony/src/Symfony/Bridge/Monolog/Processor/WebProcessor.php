@@ -15,16 +15,16 @@ use Monolog\Processor\WebProcessor as BaseWebProcessor;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * WebProcessor override to read from the HttpFoundation's Request.
+ * WebProcessor override to read from the HttpFoundation's Request
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 class WebProcessor extends BaseWebProcessor
 {
-    public function __construct(array $extraFields = null)
+    public function __construct()
     {
         // Pass an empty array as the default null value would access $_SERVER
-        parent::__construct(array(), $extraFields);
+        parent::__construct(array());
     }
 
     public function onKernelRequest(GetResponseEvent $event)

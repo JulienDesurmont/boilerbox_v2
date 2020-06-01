@@ -24,8 +24,8 @@ class DirectoryResource implements ResourceInterface, \Serializable
     /**
      * Constructor.
      *
-     * @param string      $resource The file path to the resource
-     * @param string|null $pattern  A pattern to restrict monitored files
+     * @param string $resource The file path to the resource
+     * @param string $pattern  A pattern to restrict monitored files
      */
     public function __construct($resource, $pattern = null)
     {
@@ -34,7 +34,9 @@ class DirectoryResource implements ResourceInterface, \Serializable
     }
 
     /**
-     * {@inheritdoc}
+     * Returns a string representation of the Resource.
+     *
+     * @return string A string representation of the Resource
      */
     public function __toString()
     {
@@ -42,25 +44,26 @@ class DirectoryResource implements ResourceInterface, \Serializable
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the resource tied to this Resource.
+     *
+     * @return mixed The resource
      */
     public function getResource()
     {
         return $this->resource;
     }
 
-    /**
-     * Returns the pattern to restrict monitored files.
-     *
-     * @return string|null
-     */
     public function getPattern()
     {
         return $this->pattern;
     }
 
     /**
-     * {@inheritdoc}
+     * Returns true if the resource has not been updated since the given timestamp.
+     *
+     * @param int     $timestamp The last time the resource was loaded
+     *
+     * @return bool    true if the resource has not been updated, false otherwise
      */
     public function isFresh($timestamp)
     {

@@ -40,7 +40,7 @@ class TimedPhpEngineTest extends TestCase
     }
 
     /**
-     * @return Container
+     * @return \Symfony\Component\DependencyInjection\Container
      */
     private function getContainer()
     {
@@ -62,7 +62,7 @@ class TimedPhpEngineTest extends TestCase
     }
 
     /**
-     * @return GlobalVariables
+     * @return \Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables
      */
     private function getGlobalVariables()
     {

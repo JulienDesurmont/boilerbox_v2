@@ -16,22 +16,15 @@ use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
- * ExceptionController renders error or exception pages for a given
- * FlattenException.
+ * ExceptionController.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- * @author Matthias Pigulla <mp@webfactory.de>
  */
 class ExceptionController
 {
     protected $twig;
-
-    /**
-     * @var bool Show error (false) or exception (true) pages by default.
-     */
     protected $debug;
 
     public function __construct(\Twig_Environment $twig, $debug)
@@ -42,10 +35,6 @@ class ExceptionController
 
     /**
      * Converts an Exception to a Response.
-     *
-     * A "showException" request parameter can be used to force display of an error page (when set to false) or
-     * the exception page (when true). If it is not present, the "debug" value passed into the constructor will
-     * be used.
      *
      * @param Request              $request   The request
      * @param FlattenException     $exception A FlattenException instance
@@ -58,55 +47,58 @@ class ExceptionController
     public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        $showException = $request->attributes->get('showException', $this->debug); // As opposed to an additional parameter, this maintains BC
 
         $code = $exception->getStatusCode();
 
         return new Response($this->twig->render(
-            $this->findTemplate($request, $request->getRequestFormat(), $code, $showException),
+            $this->findTemplate($request, $request->getRequestFormat(), $code, $this->debug),
             array(
-                'status_code' => $code,
-                'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                'exception' => $exception,
-                'logger' => $logger,
+                'status_code'    => $code,
+                'status_text'    => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                'exception'      => $exception,
+                'logger'         => $logger,
                 'currentContent' => $currentContent,
             )
         ));
     }
 
     /**
-     * @param int $startObLevel
+     * @param int     $startObLevel
      *
      * @return string
      */
     protected function getAndCleanOutputBuffering($startObLevel)
     {
-        if (ob_get_level() <= $startObLevel) {
-            return '';
+        // ob_get_level() never returns 0 on some Windows configurations, so if
+        // the level is the same two times in a row, the loop should be stopped.
+        $previousObLevel = null;
+        $currentContent = '';
+
+        while (($obLevel = ob_get_level()) > $startObLevel && $obLevel !== $previousObLevel) {
+            $previousObLevel = $obLevel;
+            $currentContent .= ob_get_clean();
         }
 
-        Response::closeOutputBuffers($startObLevel + 1, true);
-
-        return ob_get_clean();
+        return $currentContent;
     }
 
     /**
      * @param Request $request
      * @param string  $format
-     * @param int     $code          An HTTP response status code
-     * @param bool    $showException
+     * @param int     $code       An HTTP response status code
+     * @param bool    $debug
      *
-     * @return TemplateReferenceInterface
+     * @return TemplateReference
      */
-    protected function findTemplate(Request $request, $format, $code, $showException)
+    protected function findTemplate(Request $request, $format, $code, $debug)
     {
-        $name = $showException ? 'exception' : 'error';
-        if ($showException && 'html' == $format) {
+        $name = $debug ? 'exception' : 'error';
+        if ($debug && 'html' == $format) {
             $name = 'exception_full';
         }
 
-        // For error pages, try to find a template for the specific HTTP status code and format
-        if (!$showException) {
+        // when not in debug, try to find a template for the specific HTTP status code and format
+        if (!$debug) {
             $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format, 'twig');
             if ($this->templateExists($template)) {
                 return $template;
@@ -122,7 +114,7 @@ class ExceptionController
         // default to a generic HTML exception
         $request->setRequestFormat('html');
 
-        return new TemplateReference('TwigBundle', 'Exception', $showException ? 'exception_full' : $name, 'html', 'twig');
+        return new TemplateReference('TwigBundle', 'Exception', $name, 'html', 'twig');
     }
 
     // to be removed when the minimum required version of Twig is >= 2.0

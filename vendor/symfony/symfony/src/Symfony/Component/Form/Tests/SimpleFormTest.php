@@ -74,28 +74,6 @@ class SimpleFormTest extends AbstractFormTest
         $this->assertSame('bar', $form->getViewData());
     }
 
-    /**
-     * @expectedException        \Symfony\Component\Form\Exception\TransformationFailedException
-     * @expectedExceptionMessage Unable to transform value for property path "name": No mapping for value "arg"
-     */
-    public function testDataTransformationFailure()
-    {
-        $model = new FixedDataTransformer(array(
-            'default' => 'foo',
-        ));
-        $view = new FixedDataTransformer(array(
-            'foo' => 'bar',
-        ));
-
-        $config = new FormConfigBuilder('name', null, $this->dispatcher);
-        $config->addViewTransformer($view);
-        $config->addModelTransformer($model);
-        $config->setData('arg');
-        $form = new Form($config);
-
-        $form->getData();
-    }
-
     // https://github.com/symfony/symfony/commit/d4f4038f6daf7cf88ca7c7ab089473cce5ebf7d8#commitcomment-1632879
     public function testDataIsInitializedFromSubmit()
     {
@@ -122,19 +100,19 @@ class SimpleFormTest extends AbstractFormTest
     public function testFalseIsConvertedToNull()
     {
         $mock = $this->getMockBuilder('\stdClass')
-            ->setMethods(array('preSubmit'))
+            ->setMethods(array('preBind'))
             ->getMock();
         $mock->expects($this->once())
-            ->method('preSubmit')
+            ->method('preBind')
             ->with($this->callback(function ($event) {
                 return null === $event->getData();
             }));
 
         $config = new FormConfigBuilder('name', null, $this->dispatcher);
-        $config->addEventListener(FormEvents::PRE_SUBMIT, array($mock, 'preSubmit'));
+        $config->addEventListener(FormEvents::PRE_BIND, array($mock, 'preBind'));
         $form = new Form($config);
 
-        $form->submit(false);
+        $form->bind(false);
 
         $this->assertTrue($form->isValid());
         $this->assertNull($form->getData());
@@ -192,28 +170,34 @@ class SimpleFormTest extends AbstractFormTest
         $this->assertFalse($child->isRequired());
     }
 
-    /**
-     * @dataProvider getDisabledStates
-     */
-    public function testAlwaysDisabledIfParentDisabled($parentDisabled, $disabled, $result)
+    public function testAlwaysDisabledIfParentDisabled()
     {
-        $parent = $this->getBuilder()->setDisabled($parentDisabled)->getForm();
-        $child = $this->getBuilder()->setDisabled($disabled)->getForm();
+        $parent = $this->getBuilder()->setDisabled(true)->getForm();
+        $child = $this->getBuilder()->setDisabled(false)->getForm();
 
         $child->setParent($parent);
 
-        $this->assertSame($result, $child->isDisabled());
+        $this->assertTrue($child->isDisabled());
     }
 
-    public function getDisabledStates()
+    public function testDisabled()
     {
-        return array(
-            // parent, button, result
-            array(true, true, true),
-            array(true, false, true),
-            array(false, true, true),
-            array(false, false, false),
-        );
+        $parent = $this->getBuilder()->setDisabled(false)->getForm();
+        $child = $this->getBuilder()->setDisabled(true)->getForm();
+
+        $child->setParent($parent);
+
+        $this->assertTrue($child->isDisabled());
+    }
+
+    public function testNotDisabled()
+    {
+        $parent = $this->getBuilder()->setDisabled(false)->getForm();
+        $child = $this->getBuilder()->setDisabled(false)->getForm();
+
+        $child->setParent($parent);
+
+        $this->assertFalse($child->isDisabled());
     }
 
     public function testGetRootReturnsRootOfParent()
@@ -680,7 +664,7 @@ class SimpleFormTest extends AbstractFormTest
         $this->form->addError(new FormError('Error!'));
         $this->form->submit('foobar');
 
-        $this->assertCount(0, $this->form->getErrors());
+        $this->assertSame(array(), $this->form->getErrors());
     }
 
     public function testCreateView()

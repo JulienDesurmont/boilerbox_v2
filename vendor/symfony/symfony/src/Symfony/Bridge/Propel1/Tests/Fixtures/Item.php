@@ -11,22 +11,24 @@
 
 namespace Symfony\Bridge\Propel1\Tests\Fixtures;
 
+use \PropelPDO;
+
 class Item implements \Persistent
 {
     private $id;
+
     private $value;
+
     private $groupName;
+
     private $price;
 
-    private $slug;
-
-    public function __construct($id = null, $value = null, $groupName = null, $price = null, $slug = null)
+    public function __construct($id = null, $value = null, $groupName = null, $price = null)
     {
         $this->id = $id;
         $this->value = $value;
         $this->groupName = $groupName;
         $this->price = $price;
-        $this->slug = $slug;
     }
 
     public function getId()
@@ -52,11 +54,6 @@ class Item implements \Persistent
     public function getPrice()
     {
         return $this->price;
-    }
-
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     public function getPrimaryKey()
@@ -101,11 +98,11 @@ class Item implements \Persistent
     {
     }
 
-    public function delete(\PropelPDO $con = null)
+    public function delete(PropelPDO $con = null)
     {
     }
 
-    public function save(\PropelPDO $con = null)
+    public function save(PropelPDO $con = null)
     {
     }
 }

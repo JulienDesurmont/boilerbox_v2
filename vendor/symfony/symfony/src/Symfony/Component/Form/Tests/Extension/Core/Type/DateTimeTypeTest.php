@@ -12,10 +12,9 @@
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\Test\TypeTestCase as TestCase;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 
-class DateTimeTypeTest extends TestCase
+class DateTimeTypeTest extends TypeTestCase
 {
     protected function setUp()
     {
@@ -281,7 +280,7 @@ class DateTimeTypeTest extends TestCase
         $this->assertEquals('datetime', $view->vars['type']);
     }
 
-    public function testPassDefaultPlaceholderToViewIfNotRequired()
+    public function testPassDefaultEmptyValueToViewIfNotRequired()
     {
         $form = $this->factory->create('datetime', null, array(
             'required' => false,
@@ -289,15 +288,15 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertSame('', $view['date']['year']->vars['placeholder']);
-        $this->assertSame('', $view['date']['month']->vars['placeholder']);
-        $this->assertSame('', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('', $view['time']['hour']->vars['placeholder']);
-        $this->assertSame('', $view['time']['minute']->vars['placeholder']);
-        $this->assertSame('', $view['time']['second']->vars['placeholder']);
+        $this->assertSame('', $view['date']['year']->vars['empty_value']);
+        $this->assertSame('', $view['date']['month']->vars['empty_value']);
+        $this->assertSame('', $view['date']['day']->vars['empty_value']);
+        $this->assertSame('', $view['time']['hour']->vars['empty_value']);
+        $this->assertSame('', $view['time']['minute']->vars['empty_value']);
+        $this->assertSame('', $view['time']['second']->vars['empty_value']);
     }
 
-    public function testPassNoPlaceholderToViewIfRequired()
+    public function testPassNoEmptyValueToViewIfRequired()
     {
         $form = $this->factory->create('datetime', null, array(
             'required' => true,
@@ -305,31 +304,15 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertNull($view['date']['year']->vars['placeholder']);
-        $this->assertNull($view['date']['month']->vars['placeholder']);
-        $this->assertNull($view['date']['day']->vars['placeholder']);
-        $this->assertNull($view['time']['hour']->vars['placeholder']);
-        $this->assertNull($view['time']['minute']->vars['placeholder']);
-        $this->assertNull($view['time']['second']->vars['placeholder']);
+        $this->assertNull($view['date']['year']->vars['empty_value']);
+        $this->assertNull($view['date']['month']->vars['empty_value']);
+        $this->assertNull($view['date']['day']->vars['empty_value']);
+        $this->assertNull($view['time']['hour']->vars['empty_value']);
+        $this->assertNull($view['time']['minute']->vars['empty_value']);
+        $this->assertNull($view['time']['second']->vars['empty_value']);
     }
 
-    public function testPassPlaceholderAsString()
-    {
-        $form = $this->factory->create('datetime', null, array(
-            'placeholder' => 'Empty',
-            'with_seconds' => true,
-        ));
-
-        $view = $form->createView();
-        $this->assertSame('Empty', $view['date']['year']->vars['placeholder']);
-        $this->assertSame('Empty', $view['date']['month']->vars['placeholder']);
-        $this->assertSame('Empty', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['hour']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['minute']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['second']->vars['placeholder']);
-    }
-
-    public function testPassEmptyValueBC()
+    public function testPassEmptyValueAsString()
     {
         $form = $this->factory->create('datetime', null, array(
             'empty_value' => 'Empty',
@@ -337,12 +320,6 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertSame('Empty', $view['date']['year']->vars['placeholder']);
-        $this->assertSame('Empty', $view['date']['month']->vars['placeholder']);
-        $this->assertSame('Empty', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['hour']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['minute']->vars['placeholder']);
-        $this->assertSame('Empty', $view['time']['second']->vars['placeholder']);
         $this->assertSame('Empty', $view['date']['year']->vars['empty_value']);
         $this->assertSame('Empty', $view['date']['month']->vars['empty_value']);
         $this->assertSame('Empty', $view['date']['day']->vars['empty_value']);
@@ -351,10 +328,10 @@ class DateTimeTypeTest extends TestCase
         $this->assertSame('Empty', $view['time']['second']->vars['empty_value']);
     }
 
-    public function testPassPlaceholderAsArray()
+    public function testPassEmptyValueAsArray()
     {
         $form = $this->factory->create('datetime', null, array(
-            'placeholder' => array(
+            'empty_value' => array(
                 'year' => 'Empty year',
                 'month' => 'Empty month',
                 'day' => 'Empty day',
@@ -366,19 +343,19 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertSame('Empty year', $view['date']['year']->vars['placeholder']);
-        $this->assertSame('Empty month', $view['date']['month']->vars['placeholder']);
-        $this->assertSame('Empty day', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('Empty hour', $view['time']['hour']->vars['placeholder']);
-        $this->assertSame('Empty minute', $view['time']['minute']->vars['placeholder']);
-        $this->assertSame('Empty second', $view['time']['second']->vars['placeholder']);
+        $this->assertSame('Empty year', $view['date']['year']->vars['empty_value']);
+        $this->assertSame('Empty month', $view['date']['month']->vars['empty_value']);
+        $this->assertSame('Empty day', $view['date']['day']->vars['empty_value']);
+        $this->assertSame('Empty hour', $view['time']['hour']->vars['empty_value']);
+        $this->assertSame('Empty minute', $view['time']['minute']->vars['empty_value']);
+        $this->assertSame('Empty second', $view['time']['second']->vars['empty_value']);
     }
 
-    public function testPassPlaceholderAsPartialArrayAddEmptyIfNotRequired()
+    public function testPassEmptyValueAsPartialArrayAddEmptyIfNotRequired()
     {
         $form = $this->factory->create('datetime', null, array(
             'required' => false,
-            'placeholder' => array(
+            'empty_value' => array(
                 'year' => 'Empty year',
                 'day' => 'Empty day',
                 'hour' => 'Empty hour',
@@ -388,19 +365,19 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertSame('Empty year', $view['date']['year']->vars['placeholder']);
-        $this->assertSame('', $view['date']['month']->vars['placeholder']);
-        $this->assertSame('Empty day', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('Empty hour', $view['time']['hour']->vars['placeholder']);
-        $this->assertSame('', $view['time']['minute']->vars['placeholder']);
-        $this->assertSame('Empty second', $view['time']['second']->vars['placeholder']);
+        $this->assertSame('Empty year', $view['date']['year']->vars['empty_value']);
+        $this->assertSame('', $view['date']['month']->vars['empty_value']);
+        $this->assertSame('Empty day', $view['date']['day']->vars['empty_value']);
+        $this->assertSame('Empty hour', $view['time']['hour']->vars['empty_value']);
+        $this->assertSame('', $view['time']['minute']->vars['empty_value']);
+        $this->assertSame('Empty second', $view['time']['second']->vars['empty_value']);
     }
 
-    public function testPassPlaceholderAsPartialArrayAddNullIfRequired()
+    public function testPassEmptyValueAsPartialArrayAddNullIfRequired()
     {
         $form = $this->factory->create('datetime', null, array(
             'required' => true,
-            'placeholder' => array(
+            'empty_value' => array(
                 'year' => 'Empty year',
                 'day' => 'Empty day',
                 'hour' => 'Empty hour',
@@ -410,12 +387,12 @@ class DateTimeTypeTest extends TestCase
         ));
 
         $view = $form->createView();
-        $this->assertSame('Empty year', $view['date']['year']->vars['placeholder']);
-        $this->assertNull($view['date']['month']->vars['placeholder']);
-        $this->assertSame('Empty day', $view['date']['day']->vars['placeholder']);
-        $this->assertSame('Empty hour', $view['time']['hour']->vars['placeholder']);
-        $this->assertNull($view['time']['minute']->vars['placeholder']);
-        $this->assertSame('Empty second', $view['time']['second']->vars['placeholder']);
+        $this->assertSame('Empty year', $view['date']['year']->vars['empty_value']);
+        $this->assertNull($view['date']['month']->vars['empty_value']);
+        $this->assertSame('Empty day', $view['date']['day']->vars['empty_value']);
+        $this->assertSame('Empty hour', $view['time']['hour']->vars['empty_value']);
+        $this->assertNull($view['time']['minute']->vars['empty_value']);
+        $this->assertSame('Empty second', $view['time']['second']->vars['empty_value']);
     }
 
     public function testPassHtml5TypeIfSingleTextAndHtml5Format()
@@ -426,17 +403,6 @@ class DateTimeTypeTest extends TestCase
 
         $view = $form->createView();
         $this->assertSame('datetime', $view->vars['type']);
-    }
-
-    public function testDontPassHtml5TypeIfHtml5NotAllowed()
-    {
-        $form = $this->factory->create('datetime', null, array(
-            'widget' => 'single_text',
-            'html5' => false,
-        ));
-
-        $view = $form->createView();
-        $this->assertFalse(isset($view->vars['type']));
     }
 
     public function testDontPassHtml5TypeIfNotHtml5Format()
@@ -467,8 +433,8 @@ class DateTimeTypeTest extends TestCase
 
         $form['date']->addError($error);
 
-        $this->assertSame(array(), iterator_to_array($form['date']->getErrors()));
-        $this->assertSame(array($error), iterator_to_array($form->getErrors()));
+        $this->assertSame(array(), $form['date']->getErrors());
+        $this->assertSame(array($error), $form->getErrors());
     }
 
     public function testDateTypeSingleTextErrorsBubbleUp()
@@ -480,8 +446,8 @@ class DateTimeTypeTest extends TestCase
 
         $form['date']->addError($error);
 
-        $this->assertSame(array(), iterator_to_array($form['date']->getErrors()));
-        $this->assertSame(array($error), iterator_to_array($form->getErrors()));
+        $this->assertSame(array(), $form['date']->getErrors());
+        $this->assertSame(array($error), $form->getErrors());
     }
 
     public function testTimeTypeChoiceErrorsBubbleUp()
@@ -491,8 +457,8 @@ class DateTimeTypeTest extends TestCase
 
         $form['time']->addError($error);
 
-        $this->assertSame(array(), iterator_to_array($form['time']->getErrors()));
-        $this->assertSame(array($error), iterator_to_array($form->getErrors()));
+        $this->assertSame(array(), $form['time']->getErrors());
+        $this->assertSame(array($error), $form->getErrors());
     }
 
     public function testTimeTypeSingleTextErrorsBubbleUp()
@@ -504,7 +470,7 @@ class DateTimeTypeTest extends TestCase
 
         $form['time']->addError($error);
 
-        $this->assertSame(array(), iterator_to_array($form['time']->getErrors()));
-        $this->assertSame(array($error), iterator_to_array($form->getErrors()));
+        $this->assertSame(array(), $form['time']->getErrors());
+        $this->assertSame(array($error), $form->getErrors());
     }
 }

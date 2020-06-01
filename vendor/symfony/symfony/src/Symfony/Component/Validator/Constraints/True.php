@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Constraints;
 
+use Symfony\Component\Validator\Constraint;
+
 /**
  * @Annotation
  * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
@@ -19,6 +21,7 @@ namespace Symfony\Component\Validator\Constraints;
  *
  * @api
  */
-class True extends IsTrue
+class True extends Constraint
 {
+    public $message = 'This value should be true.';
 }

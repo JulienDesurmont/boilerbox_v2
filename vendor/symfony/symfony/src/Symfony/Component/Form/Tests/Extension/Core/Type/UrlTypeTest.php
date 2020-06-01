@@ -11,9 +11,7 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
-use Symfony\Component\Form\Test\TypeTestCase as TestCase;
-
-class UrlTypeTest extends TestCase
+class UrlTypeTest extends TypeTestCase
 {
     public function testSubmitAddsDefaultProtocolIfNoneIsIncluded()
     {
@@ -71,15 +69,5 @@ class UrlTypeTest extends TestCase
 
         $this->assertSame('www.domain.com', $form->getData());
         $this->assertSame('www.domain.com', $form->getViewData());
-    }
-
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     */
-    public function testThrowExceptionIfDefaultProtocolIsInvalid()
-    {
-        $this->factory->create('url', null, array(
-            'default_protocol' => array(),
-        ));
     }
 }

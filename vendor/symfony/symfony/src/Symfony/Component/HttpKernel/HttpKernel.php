@@ -40,7 +40,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     protected $requestStack;
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @param EventDispatcherInterface    $dispatcher   An EventDispatcherInterface instance
      * @param ControllerResolverInterface $resolver     A ControllerResolverInterface instance
@@ -86,25 +86,6 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     * @throws \LogicException If the request stack is empty
-     *
-     * @internal
-     */
-    public function terminateWithException(\Exception $exception)
-    {
-        if (!$request = $this->requestStack->getMasterRequest()) {
-            throw new \LogicException('Request stack is empty', 0, $exception);
-        }
-
-        $response = $this->handleException($exception, $request, self::MASTER_REQUEST);
-
-        $response->sendHeaders();
-        $response->sendContent();
-
-        $this->terminate($request, $response);
-    }
-
-    /**
      * Handles a request to convert it to a response.
      *
      * Exceptions are not caught.
@@ -114,7 +95,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      *
      * @return Response A Response instance
      *
-     * @throws \LogicException       If one of the listener does not behave as expected
+     * @throws \LogicException If one of the listener does not behave as expected
      * @throws NotFoundHttpException When controller cannot be found
      */
     private function handleRaw(Request $request, $type = self::MASTER_REQUEST)
@@ -131,7 +112,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
 
         // load controller
         if (false === $controller = $this->resolver->getController($request)) {
-            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
+            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getPathInfo()));
         }
 
         $event = new FilterControllerEvent($this, $controller, $request, $type);
@@ -267,7 +248,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
                 $a[] = sprintf('%s => %s', $k, $this->varToString($v));
             }
 
-            return sprintf('Array(%s)', implode(', ', $a));
+            return sprintf("Array(%s)", implode(', ', $a));
         }
 
         if (is_resource($var)) {

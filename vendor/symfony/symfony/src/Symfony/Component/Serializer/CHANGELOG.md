@@ -1,24 +1,10 @@
 CHANGELOG
 =========
 
-2.6.0
------
-
- * added a new serializer: `PropertyNormalizer`. Like `GetSetMethodNormalizer`,
-   this normalizer will map an object's properties to an array.
- * added circular references handling for `GetSetMethodNormalizer`
-
-2.5.0
------
-
- * added support for `is.*` getters in `GetSetMethodNormalizer`
-
 2.4.0
 -----
 
  * added `$context` support for XMLEncoder.
- * [DEPRECATION] JsonEncode and JsonDecode where modified to throw
-   an exception if error found. No need for get*Error() functions
 
 2.3.0
 -----

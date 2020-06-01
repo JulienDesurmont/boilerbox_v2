@@ -39,7 +39,7 @@ class YamlExtension extends \Twig_Extension
             $dumper = new YamlDumper();
         }
 
-        return $dumper->dump($input, $inline, 0, false, $dumpObjects);
+        return $dumper->dump($input, $inline, false, $dumpObjects);
     }
 
     public function dump($value, $inline = 0, $dumpObjects = false)
@@ -56,7 +56,9 @@ class YamlExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
      */
     public function getName()
     {

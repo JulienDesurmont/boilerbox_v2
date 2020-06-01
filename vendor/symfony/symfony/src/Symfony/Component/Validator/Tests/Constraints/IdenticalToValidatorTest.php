@@ -13,18 +13,12 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\IdenticalToValidator;
-use Symfony\Component\Validator\Validation;
 
 /**
  * @author Daniel Holmes <daniel@danielholmes.org>
  */
 class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
 {
-    protected function getApiVersion()
-    {
-        return Validation::API_VERSION_2_5;
-    }
-
     protected function createValidator()
     {
         return new IdenticalToValidator();
@@ -35,19 +29,6 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         return new IdenticalTo($options);
     }
 
-    public function provideAllValidComparisons()
-    {
-        $this->setDefaultTimezone('UTC');
-
-        // Don't call addPhp5Dot5Comparisons() automatically, as it does
-        // not take care of identical objects
-        $comparisons = $this->provideValidComparisons();
-
-        $this->restoreDefaultTimezone();
-
-        return $comparisons;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -56,20 +37,13 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         $date = new \DateTime('2000-01-01');
         $object = new ComparisonTest_Class(2);
 
-        $comparisons = array(
+        return array(
             array(3, 3),
             array('a', 'a'),
             array($date, $date),
             array($object, $object),
             array(null, 1),
         );
-
-        if (version_compare(PHP_VERSION, '>=', '5.5')) {
-            $immutableDate = new \DateTimeImmutable('2000-01-01');
-            $comparisons[] = array($immutableDate, $immutableDate);
-        }
-
-        return $comparisons;
     }
 
     /**

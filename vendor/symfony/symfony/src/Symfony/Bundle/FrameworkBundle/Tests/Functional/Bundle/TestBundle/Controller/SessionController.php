@@ -11,15 +11,15 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 class SessionController extends ContainerAware
 {
-    public function welcomeAction(Request $request, $name = null)
+    public function welcomeAction($name = null)
     {
+        $request = $this->container->get('request');
         $session = $request->getSession();
 
         // new session case
@@ -40,23 +40,25 @@ class SessionController extends ContainerAware
         return new Response(sprintf('Welcome back %s, nice to meet you.', $name));
     }
 
-    public function logoutAction(Request $request)
+    public function logoutAction()
     {
-        $request->getSession('session')->invalidate();
+        $request = $this->container->get('request')->getSession('session')->invalidate();
 
         return new Response('Session cleared.');
     }
 
-    public function setFlashAction(Request $request, $message)
+    public function setFlashAction($message)
     {
+        $request = $this->container->get('request');
         $session = $request->getSession();
         $session->getFlashBag()->set('notice', $message);
 
         return new RedirectResponse($this->container->get('router')->generate('session_showflash'));
     }
 
-    public function showFlashAction(Request $request)
+    public function showFlashAction()
     {
+        $request = $this->container->get('request');
         $session = $request->getSession();
 
         if ($session->getFlashBag()->has('notice')) {

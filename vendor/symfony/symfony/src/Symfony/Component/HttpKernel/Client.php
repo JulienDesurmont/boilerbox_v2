@@ -101,13 +101,10 @@ class Client extends BaseClient
 
         $r = new \ReflectionClass('\\Symfony\\Component\\ClassLoader\\ClassLoader');
         $requirePath = str_replace("'", "\\'", $r->getFileName());
-        $symfonyPath = str_replace("'", "\\'", dirname(dirname(dirname(__DIR__))));
-        $errorReporting = error_reporting();
+        $symfonyPath = str_replace("'", "\\'", realpath(__DIR__.'/../../..'));
 
         $code = <<<EOF
 <?php
-
-error_reporting($errorReporting & ~E_USER_DEPRECATED);
 
 require_once '$requirePath';
 
@@ -162,7 +159,7 @@ EOF;
      * If the size of a file is greater than the allowed size (from php.ini) then
      * an invalid UploadedFile is returned with an error set to UPLOAD_ERR_INI_SIZE.
      *
-     * @see UploadedFile
+     * @see Symfony\Component\HttpFoundation\File\UploadedFile
      *
      * @param array $files An array of files
      *

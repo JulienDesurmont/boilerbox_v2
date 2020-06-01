@@ -112,7 +112,7 @@ abstract class BaseTypeTest extends \Symfony\Component\Form\Test\TypeTestCase
             ->getForm()
             ->createView();
 
-        $this->assertNull($view['child']->vars['translation_domain']);
+        $this->assertEquals('messages', $view['child']->vars['translation_domain']);
     }
 
     public function testPassLabelToView()

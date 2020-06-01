@@ -13,7 +13,6 @@ namespace Symfony\Component\Security\Http\Firewall;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Util\StringUtils;
 use Symfony\Component\Security\Http\EntryPoint\DigestAuthenticationEntryPoint;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -94,15 +93,15 @@ class DigestAuthenticationListener implements ListenerInterface
             }
 
             $serverDigestMd5 = $digestAuth->calculateServerDigest($user->getPassword(), $request->getMethod());
-        } catch (UsernameNotFoundException $e) {
+        } catch (UsernameNotFoundException $notFound) {
             $this->fail($event, $request, new BadCredentialsException(sprintf('Username %s not found.', $digestAuth->getUsername())));
 
             return;
         }
 
-        if (!StringUtils::equals($serverDigestMd5, $digestAuth->getResponse())) {
+        if ($serverDigestMd5 !== $digestAuth->getResponse()) {
             if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Expected response: "%s" but received: "%s"; is AuthenticationDao returning clear text passwords?', $serverDigestMd5, $digestAuth->getResponse()));
+                $this->logger->debug(sprintf("Expected response: '%s' but received: '%s'; is AuthenticationDao returning clear text passwords?", $serverDigestMd5, $digestAuth->getResponse()));
             }
 
             $this->fail($event, $request, new BadCredentialsException('Incorrect response'));
@@ -162,7 +161,7 @@ class DigestData
 
     public function getUsername()
     {
-        return strtr($this->elements['username'], array('\\"' => '"', '\\\\' => '\\'));
+        return strtr($this->elements['username'], array("\\\"" => "\"", "\\\\" => "\\"));
     }
 
     public function validateAndDecode($entryPointKey, $expectedRealm)

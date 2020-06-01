@@ -11,12 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
-use Symfony\Component\Form\Test\TypeTestCase as TestCase;
-
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class SubmitTypeTest extends TestCase
+class SubmitTypeTest extends TypeTestCase
 {
     public function testCreateSubmitButtonInstances()
     {

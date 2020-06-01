@@ -11,15 +11,8 @@
 
 namespace Symfony\Component\OptionsResolver;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
-use Symfony\Component\OptionsResolver\Exception\OptionDefinitionException;
-
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @deprecated Deprecated since Symfony 2.6, to be removed in Symfony 3.0.
- *             Use {@link OptionsResolver} instead.
  */
 interface OptionsResolverInterface
 {
@@ -75,6 +68,8 @@ interface OptionsResolverInterface
      * @param array $optionNames A list of option names.
      *
      * @return OptionsResolverInterface The resolver instance.
+     *
+     * @throws Exception\OptionDefinitionException When trying to pass default values.
      */
     public function setOptional(array $optionNames);
 
@@ -87,8 +82,10 @@ interface OptionsResolverInterface
      * @param array $optionNames A list of option names.
      *
      * @return OptionsResolverInterface The resolver instance.
+     *
+     * @throws Exception\OptionDefinitionException When trying to pass default values.
      */
-    public function setRequired($optionNames);
+    public function setRequired(array $optionNames);
 
     /**
      * Sets allowed values for a list of options.
@@ -99,11 +96,11 @@ interface OptionsResolverInterface
      *
      * @return OptionsResolverInterface The resolver instance.
      *
-     * @throws InvalidOptionsException If an option has not been defined
+     * @throws Exception\InvalidOptionsException If an option has not been defined
      *                                 (see {@link isKnown()}) for which
      *                                 an allowed value is set.
      */
-    public function setAllowedValues($allowedValues);
+    public function setAllowedValues(array $allowedValues);
 
     /**
      * Adds allowed values for a list of options.
@@ -116,11 +113,11 @@ interface OptionsResolverInterface
      *
      * @return OptionsResolverInterface The resolver instance.
      *
-     * @throws InvalidOptionsException If an option has not been defined
+     * @throws Exception\InvalidOptionsException If an option has not been defined
      *                                 (see {@link isKnown()}) for which
      *                                 an allowed value is set.
      */
-    public function addAllowedValues($allowedValues);
+    public function addAllowedValues(array $allowedValues);
 
     /**
      * Sets allowed types for a list of options.
@@ -130,10 +127,10 @@ interface OptionsResolverInterface
      *
      * @return OptionsResolverInterface The resolver instance.
      *
-     * @throws InvalidOptionsException If an option has not been defined for
-     *                                 which an allowed type is set.
+     * @throws Exception\InvalidOptionsException If an option has not been defined for
+     *                                           which an allowed type is set.
      */
-    public function setAllowedTypes($allowedTypes);
+    public function setAllowedTypes(array $allowedTypes);
 
     /**
      * Adds allowed types for a list of options.
@@ -145,10 +142,10 @@ interface OptionsResolverInterface
      *
      * @return OptionsResolverInterface The resolver instance.
      *
-     * @throws InvalidOptionsException If an option has not been defined for
-     *                                 which an allowed type is set.
+     * @throws Exception\InvalidOptionsException If an option has not been defined for
+     *                                           which an allowed type is set.
      */
-    public function addAllowedTypes($allowedTypes);
+    public function addAllowedTypes(array $allowedTypes);
 
     /**
      * Sets normalizers that are applied on resolved options.
@@ -178,7 +175,7 @@ interface OptionsResolverInterface
      *
      * @param string $option The name of the option.
      *
-     * @return bool Whether the option is known.
+     * @return bool    Whether the option is known.
      */
     public function isKnown($option);
 
@@ -191,7 +188,7 @@ interface OptionsResolverInterface
      *
      * @param string $option The name of the option.
      *
-     * @return bool Whether the option is required.
+     * @return bool    Whether the option is required.
      */
     public function isRequired($option);
 
@@ -202,12 +199,12 @@ interface OptionsResolverInterface
      *
      * @return array A list of options and their values.
      *
-     * @throws InvalidOptionsException   If any of the passed options has not
-     *                                   been defined or does not contain an
-     *                                   allowed value.
-     * @throws MissingOptionsException   If a required option is missing.
-     * @throws OptionDefinitionException If a cyclic dependency is detected
-     *                                   between two lazy options.
+     * @throws Exception\InvalidOptionsException   If any of the passed options has not
+     *                                             been defined or does not contain an
+     *                                             allowed value.
+     * @throws Exception\MissingOptionsException   If a required option is missing.
+     * @throws Exception\OptionDefinitionException If a cyclic dependency is detected
+     *                                             between two lazy options.
      */
     public function resolve(array $options = array());
 }

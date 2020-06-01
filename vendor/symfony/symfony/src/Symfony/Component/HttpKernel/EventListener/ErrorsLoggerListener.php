@@ -12,7 +12,7 @@
 namespace Symfony\Component\HttpKernel\EventListener;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\HttpKernel\Debug\ErrorHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -21,8 +21,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @author Colin Frei <colin@colinfrei.com>
  * @author Konstantin Myakshin <koc-dp@yandex.ru>
- *
- * @deprecated since 2.6, to be removed in 3.0. Use DebugHandlersListener instead.
  */
 class ErrorsLoggerListener implements EventSubscriberInterface
 {
@@ -40,12 +38,11 @@ class ErrorsLoggerListener implements EventSubscriberInterface
     {
         if (null !== $this->logger) {
             ErrorHandler::setLogger($this->logger, $this->channel);
-            $this->logger = null;
         }
     }
 
     public static function getSubscribedEvents()
     {
-        return array(KernelEvents::REQUEST => array('injectLogger', 2048));
+        return array(KernelEvents::REQUEST => 'injectLogger');
     }
 }

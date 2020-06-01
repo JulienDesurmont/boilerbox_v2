@@ -9,8 +9,7 @@
         <div class="clear-fix"></div>
         <label for="method">Method</label>
         <select name="method" id="method">
-            <option value=""{{ '' == method ? ' selected="selected"' : '' }}>&nbsp;</option>
-            {% for m in ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] %}
+            {% for m in ['', 'DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'] %}
                 <option{{ m == method ? ' selected="selected"' : '' }}>{{ m }}</option>
             {% endfor %}
         </select>
@@ -22,10 +21,10 @@
         <input type="text" name="token" id="token" value="{{ token }}">
         <div class="clear-fix"></div>
         <label for="start">From</label>
-        <input type="date" name="start" id="start" value="{{ start }}">
+        <input type="text" name="start" id="start" value="{{ start }}">
         <div class="clear-fix"></div>
         <label for="end">Until</label>
-        <input type="date" name="end" id="end" value="{{ end }}">
+        <input type="text" name="end" id="end" value="{{ end }}">
         <div class="clear-fix"></div>
         <label for="limit">Limit</label>
         <select name="limit" id="limit">

@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Util\StringUtils;
 
 /**
  * Concrete implementation of the RememberMeServicesInterface providing
@@ -42,19 +41,19 @@ class TokenBasedRememberMeServices extends AbstractRememberMeServices
         }
         try {
             $user = $this->getUserProvider($class)->loadUserByUsername($username);
-        } catch (\Exception $e) {
-            if (!$e instanceof AuthenticationException) {
-                $e = new AuthenticationException($e->getMessage(), $e->getCode(), $e);
+        } catch (\Exception $ex) {
+            if (!$ex instanceof AuthenticationException) {
+                $ex = new AuthenticationException($ex->getMessage(), $ex->getCode(), $ex);
             }
 
-            throw $e;
+            throw $ex;
         }
 
         if (!$user instanceof UserInterface) {
             throw new \RuntimeException(sprintf('The UserProviderInterface implementation must return an instance of UserInterface, but returned "%s".', get_class($user)));
         }
 
-        if (true !== StringUtils::equals($this->generateCookieHash($class, $username, $expires, $user->getPassword()), $hash)) {
+        if (true !== $this->compareHashes($hash, $this->generateCookieHash($class, $username, $expires, $user->getPassword()))) {
             throw new AuthenticationException('The cookie\'s hash is invalid.');
         }
 
@@ -63,6 +62,31 @@ class TokenBasedRememberMeServices extends AbstractRememberMeServices
         }
 
         return $user;
+    }
+
+    /**
+     * Compares two hashes using a constant-time algorithm to avoid (remote)
+     * timing attacks.
+     *
+     * This is the same implementation as used in the BasePasswordEncoder.
+     *
+     * @param string $hash1 The first hash
+     * @param string $hash2 The second hash
+     *
+     * @return bool    true if the two hashes are the same, false otherwise
+     */
+    private function compareHashes($hash1, $hash2)
+    {
+        if (strlen($hash1) !== $c = strlen($hash2)) {
+            return false;
+        }
+
+        $result = 0;
+        for ($i = 0; $i < $c; $i++) {
+            $result |= ord($hash1[$i]) ^ ord($hash2[$i]);
+        }
+
+        return 0 === $result;
     }
 
     /**
@@ -90,17 +114,17 @@ class TokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * Generates the cookie value.
      *
-     * @param string $class
-     * @param string $username The username
-     * @param int    $expires  The Unix timestamp when the cookie expires
-     * @param string $password The encoded password
+     * @param string  $class
+     * @param string  $username The username
+     * @param int     $expires  The Unix timestamp when the cookie expires
+     * @param string  $password The encoded password
+     *
+     * @throws \RuntimeException if username contains invalid chars
      *
      * @return string
      */
     protected function generateCookieValue($class, $username, $expires, $password)
     {
-        // $username is encoded because it might contain COOKIE_DELIMITER,
-        // we assume other values don't
         return $this->encodeCookie(array(
             $class,
             base64_encode($username),
@@ -110,12 +134,14 @@ class TokenBasedRememberMeServices extends AbstractRememberMeServices
     }
 
     /**
-     * Generates a hash for the cookie to ensure it is not being tempered with.
+     * Generates a hash for the cookie to ensure it is not being tempered with
      *
-     * @param string $class
-     * @param string $username The username
-     * @param int    $expires  The Unix timestamp when the cookie expires
-     * @param string $password The encoded password
+     * @param string  $class
+     * @param string  $username The username
+     * @param int     $expires  The Unix timestamp when the cookie expires
+     * @param string  $password The encoded password
+     *
+     * @throws \RuntimeException when the private key is empty
      *
      * @return string
      */

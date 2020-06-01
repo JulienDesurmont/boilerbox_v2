@@ -31,7 +31,6 @@ class TranslationLoader
 
     /**
      * Adds a loader to the translation extractor.
-     *
      * @param string          $format The format of the loader
      * @param LoaderInterface $loader
      */
@@ -48,10 +47,6 @@ class TranslationLoader
      */
     public function loadMessages($directory, MessageCatalogue $catalogue)
     {
-        if (!is_dir($directory)) {
-            return;
-        }
-
         foreach ($this->loaders as $format => $loader) {
             // load any existing translation files
             $finder = new Finder();

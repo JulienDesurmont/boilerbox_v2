@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\PropertyAccess\Tests;
 
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+
 class PropertyAccessorCollectionTest_Car
 {
     private $axes;
@@ -148,11 +150,11 @@ abstract class PropertyAccessorCollectionTest extends PropertyAccessorArrayAcces
 
     /**
      * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     * @expectedExceptionMessage Neither the property "axes" nor one of the methods "addAx()"/"removeAx()", "addAxe()"/"removeAxe()", "addAxis()"/"removeAxis()", "setAxes()", "axes()", "__set()" or "__call()" exist and have public access in class "Mock_PropertyAccessorCollectionTest_CarNoAdderAndRemover
+     * @expectedExceptionMessage Found the public method "addAxis()", but did not find a public "removeAxis()" on class Mock_PropertyAccessorCollectionTest_CarOnlyAdder
      */
-    public function testSetValueFailsIfNoAdderNorRemoverFound()
+    public function testSetValueFailsIfOnlyAdderFound()
     {
-        $car = $this->getMock(__CLASS__.'_CarNoAdderAndRemover');
+        $car = $this->getMock(__CLASS__.'_CarOnlyAdder');
         $axesBefore = $this->getContainer(array(1 => 'second', 3 => 'fourth'));
         $axesAfter = $this->getContainer(array(0 => 'first', 1 => 'second', 2 => 'third'));
 
@@ -163,35 +165,32 @@ abstract class PropertyAccessorCollectionTest extends PropertyAccessorArrayAcces
         $this->propertyAccessor->setValue($car, 'axes', $axesAfter);
     }
 
-    public function testIsWritableReturnsTrueIfAdderAndRemoverExists()
-    {
-        $car = $this->getMock(__CLASS__.'_Car');
-        $axes = $this->getContainer(array(1 => 'first', 2 => 'second', 3 => 'third'));
-
-        $this->assertTrue($this->propertyAccessor->isWritable($car, 'axes', $axes));
-    }
-
-    public function testIsWritableReturnsFalseIfOnlyAdderExists()
-    {
-        $car = $this->getMock(__CLASS__.'_CarOnlyAdder');
-        $axes = $this->getContainer(array(1 => 'first', 2 => 'second', 3 => 'third'));
-
-        $this->assertFalse($this->propertyAccessor->isWritable($car, 'axes', $axes));
-    }
-
-    public function testIsWritableReturnsFalseIfOnlyRemoverExists()
+    /**
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @expectedExceptionMessage Found the public method "removeAxis()", but did not find a public "addAxis()" on class Mock_PropertyAccessorCollectionTest_CarOnlyRemover
+     */
+    public function testSetValueFailsIfOnlyRemoverFound()
     {
         $car = $this->getMock(__CLASS__.'_CarOnlyRemover');
-        $axes = $this->getContainer(array(1 => 'first', 2 => 'second', 3 => 'third'));
+        $axesBefore = $this->getContainer(array(1 => 'second', 3 => 'fourth'));
+        $axesAfter = $this->getContainer(array(0 => 'first', 1 => 'second', 2 => 'third'));
 
-        $this->assertFalse($this->propertyAccessor->isWritable($car, 'axes', $axes));
+        $car->expects($this->any())
+            ->method('getAxes')
+            ->will($this->returnValue($axesBefore));
+
+        $this->propertyAccessor->setValue($car, 'axes', $axesAfter);
     }
 
-    public function testIsWritableReturnsFalseIfNoAdderNorRemoverExists()
+    /**
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @expectedExceptionMessage Neither the property "axes" nor one of the methods "addAx()", "addAxe()", "addAxis()", "setAxes()", "__set()" or "__call()" exist and have public access in class "Mock_PropertyAccessorCollectionTest_CarNoAdderAndRemover
+     */
+    public function testSetValueFailsIfNoAdderAndNoRemoverFound()
     {
         $car = $this->getMock(__CLASS__.'_CarNoAdderAndRemover');
-        $axes = $this->getContainer(array(1 => 'first', 2 => 'second', 3 => 'third'));
+        $axes = $this->getContainer(array(0 => 'first', 1 => 'second', 2 => 'third'));
 
-        $this->assertFalse($this->propertyAccessor->isWritable($car, 'axes', $axes));
+        $this->propertyAccessor->setValue($car, 'axes', $axes);
     }
 }

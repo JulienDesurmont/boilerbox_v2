@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Util\ClassUtils;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface;
 
 /**
- * A SecurityIdentity implementation used for actual users.
+ * A SecurityIdentity implementation used for actual users
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
@@ -27,7 +27,7 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
     private $class;
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @param string $username the username representation
      * @param string $class    the user's fully qualified class name
@@ -36,7 +36,7 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
      */
     public function __construct($username, $class)
     {
-        if ('' === $username || null === $username) {
+        if (empty($username)) {
             throw new \InvalidArgumentException('$username must not be empty.');
         }
         if (empty($class)) {
@@ -48,10 +48,9 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
     }
 
     /**
-     * Creates a user security identity from a UserInterface.
+     * Creates a user security identity from a UserInterface
      *
      * @param UserInterface $user
-     *
      * @return UserSecurityIdentity
      */
     public static function fromAccount(UserInterface $user)
@@ -60,10 +59,9 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
     }
 
     /**
-     * Creates a user security identity from a TokenInterface.
+     * Creates a user security identity from a TokenInterface
      *
      * @param TokenInterface $token
-     *
      * @return UserSecurityIdentity
      */
     public static function fromToken(TokenInterface $token)
@@ -78,7 +76,7 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
     }
 
     /**
-     * Returns the username.
+     * Returns the username
      *
      * @return string
      */
@@ -88,7 +86,7 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
     }
 
     /**
-     * Returns the user's class name.
+     * Returns the user's class name
      *
      * @return string
      */
@@ -102,7 +100,7 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
      */
     public function equals(SecurityIdentityInterface $sid)
     {
-        if (!$sid instanceof self) {
+        if (!$sid instanceof UserSecurityIdentity) {
             return false;
         }
 

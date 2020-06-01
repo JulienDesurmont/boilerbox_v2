@@ -55,7 +55,7 @@ class Logger extends BaseLogger implements LoggerInterface, DebugLoggerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @see Symfony\Component\HttpKernel\Log\DebugLoggerInterface
      */
     public function getLogs()
     {
@@ -67,7 +67,7 @@ class Logger extends BaseLogger implements LoggerInterface, DebugLoggerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @see Symfony\Component\HttpKernel\Log\DebugLoggerInterface
      */
     public function countErrors()
     {

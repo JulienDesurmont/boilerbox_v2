@@ -72,20 +72,19 @@ abstract class Bundle extends ContainerAware implements BundleInterface
     public function getContainerExtension()
     {
         if (null === $this->extension) {
-            $class = $this->getContainerExtensionClass();
+            $basename = preg_replace('/Bundle$/', '', $this->getName());
+
+            $class = $this->getNamespace().'\\DependencyInjection\\'.$basename.'Extension';
             if (class_exists($class)) {
                 $extension = new $class();
 
-                if (!$extension instanceof ExtensionInterface) {
-                    throw new \LogicException(sprintf('Extension %s must implement Symfony\Component\DependencyInjection\Extension\ExtensionInterface.', $class));
-                }
-
                 // check naming convention
-                $basename = preg_replace('/Bundle$/', '', $this->getName());
                 $expectedAlias = Container::underscore($basename);
                 if ($expectedAlias != $extension->getAlias()) {
                     throw new \LogicException(sprintf(
-                        'Users will expect the alias of the default extension of a bundle to be the underscored version of the bundle name ("%s"). You can override "Bundle::getContainerExtension()" if you want to use "%s" or another alias.',
+                        'The extension alias for the default extension of a '.
+                        'bundle must be the underscored version of the '.
+                        'bundle name ("%s" instead of "%s")',
                         $expectedAlias, $extension->getAlias()
                     ));
                 }
@@ -199,17 +198,5 @@ abstract class Bundle extends ContainerAware implements BundleInterface
                 $application->add($r->newInstance());
             }
         }
-    }
-
-    /**
-     * Returns the bundle's container extension class.
-     *
-     * @return string
-     */
-    protected function getContainerExtensionClass()
-    {
-        $basename = preg_replace('/Bundle$/', '', $this->getName());
-
-        return $this->getNamespace().'\\DependencyInjection\\'.$basename.'Extension';
     }
 }

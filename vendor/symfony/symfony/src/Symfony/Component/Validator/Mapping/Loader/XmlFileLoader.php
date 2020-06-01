@@ -11,23 +11,18 @@
 
 namespace Symfony\Component\Validator\Mapping\Loader;
 
-use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Validator\Exception\MappingException;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Config\Util\XmlUtils;
 
-/**
- * Loads validation metadata from an XML file.
- *
- * @author Bernhard Schussek <bschussek@gmail.com>
- */
 class XmlFileLoader extends FileLoader
 {
     /**
-     * The XML nodes of the mapping file.
+     * An array of SimpleXMLElement instances.
      *
-     * @var \SimpleXMLElement[]|null
+     * @var \SimpleXMLElement[]
      */
-    protected $classes;
+    protected $classes = null;
 
     /**
      * {@inheritdoc}
@@ -35,11 +30,8 @@ class XmlFileLoader extends FileLoader
     public function loadClassMetadata(ClassMetadata $metadata)
     {
         if (null === $this->classes) {
-            // This method may throw an exception. Do not modify the class'
-            // state before it completes
-            $xml = $this->parseFile($this->file);
-
             $this->classes = array();
+            $xml = $this->parseFile($this->file);
 
             foreach ($xml->namespace as $namespace) {
                 $this->addNamespaceAlias((string) $namespace['prefix'], trim((string) $namespace));
@@ -51,9 +43,33 @@ class XmlFileLoader extends FileLoader
         }
 
         if (isset($this->classes[$metadata->getClassName()])) {
-            $classDescription = $this->classes[$metadata->getClassName()];
+            $xml = $this->classes[$metadata->getClassName()];
 
-            $this->loadClassMetadataFromXml($metadata, $classDescription);
+            foreach ($xml->{'group-sequence-provider'} as $provider) {
+                $metadata->setGroupSequenceProvider(true);
+            }
+
+            foreach ($xml->{'group-sequence'} as $groupSequence) {
+                if (count($groupSequence->value) > 0) {
+                    $metadata->setGroupSequence($this->parseValues($groupSequence[0]->value));
+                }
+            }
+
+            foreach ($this->parseConstraints($xml->constraint) as $constraint) {
+                $metadata->addConstraint($constraint);
+            }
+
+            foreach ($xml->property as $property) {
+                foreach ($this->parseConstraints($property->constraint) as $constraint) {
+                    $metadata->addPropertyConstraint((string) $property['name'], $constraint);
+                }
+            }
+
+            foreach ($xml->getter as $getter) {
+                foreach ($this->parseConstraints($getter->constraint) as $constraint) {
+                    $metadata->addGetterConstraint((string) $getter['property'], $constraint);
+                }
+            }
 
             return true;
         }
@@ -163,57 +179,22 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * Loads the XML class descriptions from the given file.
+     * Parse a XML File.
      *
-     * @param string $path The path of the XML file
+     * @param string $file Path of file
      *
-     * @return \SimpleXMLElement The class descriptions
+     * @return \SimpleXMLElement
      *
-     * @throws MappingException If the file could not be loaded
+     * @throws MappingException
      */
-    protected function parseFile($path)
+    protected function parseFile($file)
     {
         try {
-            $dom = XmlUtils::loadFile($path, __DIR__.'/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd');
+            $dom = XmlUtils::loadFile($file, __DIR__.'/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd');
         } catch (\Exception $e) {
             throw new MappingException($e->getMessage(), $e->getCode(), $e);
         }
 
         return simplexml_import_dom($dom);
-    }
-
-    /**
-     * Loads the validation metadata from the given XML class description.
-     *
-     * @param ClassMetadata $metadata         The metadata to load
-     * @param array         $classDescription The XML class description
-     */
-    private function loadClassMetadataFromXml(ClassMetadata $metadata, $classDescription)
-    {
-        foreach ($classDescription->{'group-sequence-provider'} as $_) {
-            $metadata->setGroupSequenceProvider(true);
-        }
-
-        foreach ($classDescription->{'group-sequence'} as $groupSequence) {
-            if (count($groupSequence->value) > 0) {
-                $metadata->setGroupSequence($this->parseValues($groupSequence[0]->value));
-            }
-        }
-
-        foreach ($this->parseConstraints($classDescription->constraint) as $constraint) {
-            $metadata->addConstraint($constraint);
-        }
-
-        foreach ($classDescription->property as $property) {
-            foreach ($this->parseConstraints($property->constraint) as $constraint) {
-                $metadata->addPropertyConstraint((string) $property['name'], $constraint);
-            }
-        }
-
-        foreach ($classDescription->getter as $getter) {
-            foreach ($this->parseConstraints($getter->constraint) as $constraint) {
-                $metadata->addGetterConstraint((string) $getter['property'], $constraint);
-            }
-        }
     }
 }

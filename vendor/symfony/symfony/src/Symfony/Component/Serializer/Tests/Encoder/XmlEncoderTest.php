@@ -32,7 +32,7 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
     public function testEncodeScalar()
     {
         $obj = new ScalarDummy();
-        $obj->xmlFoo = 'foo';
+        $obj->xmlFoo = "foo";
 
         $expected = '<?xml version="1.0"?>'."\n".
             '<response>foo</response>'."\n";
@@ -43,7 +43,7 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
     public function testSetRootNodeName()
     {
         $obj = new ScalarDummy();
-        $obj->xmlFoo = 'foo';
+        $obj->xmlFoo = "foo";
 
         $this->encoder->setRootNodeName('test');
         $expected = '<?xml version="1.0"?>'."\n".
@@ -70,11 +70,11 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
                 '@name' => 'Bar',
             ),
             'Foo' => array(
-                'Bar' => 'Test',
+                'Bar' => "Test",
                 '@Type' => 'test',
             ),
             'föo_bär' => 'a',
-            'Bar' => array(1,2,3),
+            "Bar" => array(1,2,3),
             'a' => 'b',
         );
         $expected = '<?xml version="1.0"?>'."\n".
@@ -203,14 +203,6 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($source, $this->encoder->encode($obj, 'xml'));
     }
 
-    public function testEncodeWithNamespace()
-    {
-        $source = $this->getNamespacedXmlSource();
-        $array = $this->getNamespacedArray();
-
-        $this->assertEquals($source, $this->encoder->encode($array, 'xml'));
-    }
-
     public function testEncodeSerializerXmlRootNodeNameOption()
     {
         $options = array('xml_root_node_name' => 'test');
@@ -234,39 +226,6 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
         $obj = $this->getObject();
 
         $this->assertEquals(get_object_vars($obj), $this->encoder->decode($source, 'xml'));
-    }
-
-    public function testDecodeCdataWrapping()
-    {
-        $expected = array(
-            'firstname' => 'Paul <or Me>',
-        );
-
-        $xml = '<?xml version="1.0"?>'."\n".
-            '<response><firstname><![CDATA[Paul <or Me>]]></firstname></response>'."\n";
-
-        $this->assertEquals($expected, $this->encoder->decode($xml, 'xml'));
-    }
-
-    public function testDecodeCdataWrappingAndWhitespace()
-    {
-        $expected = array(
-            'firstname' => 'Paul <or Me>',
-        );
-
-        $xml = '<?xml version="1.0"?>'."\n".
-            '<response><firstname>'."\n".
-                '<![CDATA[Paul <or Me>]]></firstname></response>'."\n";
-
-        $this->assertEquals($expected, $this->encoder->decode($xml, 'xml'));
-    }
-
-    public function testDecodeWithNamespace()
-    {
-        $source = $this->getNamespacedXmlSource();
-        $array = $this->getNamespacedArray();
-
-        $this->assertEquals($array, $this->encoder->decode($source, 'xml'));
     }
 
     public function testDecodeScalarWithAttribute()
@@ -328,56 +287,33 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->encoder->decode($source, 'xml'));
     }
 
-    public function testDecodeIgnoreWhiteSpace()
-    {
-        $source = <<<XML
-<?xml version="1.0"?>
-<people>
-    <person>
-        <firstname>Benjamin</firstname>
-        <lastname>Alexandre</lastname>
-    </person>
-    <person>
-        <firstname>Damien</firstname>
-        <lastname>Clay</lastname>
-    </person>
-</people>
-XML;
-        $expected = array('person' => array(
-            array('firstname' => 'Benjamin', 'lastname' => 'Alexandre'),
-            array('firstname' => 'Damien', 'lastname' => 'Clay'),
-        ));
-
-        $this->assertEquals($expected, $this->encoder->decode($source, 'xml'));
-    }
-
     public function testDecodeWithoutItemHash()
     {
         $obj = new ScalarDummy();
         $obj->xmlFoo = array(
             'foo-bar' => array(
-                '@key' => 'value',
-                'item' => array('@key' => 'key', 'key-val' => 'val'),
+                '@key' => "value",
+                'item' => array("@key" => 'key', "key-val" => 'val'),
             ),
             'Foo' => array(
-                'Bar' => 'Test',
+                'Bar' => "Test",
                 '@Type' => 'test',
             ),
             'föo_bär' => 'a',
-            'Bar' => array(1,2,3),
+            "Bar" => array(1,2,3),
             'a' => 'b',
         );
         $expected = array(
             'foo-bar' => array(
-                '@key' => 'value',
-                'key' => array('@key' => 'key', 'key-val' => 'val'),
+                '@key' => "value",
+                'key' => array('@key' => 'key', "key-val" => 'val'),
             ),
             'Foo' => array(
-                'Bar' => 'Test',
+                'Bar' => "Test",
                 '@Type' => 'test',
             ),
             'föo_bär' => 'a',
-            'Bar' => array(1,2,3),
+            "Bar" => array(1,2,3),
             'a' => 'b',
         );
         $xml = $this->encoder->encode($obj, 'xml');
@@ -430,60 +366,13 @@ XML;
             '</response>'."\n";
     }
 
-    protected function getNamespacedXmlSource()
-    {
-        return '<?xml version="1.0"?>'."\n".
-            '<response xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app" xmlns:media="http://search.yahoo.com/mrss/" xmlns:gd="http://schemas.google.com/g/2005" xmlns:yt="http://gdata.youtube.com/schemas/2007">'.
-            '<qux>1</qux>'.
-            '<app:foo>foo</app:foo>'.
-            '<yt:bar>a</yt:bar><yt:bar>b</yt:bar>'.
-            '<media:baz><media:key>val</media:key><media:key2>val</media:key2><item key="A B">bar</item>'.
-            '<item><title>title1</title></item><item><title>title2</title></item>'.
-            '<Barry size="large"><FooBar gd:id="1"><Baz>Ed</Baz></FooBar></Barry></media:baz>'.
-            '</response>'."\n";
-    }
-
-    protected function getNamespacedArray()
-    {
-        return array(
-            '@xmlns' => 'http://www.w3.org/2005/Atom',
-            '@xmlns:app' => 'http://www.w3.org/2007/app',
-            '@xmlns:media' => 'http://search.yahoo.com/mrss/',
-            '@xmlns:gd' => 'http://schemas.google.com/g/2005',
-            '@xmlns:yt' => 'http://gdata.youtube.com/schemas/2007',
-            'qux' => "1",
-            'app:foo' => "foo",
-            'yt:bar' => array("a", "b"),
-            'media:baz' => array(
-                'media:key' => "val",
-                'media:key2' => "val",
-                'A B' => "bar",
-                'item' => array(
-                    array(
-                        'title' => 'title1',
-                    ),
-                    array(
-                        'title' => 'title2',
-                    ),
-                ),
-                'Barry' => array(
-                    '@size' => 'large',
-                    'FooBar' => array(
-                        'Baz' => 'Ed',
-                        '@gd:id' => 1,
-                    ),
-                ),
-            ),
-        );
-    }
-
     protected function getObject()
     {
         $obj = new Dummy();
         $obj->foo = 'foo';
         $obj->bar = array('a', 'b');
         $obj->baz = array('key' => 'val', 'key2' => 'val', 'A B' => 'bar', 'item' => array(array('title' => 'title1'), array('title' => 'title2')), 'Barry' => array('FooBar' => array('Baz' => 'Ed', '@id' => 1)));
-        $obj->qux = '1';
+        $obj->qux = "1";
 
         return $obj;
     }

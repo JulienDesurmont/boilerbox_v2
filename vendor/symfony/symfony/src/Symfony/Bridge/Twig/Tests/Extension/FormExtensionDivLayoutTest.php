@@ -36,13 +36,13 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
             'form_div_layout.html.twig',
             'custom_widgets.html.twig',
         ));
-        $renderer = new TwigRenderer($rendererEngine, $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManagerInterface'));
+        $renderer = new TwigRenderer($rendererEngine, $this->getMock('Symfony\Component\Form\Extension\Csrf\CsrfProvider\CsrfProviderInterface'));
 
         $this->extension = new FormExtension($renderer);
 
         $loader = new StubFilesystemLoader(array(
             __DIR__.'/../../Resources/views/Form',
-            __DIR__.'/Fixtures/templates/form',
+            __DIR__,
         ));
 
         $environment = new \Twig_Environment($loader, array('strict_variables' => true));

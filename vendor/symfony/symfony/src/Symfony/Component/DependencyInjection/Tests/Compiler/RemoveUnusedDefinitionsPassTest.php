@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\AnalyzeServiceReferencesPass;
+use Symfony\Component\DependencyInjection\Compiler\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\RepeatedPass;
 use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
 use Symfony\Component\DependencyInjection\Definition;
@@ -86,12 +87,14 @@ class RemoveUnusedDefinitionsPassTest extends \PHPUnit_Framework_TestCase
 
         $container
             ->register('foo', 'stdClass')
-            ->setFactory(array('stdClass', 'getInstance'))
+            ->setFactoryClass('stdClass')
+            ->setFactoryMethod('getInstance')
             ->setPublic(false);
 
         $container
             ->register('bar', 'stdClass')
-            ->setFactory(array(new Reference('foo'), 'getInstance'))
+            ->setFactoryService('foo')
+            ->setFactoryMethod('getInstance')
             ->setPublic(false);
 
         $container

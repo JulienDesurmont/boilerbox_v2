@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTes
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-abstract class UserPasswordValidatorTest extends AbstractConstraintValidatorTest
+class UserPasswordValidatorTest extends AbstractConstraintValidatorTest
 {
     const PASSWORD = 's3Cr3t';
 
@@ -86,8 +86,7 @@ abstract class UserPasswordValidatorTest extends AbstractConstraintValidatorTest
 
         $this->validator->validate('secret', $constraint);
 
-        $this->buildViolation('myMessage')
-            ->assertRaised();
+        $this->assertViolation('myMessage');
     }
 
     /**

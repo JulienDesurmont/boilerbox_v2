@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 
 /**
- * ProjectServiceContainer.
+ * ProjectServiceContainer
  *
  * This class has been auto-generated
  * by the Symfony Dependency Injection Component.
@@ -26,6 +26,9 @@ class LazyServiceProjectServiceContainer extends Container
         $this->services =
         $this->scopedServices =
         $this->scopeStacks = array();
+
+        $this->set('service_container', $this);
+
         $this->scopes = array();
         $this->scopeChildren = array();
     }
@@ -46,7 +49,7 @@ class LazyServiceProjectServiceContainer extends Container
             $container = $this;
 
             return $this->services['foo'] = new stdClass_c1d194250ee2e2b7d2eab8b8212368a8(
-                function (&$wrappedInstance, \ProxyManager\Proxy\LazyLoadingInterface $proxy) use ($container) {
+                function (& $wrappedInstance, \ProxyManager\Proxy\LazyLoadingInterface $proxy) use ($container) {
                     $wrappedInstance = $container->getFooService(false);
 
                     $proxy->setProxyInitializer(null);
@@ -94,7 +97,7 @@ class stdClass_c1d194250ee2e2b7d2eab8b8212368a8 extends \stdClass implements \Pr
 
     /**
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __set($name, $value)
     {

@@ -12,6 +12,7 @@
 namespace Symfony\Bridge\Doctrine\Tests\Form\Type;
 
 use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\GroupableEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity;
@@ -43,6 +44,22 @@ class EntityTypeTest extends TypeTestCase
 
     protected function setUp()
     {
+        if (!class_exists('Symfony\Component\Form\Form')) {
+            $this->markTestSkipped('The "Form" component is not available');
+        }
+
+        if (!class_exists('Doctrine\DBAL\Platforms\MySqlPlatform')) {
+            $this->markTestSkipped('Doctrine DBAL is not available.');
+        }
+
+        if (!class_exists('Doctrine\Common\Version')) {
+            $this->markTestSkipped('Doctrine Common is not available.');
+        }
+
+        if (!class_exists('Doctrine\ORM\EntityManager')) {
+            $this->markTestSkipped('Doctrine ORM is not available.');
+        }
+
         $this->em = DoctrineTestHelper::createTestEntityManager();
         $this->emRegistry = $this->createRegistryMock('default', $this->em);
 
@@ -100,16 +117,6 @@ class EntityTypeTest extends TypeTestCase
     public function testClassOptionIsRequired()
     {
         $this->factory->createNamed('name', 'entity');
-    }
-
-    /**
-     * @expectedException Symfony\Component\Form\Exception\RuntimeException
-     */
-    public function testInvalidClassOption()
-    {
-        $this->factory->createNamed('name', 'entity', null, array(
-            'class' => 'foo',
-        ));
     }
 
     public function testSetDataToUninitializedEntityWithNonRequired()
@@ -747,21 +754,6 @@ class EntityTypeTest extends TypeTestCase
         $this->factory->createNamed('name', 'entity', null, array(
             'class' => self::SINGLE_IDENT_CLASS,
             'required' => false,
-            'property' => 'name',
-        ));
-    }
-
-    public function testExplicitEm()
-    {
-        $this->emRegistry->expects($this->never())
-            ->method('getManager');
-
-        $this->emRegistry->expects($this->never())
-            ->method('getManagerForClass');
-
-        $this->factory->createNamed('name', 'entity', null, array(
-            'em' => $this->em,
-            'class' => self::SINGLE_IDENT_CLASS,
             'property' => 'name',
         ));
     }

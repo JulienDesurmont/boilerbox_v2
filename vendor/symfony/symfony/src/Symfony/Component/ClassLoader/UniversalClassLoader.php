@@ -32,8 +32,8 @@ namespace Symfony\Component\ClassLoader;
  *     // register classes with namespaces
  *     $loader->registerNamespaces(array(
  *         'Symfony\Component' => __DIR__.'/component',
- *         'Symfony' => __DIR__.'/framework',
- *         'Sensio' => array(__DIR__.'/src', __DIR__.'/vendor'),
+ *         'Symfony'           => __DIR__.'/framework',
+ *         'Sensio'            => array(__DIR__.'/src', __DIR__.'/vendor'),
  *     ));
  *
  *     // register a library using the PEAR naming convention
@@ -57,8 +57,6 @@ namespace Symfony\Component\ClassLoader;
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @api
- *
- * @deprecated Deprecated since version 2.4, to be removed in 3.0. Use the ClassLoader class instead.
  */
 class UniversalClassLoader
 {
@@ -70,13 +68,13 @@ class UniversalClassLoader
 
     /**
      * Turns on searching the include for class files. Allows easy loading
-     * of installed PEAR packages.
+     * of installed PEAR packages
      *
-     * @param bool $useIncludePath
+     * @param bool    $useIncludePath
      */
     public function useIncludePath($useIncludePath)
     {
-        $this->useIncludePath = (bool) $useIncludePath;
+        $this->useIncludePath = $useIncludePath;
     }
 
     /**
@@ -175,7 +173,7 @@ class UniversalClassLoader
     }
 
     /**
-     * Registers an array of namespaces.
+     * Registers an array of namespaces
      *
      * @param array $namespaces An array of namespaces (namespaces as keys and locations as values)
      *
@@ -231,7 +229,7 @@ class UniversalClassLoader
     /**
      * Registers this instance as an autoloader.
      *
-     * @param bool $prepend Whether to prepend the autoloader or not
+     * @param bool    $prepend Whether to prepend the autoloader or not
      *
      * @api
      */
@@ -245,7 +243,7 @@ class UniversalClassLoader
      *
      * @param string $class The name of the class
      *
-     * @return bool|null True, if loaded
+     * @return bool|null    True, if loaded
      */
     public function loadClass($class)
     {

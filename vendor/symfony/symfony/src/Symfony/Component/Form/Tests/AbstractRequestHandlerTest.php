@@ -267,50 +267,6 @@ abstract class AbstractRequestHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testSubmitMultipleFiles($method)
-    {
-        $form = $this->getMockForm('param1', $method);
-        $file = $this->getMockFile();
-
-        $this->setRequestData($method, array(
-            'param1' => null,
-        ), array(
-            'param2' => $this->getMockFile('2'),
-            'param1' => $file,
-            'param3' => $this->getMockFile('3'),
-        ));
-
-        $form->expects($this->once())
-             ->method('submit')
-             ->with($file, 'PATCH' !== $method);
-
-        $this->requestHandler->handleRequest($form, $this->request);
-    }
-
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testSubmitFileWithNamelessForm($method)
-    {
-        $form = $this->getMockForm(null, $method);
-        $file = $this->getMockFile();
-
-        $this->setRequestData($method, array(
-            '' => null,
-        ), array(
-            '' => $file,
-        ));
-
-        $form->expects($this->once())
-             ->method('submit')
-             ->with($file, 'PATCH' !== $method);
-
-        $this->requestHandler->handleRequest($form, $this->request);
-    }
-
-    /**
      * @dataProvider getPostMaxSizeFixtures
      */
     public function testAddFormErrorIfPostMaxSizeExceeded($contentLength, $iniMax, $shouldFail, array $errorParams = array())
@@ -329,10 +285,9 @@ abstract class AbstractRequestHandlerTest extends \PHPUnit_Framework_TestCase
         $this->requestHandler->handleRequest($form, $this->request);
 
         if ($shouldFail) {
-            $error = new FormError($options['post_max_size_message'], null, $errorParams);
-            $error->setOrigin($form);
+            $errors = array(new FormError($options['post_max_size_message'], null, $errorParams));
 
-            $this->assertEquals(array($error), iterator_to_array($form->getErrors()));
+            $this->assertEquals($errors, $form->getErrors());
             $this->assertTrue($form->isSubmitted());
         } else {
             $this->assertCount(0, $form->getErrors());
@@ -359,7 +314,7 @@ abstract class AbstractRequestHandlerTest extends \PHPUnit_Framework_TestCase
 
     abstract protected function getRequestHandler();
 
-    abstract protected function getMockFile($suffix = '');
+    abstract protected function getMockFile();
 
     protected function getMockForm($name, $method = null, $compound = true)
     {

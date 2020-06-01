@@ -4,14 +4,14 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
+class ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4
 {
     public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '185c4e929cdca231b7544ab54e07fde3' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/functions.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
         '3fad0ebbff9928a94a9d8941fb314bd8' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/functions.php',
-        '185c4e929cdca231b7544ab54e07fde3' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -22,6 +22,7 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Bundle\\SwiftmailerBundle\\' => 33,
             'Symfony\\Bundle\\MonologBundle\\' => 29,
             'Symfony\\Bundle\\AsseticBundle\\' => 29,
@@ -46,7 +47,14 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
         ),
         'D' => 
         array (
+            'Doctrine\\Persistence\\' => 21,
+            'Doctrine\\DBAL\\' => 14,
+            'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\Inflector\\' => 26,
+            'Doctrine\\Common\\Collections\\' => 28,
             'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
+            'Doctrine\\Common\\' => 16,
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
         ),
@@ -60,6 +68,10 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Symfony\\Bundle\\SwiftmailerBundle\\' => 
         array (
@@ -97,9 +109,40 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
         array (
             0 => __DIR__ . '/..' . '/incenteev/composer-parameter-handler',
         ),
+        'Doctrine\\Persistence\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/persistence/lib/Doctrine/Persistence',
+        ),
+        'Doctrine\\DBAL\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/dbal/lib/Doctrine/DBAL',
+        ),
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+        ),
+        'Doctrine\\Common\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
+        ),
+        'Doctrine\\Common\\Collections\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/collections/lib/Doctrine/Common/Collections',
+        ),
         'Doctrine\\Common\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
+        ),
+        'Doctrine\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/reflection/lib/Doctrine/Common',
+            1 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+            2 => __DIR__ . '/..' . '/doctrine/persistence/lib/Doctrine/Common',
+            3 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
         ),
         'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 
         array (
@@ -129,6 +172,10 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
             array (
                 0 => __DIR__ . '/..' . '/symfony/intl',
             ),
+            'Symfony\\Component\\Icu\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/symfony/icu',
+            ),
             'Symfony\\' => 
             array (
                 0 => __DIR__ . '/..' . '/symfony/symfony/src',
@@ -155,30 +202,6 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
             array (
                 0 => __DIR__ . '/..' . '/doctrine/orm/lib',
             ),
-            'Doctrine\\DBAL\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
-            ),
-            'Doctrine\\Common\\Lexer\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
-            ),
-            'Doctrine\\Common\\Inflector\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
-            ),
-            'Doctrine\\Common\\Collections\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/collections/lib',
-            ),
-            'Doctrine\\Common\\Annotations\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/annotations/lib',
-            ),
-            'Doctrine\\Common\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/common/lib',
-            ),
         ),
         'A' => 
         array (
@@ -202,12 +225,13 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
     );
 
     public static $classMap = array (
-        'Collator' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/Collator.php',
-        'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/IntlDateFormatter.php',
-        'Locale' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/Locale.php',
-        'NumberFormatter' => __DIR__ . '/..' . '/symfony/intl/Symfony/Component/Intl/Resources/stubs/NumberFormatter.php',
+        'Collator' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/Collator.php',
+        'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/IntlDateFormatter.php',
+        'Locale' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/Locale.php',
+        'NumberFormatter' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/NumberFormatter.php',
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
         'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
+        'Symfony\\Component\\HttpFoundation\\Resources\\stubs\\FakeFile' => __DIR__ . '/..' . '/symfony/symfony/src/Symfony/Component/HttpFoundation/Resources/stubs/FakeFile.php',
         'scss_formatter' => __DIR__ . '/..' . '/leafo/scssphp/classmap.php',
         'scss_formatter_compressed' => __DIR__ . '/..' . '/leafo/scssphp/classmap.php',
         'scss_formatter_crunched' => __DIR__ . '/..' . '/leafo/scssphp/classmap.php',
@@ -220,11 +244,11 @@ class ComposerStaticInitfa582c42e855618e176c32cfce1e5edf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfa582c42e855618e176c32cfce1e5edf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfa582c42e855618e176c32cfce1e5edf::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitfa582c42e855618e176c32cfce1e5edf::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitfa582c42e855618e176c32cfce1e5edf::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitfa582c42e855618e176c32cfce1e5edf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit9d4238fc31637071acdfb9ebc23ef1e4::$classMap;
 
         }, null, ClassLoader::class);
     }

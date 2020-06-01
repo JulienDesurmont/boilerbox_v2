@@ -13,11 +13,11 @@ namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
- * Validator for Callback constraint.
+ * Validator for Callback constraint
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
@@ -30,8 +30,8 @@ class CallbackValidator extends ConstraintValidator
      */
     public function validate($object, Constraint $constraint)
     {
-        if (!$constraint instanceof Callback) {
-            throw new UnexpectedTypeException($constraint, __NAMESPACE__.'\Callback');
+        if (null === $object) {
+            return;
         }
 
         if (null !== $constraint->callback && null !== $constraint->methods) {
@@ -50,15 +50,13 @@ class CallbackValidator extends ConstraintValidator
         $methods = $constraint->methods ?: array($constraint->callback);
 
         foreach ($methods as $method) {
-            if ($method instanceof \Closure) {
-                $method($object, $this->context);
-            } elseif (is_array($method)) {
+            if (is_array($method) || $method instanceof \Closure) {
                 if (!is_callable($method)) {
                     throw new ConstraintDefinitionException(sprintf('"%s::%s" targeted by Callback constraint is not a valid callable', $method[0], $method[1]));
                 }
 
                 call_user_func($method, $object, $this->context);
-            } elseif (null !== $object) {
+            } else {
                 if (!method_exists($object, $method)) {
                     throw new ConstraintDefinitionException(sprintf('Method "%s" targeted by Callback constraint does not exist', $method));
                 }

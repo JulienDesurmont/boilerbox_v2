@@ -42,7 +42,7 @@ class ActionsHelper extends Helper
      *
      * @return string The fragment content
      *
-     * @see FragmentHandler::render()
+     * @see Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()
      */
     public function render($uri, array $options = array())
     {
@@ -58,7 +58,9 @@ class ActionsHelper extends Helper
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the canonical name of this helper.
+     *
+     * @return string The canonical name
      */
     public function getName()
     {

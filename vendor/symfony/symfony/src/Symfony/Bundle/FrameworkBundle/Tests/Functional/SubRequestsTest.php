@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+/**
+ * @group functional
+ */
 class SubRequestsTest extends WebTestCase
 {
     public function testStateAfterSubRequest()

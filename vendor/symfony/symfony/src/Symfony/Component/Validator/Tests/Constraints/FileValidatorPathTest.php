@@ -30,7 +30,6 @@ class FileValidatorPathTest extends FileValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ file }}', '"foobar"')
-            ->setCode(File::NOT_FOUND_ERROR)
             ->assertRaised();
     }
 }

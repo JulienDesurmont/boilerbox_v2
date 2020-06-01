@@ -11,9 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Templating;
 
+use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Templating\TemplateNameParser as BaseTemplateNameParser;
 
 /**
  * TemplateNameParser converts template names from the short notation
@@ -22,7 +22,7 @@ use Symfony\Component\Templating\TemplateNameParser as BaseTemplateNameParser;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class TemplateNameParser extends BaseTemplateNameParser
+class TemplateNameParser implements TemplateNameParserInterface
 {
     protected $kernel;
     protected $cache = array();
@@ -56,7 +56,7 @@ class TemplateNameParser extends BaseTemplateNameParser
         }
 
         if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)\.([^\.]+)$/', $name, $matches)) {
-            return parent::parse($name);
+            throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.format.engine").', $name));
         }
 
         $template = new TemplateReference($matches[1], $matches[2], $matches[3], $matches[4], $matches[5]);

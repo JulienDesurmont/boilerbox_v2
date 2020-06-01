@@ -90,16 +90,26 @@ class TranslationExtension extends \Twig_Extension
 
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)
     {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
         return $this->translator->trans($message, $arguments, $domain, $locale);
     }
 
     public function transchoice($message, $count, array $arguments = array(), $domain = null, $locale = null)
     {
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
         return $this->translator->transChoice($message, $count, array_merge(array('%count%' => $count), $arguments), $domain, $locale);
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
      */
     public function getName()
     {

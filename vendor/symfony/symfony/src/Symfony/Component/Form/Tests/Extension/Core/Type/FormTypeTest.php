@@ -12,6 +12,7 @@
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
 use Symfony\Component\PropertyAccess\PropertyPath;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Tests\Fixtures\Author;
 use Symfony\Component\Form\Tests\Fixtures\FixedDataTransformer;
@@ -131,49 +132,10 @@ class FormTypeTest extends BaseTypeTest
 
     public function testPassMaxLengthToView()
     {
-        $form = $this->factory->create('form', null, array('attr' => array('maxlength' => 10)));
-        $view = $form->createView();
-
-        $this->assertSame(10, $view->vars['attr']['maxlength']);
-    }
-
-    public function testPassMaxLengthBCToView()
-    {
         $form = $this->factory->create('form', null, array('max_length' => 10));
         $view = $form->createView();
 
-        $this->assertSame(10, $view->vars['attr']['maxlength']);
-    }
-
-    public function testDataClassMayBeNull()
-    {
-        $this->factory->createBuilder('form', null, array(
-            'data_class' => null,
-        ));
-    }
-
-    public function testDataClassMayBeAbstractClass()
-    {
-        $this->factory->createBuilder('form', null, array(
-            'data_class' => 'Symfony\Component\Form\Tests\Fixtures\AbstractAuthor',
-        ));
-    }
-
-    public function testDataClassMayBeInterface()
-    {
-        $this->factory->createBuilder('form', null, array(
-            'data_class' => 'Symfony\Component\Form\Tests\Fixtures\AuthorInterface',
-        ));
-    }
-
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
-     */
-    public function testDataClassMustBeValidClassOrInterface()
-    {
-        $this->factory->createBuilder('form', null, array(
-            'data_class' => 'foobar',
-        ));
+        $this->assertSame(10, $view->vars['max_length']);
     }
 
     public function testSubmitWithEmptyDataCreatesObjectIfClassAvailable()
@@ -326,7 +288,6 @@ class FormTypeTest extends BaseTypeTest
 
     /**
      * @dataProvider provideZeros
-     *
      * @see https://github.com/symfony/symfony/issues/1986
      */
     public function testSetDataThroughParamsWithZero($data, $dataAsString)

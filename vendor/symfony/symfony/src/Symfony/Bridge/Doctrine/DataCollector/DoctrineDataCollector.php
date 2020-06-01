@@ -59,9 +59,9 @@ class DoctrineDataCollector extends DataCollector
         }
 
         $this->data = array(
-            'queries' => $queries,
+            'queries'     => $queries,
             'connections' => $this->connections,
-            'managers' => $this->managers,
+            'managers'    => $this->managers,
         );
     }
 
@@ -117,10 +117,8 @@ class DoctrineDataCollector extends DataCollector
     private function sanitizeQuery($connectionName, $query)
     {
         $query['explainable'] = true;
-        if (!is_array($query['params'])) {
-            $query['params'] = array($query['params']);
-        }
-        foreach ($query['params'] as $j => $param) {
+        $query['params'] = (array) $query['params'];
+        foreach ($query['params'] as $j => &$param) {
             if (isset($query['types'][$j])) {
                 // Transform the param according to the type
                 $type = $query['types'][$j];
@@ -133,7 +131,7 @@ class DoctrineDataCollector extends DataCollector
                 }
             }
 
-            list($query['params'][$j], $explainable) = $this->sanitizeParam($param);
+            list($param, $explainable) = $this->sanitizeParam($param);
             if (!$explainable) {
                 $query['explainable'] = false;
             }

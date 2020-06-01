@@ -17,13 +17,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Getting Entities through the ORM QueryBuilder.
+ * Getting Entities through the ORM QueryBuilder
  */
 class ORMQueryBuilderLoader implements EntityLoaderInterface
 {
     /**
      * Contains the query builder that builds the query for fetching the
-     * entities.
+     * entities
      *
      * This property should only be accessed through queryBuilder.
      *
@@ -32,7 +32,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
     private $queryBuilder;
 
     /**
-     * Construct an ORM Query Builder Loader.
+     * Construct an ORM Query Builder Loader
      *
      * @param QueryBuilder|\Closure $queryBuilder
      * @param EntityManager         $manager
@@ -86,17 +86,8 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         $metadata = $qb->getEntityManager()->getClassMetadata($entity);
         if (in_array($metadata->getTypeOfField($identifier), array('integer', 'bigint', 'smallint'))) {
             $parameterType = Connection::PARAM_INT_ARRAY;
-
-            // Filter out non-integer values (e.g. ""). If we don't, some
-            // databases such as PostgreSQL fail.
-            $values = array_values(array_filter($values, function ($v) {
-                return (string) $v === (string) (int) $v;
-            }));
         } else {
             $parameterType = Connection::PARAM_STR_ARRAY;
-        }
-        if (!$values) {
-            return array();
         }
 
         return $qb->andWhere($where)

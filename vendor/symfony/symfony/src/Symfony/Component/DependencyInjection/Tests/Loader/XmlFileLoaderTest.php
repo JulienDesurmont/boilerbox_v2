@@ -12,8 +12,11 @@
 namespace Symfony\Component\DependencyInjection\Tests\Loader;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
@@ -50,37 +53,37 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $loader = new XmlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/ini'));
         $r = new \ReflectionObject($loader);
-        $m = $r->getMethod('parseFileToDOM');
+        $m = $r->getMethod('parseFile');
         $m->setAccessible(true);
 
         try {
             $m->invoke($loader, self::$fixturesPath.'/ini/parameters.ini');
-            $this->fail('->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->fail('->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Exception\\InvalidArgumentException', $e, '->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
-            $this->assertRegExp(sprintf('#^Unable to parse file ".+%s".$#', 'parameters.ini'), $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Exception\\InvalidArgumentException', $e, '->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->assertRegExp(sprintf('#^Unable to parse file ".+%s".$#', 'parameters.ini'), $e->getMessage(), '->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
 
             $e = $e->getPrevious();
-            $this->assertInstanceOf('InvalidArgumentException', $e, '->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
-            $this->assertStringStartsWith('[ERROR 4] Start tag expected, \'<\' not found (in', $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->assertInstanceOf('InvalidArgumentException', $e, '->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->assertStringStartsWith('[ERROR 4] Start tag expected, \'<\' not found (in', $e->getMessage(), '->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
         }
 
         $loader = new XmlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/xml'));
 
         try {
             $m->invoke($loader, self::$fixturesPath.'/xml/nonvalid.xml');
-            $this->fail('->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
+            $this->fail('->parseFile() throws an InvalidArgumentException if the loaded file does not validate the XSD');
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Exception\\InvalidArgumentException', $e, '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
-            $this->assertRegExp(sprintf('#^Unable to parse file ".+%s".$#', 'nonvalid.xml'), $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file is not a valid XML file');
+            $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Exception\\InvalidArgumentException', $e, '->parseFile() throws an InvalidArgumentException if the loaded file does not validate the XSD');
+            $this->assertRegExp(sprintf('#^Unable to parse file ".+%s".$#', 'nonvalid.xml'), $e->getMessage(), '->parseFile() throws an InvalidArgumentException if the loaded file is not a valid XML file');
 
             $e = $e->getPrevious();
-            $this->assertInstanceOf('InvalidArgumentException', $e, '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
-            $this->assertStringStartsWith('[ERROR 1845] Element \'nonvalid\': No matching global declaration available for the validation root. (in', $e->getMessage(), '->parseFileToDOM() throws an InvalidArgumentException if the loaded file does not validate the XSD');
+            $this->assertInstanceOf('InvalidArgumentException', $e, '->parseFile() throws an InvalidArgumentException if the loaded file does not validate the XSD');
+            $this->assertStringStartsWith('[ERROR 1845] Element \'nonvalid\': No matching global declaration available for the validation root. (in', $e->getMessage(), '->parseFile() throws an InvalidArgumentException if the loaded file does not validate the XSD');
         }
 
         $xml = $m->invoke($loader, self::$fixturesPath.'/xml/services1.xml');
-        $this->assertInstanceOf('DOMDocument', $xml, '->parseFileToDOM() returns an SimpleXMLElement object');
+        $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\SimpleXMLElement', $xml, '->parseFile() returns an SimpleXMLElement object');
     }
 
     public function testLoadParameters()
@@ -179,7 +182,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($services[(string) $args[0]]), '->load() makes a reference to the created ones');
         $inner = $services[(string) $args[0]];
         $this->assertEquals('BazClass', $inner->getClass(), '->load() uses the same configuration as for the anonymous ones');
-        $this->assertFalse($inner->isPublic());
 
         // anonymous service as a property
         $properties = $services['foo']->getProperties();
@@ -213,9 +215,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($services['factory_service']->getClass());
         $this->assertEquals('getInstance', $services['factory_service']->getFactoryMethod());
         $this->assertEquals('baz_factory', $services['factory_service']->getFactoryService());
-        $this->assertEquals('factory', $services['new_factory1']->getFactory(), '->load() parses the factory tag');
-        $this->assertEquals(array(new Reference('baz', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false), 'getClass'), $services['new_factory2']->getFactory(), '->load() parses the factory tag');
-        $this->assertEquals(array('BazClass', 'getInstance'), $services['new_factory3']->getFactory(), '->load() parses the factory tag');
 
         $this->assertTrue($services['request']->isSynthetic(), '->load() parses the synthetic flag');
         $this->assertTrue($services['request']->isSynchronized(), '->load() parses the synchronized flag');
@@ -228,10 +227,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($aliases['another_alias_for_foo']));
         $this->assertEquals('foo', (string) $aliases['another_alias_for_foo']);
         $this->assertFalse($aliases['another_alias_for_foo']->isPublic());
-
-        $this->assertNull($services['request']->getDecoratedService());
-        $this->assertEquals(array('decorated', null), $services['decorator_service']->getDecoratedService());
-        $this->assertEquals(array('decorated', 'decorated.pif-pouf'), $services['decorator_service_with_name']->getDecoratedService());
     }
 
     public function testParsesTags()
@@ -259,31 +254,31 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testConvertDomElementToArray()
     {
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo>bar</foo>');
         $this->assertEquals('bar', XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo foo="bar" />');
         $this->assertEquals(array('foo' => 'bar'), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo><foo>bar</foo></foo>');
         $this->assertEquals(array('foo' => 'bar'), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo><foo>bar<foo>bar</foo></foo></foo>');
         $this->assertEquals(array('foo' => array('value' => 'bar', 'foo' => 'bar')), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo><foo></foo></foo>');
         $this->assertEquals(array('foo' => null), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo><foo><!-- foo --></foo></foo>');
         $this->assertEquals(array('foo' => null), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
 
-        $doc = new \DOMDocument('1.0');
+        $doc = new \DOMDocument("1.0");
         $doc->loadXML('<foo><foo foo="bar"/><foo foo="bar"/></foo>');
         $this->assertEquals(array('foo' => array(array('foo' => 'bar'), array('foo' => 'bar'))), XmlFileLoader::convertDomElementToArray($doc->documentElement), '::convertDomElementToArray() converts a \DomElement to an array');
     }
@@ -430,26 +425,5 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('InvalidArgumentException', $e, '->load() throws an InvalidArgumentException if the configuration contains a document type');
             $this->assertSame('Document types are not allowed.', $e->getMessage(), '->load() throws an InvalidArgumentException if the configuration contains a document type');
         }
-    }
-
-    public function testXmlNamespaces()
-    {
-        $container = new ContainerBuilder();
-        $loader = new XmlFileLoader($container, new FileLocator(self::$fixturesPath.'/xml'));
-        $loader->load('namespaces.xml');
-        $services = $container->getDefinitions();
-
-        $this->assertTrue(isset($services['foo']), '->load() parses <srv:service> elements');
-        $this->assertEquals(1, count($services['foo']->getTag('foo.tag')), '->load parses <srv:tag> elements');
-        $this->assertEquals(array(array('setBar', array('foo'))), $services['foo']->getMethodCalls(), '->load() parses the <srv:call> tag');
-    }
-
-    public function testLoadIndexedArguments()
-    {
-        $container = new ContainerBuilder();
-        $loader = new XmlFileLoader($container, new FileLocator(self::$fixturesPath.'/xml'));
-        $loader->load('services14.xml');
-
-        $this->assertEquals(array('index_0' => 'app'), $container->findDefinition('logger')->getArguments());
     }
 }

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Psr\Log\LoggerInterface;
 
 /**
- * Base class implementing the RememberMeServicesInterface.
+ * Base class implementing the RememberMeServicesInterface
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
@@ -123,21 +123,21 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
             }
 
             return new RememberMeToken($user, $this->providerKey, $this->key);
-        } catch (CookieTheftException $e) {
+        } catch (CookieTheftException $theft) {
             $this->cancelCookie($request);
 
-            throw $e;
-        } catch (UsernameNotFoundException $e) {
+            throw $theft;
+        } catch (UsernameNotFoundException $notFound) {
             if (null !== $this->logger) {
                 $this->logger->info('User for remember-me cookie not found.');
             }
-        } catch (UnsupportedUserException $e) {
+        } catch (UnsupportedUserException $unSupported) {
             if (null !== $this->logger) {
                 $this->logger->warning('User class for remember-me cookie not supported.');
             }
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException $invalid) {
             if (null !== $this->logger) {
-                $this->logger->debug('Remember-Me authentication failed: '.$e->getMessage());
+                $this->logger->debug('Remember-Me authentication failed: '.$invalid->getMessage());
             }
         }
 
@@ -217,7 +217,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
      * @param array   $cookieParts
      * @param Request $request
      *
-     * @return UserInterface
+     * @return TokenInterface
      */
     abstract protected function processAutoLoginCookie(array $cookieParts, Request $request);
 
@@ -251,7 +251,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
     }
 
     /**
-     * Decodes the raw cookie value.
+     * Decodes the raw cookie value
      *
      * @param string $rawCookie
      *
@@ -263,27 +263,19 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
     }
 
     /**
-     * Encodes the cookie parts.
+     * Encodes the cookie parts
      *
      * @param array $cookieParts
      *
      * @return string
-     *
-     * @throws \InvalidArgumentException When $cookieParts contain the cookie delimiter. Extending class should either remove or escape it.
      */
     protected function encodeCookie(array $cookieParts)
     {
-        foreach ($cookieParts as $cookiePart) {
-            if (false !== strpos($cookiePart, self::COOKIE_DELIMITER)) {
-                throw new \InvalidArgumentException(sprintf('$cookieParts should not contain the cookie delimiter "%s"', self::COOKIE_DELIMITER));
-            }
-        }
-
         return base64_encode(implode(self::COOKIE_DELIMITER, $cookieParts));
     }
 
     /**
-     * Deletes the remember-me cookie.
+     * Deletes the remember-me cookie
      *
      * @param Request $request
      */
@@ -297,7 +289,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
     }
 
     /**
-     * Checks whether remember-me capabilities were requested.
+     * Checks whether remember-me capabilities were requested
      *
      * @param Request $request
      *

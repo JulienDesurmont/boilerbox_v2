@@ -11,10 +11,10 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\Type;
 
-use Symfony\Component\Form\Test\FormPerformanceTestCase;
+use Symfony\Component\Form\Tests\FormPerformanceTestCase;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
+use Symfony\Bridge\Doctrine\Tests\DoctrineOrmTestCase;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 
@@ -50,7 +50,7 @@ class EntityTypePerformanceTest extends FormPerformanceTestCase
 
     protected function setUp()
     {
-        $this->em = DoctrineTestHelper::createTestEntityManager();
+        $this->em = DoctrineOrmTestCase::createTestEntityManager();
 
         parent::setUp();
 

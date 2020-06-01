@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\Security\Http\Tests\Firewall;
 
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 
 class AnonymousAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
@@ -29,13 +28,7 @@ class AnonymousAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             ->method('setToken')
         ;
 
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
-        $authenticationManager
-            ->expects($this->never())
-            ->method('authenticate')
-        ;
-
-        $listener = new AnonymousAuthenticationListener($context, 'TheKey', null, $authenticationManager);
+        $listener = new AnonymousAuthenticationListener($context, 'TheKey');
         $listener->handle($this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false));
     }
 
@@ -47,31 +40,25 @@ class AnonymousAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getToken')
             ->will($this->returnValue(null))
         ;
-
-        $anonymousToken = new AnonymousToken('TheKey', 'anon.', array());
-
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
-        $authenticationManager
-            ->expects($this->once())
-            ->method('authenticate')
-            ->with($this->callback(function ($token) {
-                return 'TheKey' === $token->getKey();
-            }))
-            ->will($this->returnValue($anonymousToken))
-        ;
-
         $context
             ->expects($this->once())
             ->method('setToken')
-            ->with($anonymousToken)
+            ->with(self::logicalAnd(
+                $this->isInstanceOf('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken'),
+                $this->attributeEqualTo('key', 'TheKey')
+            ))
         ;
 
-        $listener = new AnonymousAuthenticationListener($context, 'TheKey', null, $authenticationManager);
+        $listener = new AnonymousAuthenticationListener($context, 'TheKey');
         $listener->handle($this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false));
     }
 
     public function testHandledEventIsLogged()
     {
+        if (!interface_exists('Psr\Log\LoggerInterface')) {
+            $this->markTestSkipped('The "LoggerInterface" is not available');
+        }
+
         $context = $this->getMock('Symfony\Component\Security\Core\SecurityContextInterface');
         $logger = $this->getMock('Psr\Log\LoggerInterface');
         $logger->expects($this->once())
@@ -79,9 +66,7 @@ class AnonymousAuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             ->with('Populated SecurityContext with an anonymous Token')
         ;
 
-        $authenticationManager = $this->getMock('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface');
-
-        $listener = new AnonymousAuthenticationListener($context, 'TheKey', $logger, $authenticationManager);
+        $listener = new AnonymousAuthenticationListener($context, 'TheKey', $logger);
         $listener->handle($this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false));
     }
 }

@@ -22,6 +22,6 @@ class FileLoaderImportCircularReferenceException extends FileLoaderLoadException
     {
         $message = sprintf('Circular reference detected in "%s" ("%s" > "%s").', $this->varToString($resources[0]), implode('" > "', $resources), $resources[0]);
 
-        \Exception::__construct($message, $code, $previous);
+        call_user_func('Exception::__construct', $message, $code, $previous);
     }
 }

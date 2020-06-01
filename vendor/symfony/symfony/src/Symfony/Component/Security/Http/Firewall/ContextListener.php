@@ -113,9 +113,6 @@ class ContextListener implements ListenerInterface
             return;
         }
 
-        $this->dispatcher->removeListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'));
-        $this->registered = false;
-
         if (null !== $this->logger) {
             $this->logger->debug('Write SecurityContext in the session');
         }
@@ -137,7 +134,7 @@ class ContextListener implements ListenerInterface
     }
 
     /**
-     * Refreshes the user by reloading it from the user provider.
+     * Refreshes the user by reloading it from the user provider
      *
      * @param TokenInterface $token
      *
@@ -145,7 +142,7 @@ class ContextListener implements ListenerInterface
      *
      * @throws \RuntimeException
      */
-    protected function refreshUser(TokenInterface $token)
+    private function refreshUser(TokenInterface $token)
     {
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
@@ -166,11 +163,11 @@ class ContextListener implements ListenerInterface
                 }
 
                 return $token;
-            } catch (UnsupportedUserException $e) {
+            } catch (UnsupportedUserException $unsupported) {
                 // let's try the next user provider
-            } catch (UsernameNotFoundException $e) {
+            } catch (UsernameNotFoundException $notFound) {
                 if (null !== $this->logger) {
-                    $this->logger->warning(sprintf('Username "%s" could not be found.', $e->getUsername()));
+                    $this->logger->warning(sprintf('Username "%s" could not be found.', $notFound->getUsername()));
                 }
 
                 return;

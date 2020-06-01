@@ -88,8 +88,8 @@ class LogoutUrlHelper extends Helper
     /**
      * Generates the logout URL for the firewall.
      *
-     * @param string      $key           The firewall key
-     * @param bool|string $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
+     * @param string         $key           The firewall key
+     * @param bool|string    $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
      *
      * @return string The logout URL
      *
@@ -106,7 +106,7 @@ class LogoutUrlHelper extends Helper
         $parameters = null !== $csrfTokenManager ? array($csrfParameter => (string) $csrfTokenManager->getToken($csrfTokenId)) : array();
 
         if ('/' === $logoutPath[0]) {
-            $request = $this->container->get('request_stack')->getCurrentRequest();
+            $request = $this->container->get('request');
 
             $url = UrlGeneratorInterface::ABSOLUTE_URL === $referenceType ? $request->getUriForPath($logoutPath) : $request->getBasePath().$logoutPath;
 
@@ -121,7 +121,9 @@ class LogoutUrlHelper extends Helper
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the canonical name of this helper.
+     *
+     * @return string The canonical name
      */
     public function getName()
     {

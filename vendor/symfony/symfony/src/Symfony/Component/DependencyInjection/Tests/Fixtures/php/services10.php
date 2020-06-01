@@ -9,16 +9,13 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 
 /**
- * ProjectServiceContainer.
+ * ProjectServiceContainer
  *
  * This class has been auto-generated
  * by the Symfony Dependency Injection Component.
  */
 class ProjectServiceContainer extends Container
 {
-    private $parameters;
-    private $targetDirs = array();
-
     /**
      * Constructor.
      */
@@ -29,6 +26,9 @@ class ProjectServiceContainer extends Container
         $this->services =
         $this->scopedServices =
         $this->scopeStacks = array();
+
+        $this->set('service_container', $this);
+
         $this->scopes = array();
         $this->scopeChildren = array();
         $this->methodMap = array(
@@ -36,14 +36,6 @@ class ProjectServiceContainer extends Container
         );
 
         $this->aliases = array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function compile()
-    {
-        throw new LogicException('You cannot compile a dumped frozen container.');
     }
 
     /**
@@ -102,7 +94,6 @@ class ProjectServiceContainer extends Container
 
         return $this->parameterBag;
     }
-
     /**
      * Gets the default parameters.
      *

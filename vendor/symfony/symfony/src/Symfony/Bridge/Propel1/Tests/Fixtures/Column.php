@@ -11,16 +11,21 @@
 
 namespace Symfony\Bridge\Propel1\Tests\Fixtures;
 
-class Column extends \ColumnMap
+class Column
 {
     private $name;
-    protected $type;
+
+    private $type;
 
     public function __construct($name, $type)
     {
         $this->name = $name;
         $this->type = $type;
-        $this->phpName = ucfirst($name);
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     public function isText()
@@ -30,13 +35,13 @@ class Column extends \ColumnMap
         }
 
         switch ($this->type) {
-            case \PropelColumnTypes::CHAR:
-            case \PropelColumnTypes::VARCHAR:
-            case \PropelColumnTypes::LONGVARCHAR:
-            case \PropelColumnTypes::BLOB:
-            case \PropelColumnTypes::CLOB:
-            case \PropelColumnTypes::CLOB_EMU:
-                return true;
+        case \PropelColumnTypes::CHAR:
+        case \PropelColumnTypes::VARCHAR:
+        case \PropelColumnTypes::LONGVARCHAR:
+        case \PropelColumnTypes::BLOB:
+        case \PropelColumnTypes::CLOB:
+        case \PropelColumnTypes::CLOB_EMU:
+            return true;
         }
 
         return false;
@@ -49,6 +54,6 @@ class Column extends \ColumnMap
 
     public function isNotNull()
     {
-        return 'id' === $this->name;
+        return ('id' === $this->name);
     }
 }

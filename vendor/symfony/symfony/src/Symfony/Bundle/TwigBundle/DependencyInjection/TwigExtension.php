@@ -36,13 +36,13 @@ class TwigExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('twig.xml');
 
-        foreach ($configs as $key => $config) {
+        foreach ($configs as &$config) {
             if (isset($config['globals'])) {
                 foreach ($config['globals'] as $name => $value) {
                     if (is_array($value) && isset($value['key'])) {
-                        $configs[$key]['globals'][$name] = array(
-                            'key' => $name,
-                            'value' => $value,
+                        $config['globals'][$name] = array(
+                            'key'   => $name,
+                            'value' => $config['globals'][$name],
                         );
                     }
                 }
@@ -55,7 +55,7 @@ class TwigExtension extends Extension
 
         $container->setParameter('twig.exception_listener.controller', $config['exception_controller']);
 
-        $container->setParameter('twig.form.resources', $config['form_themes']);
+        $container->setParameter('twig.form.resources', $config['form']['resources']);
 
         $twigFilesystemLoaderDefinition = $container->getDefinition('twig.loader.filesystem');
 
@@ -75,7 +75,7 @@ class TwigExtension extends Extension
             }
 
             $reflection = new \ReflectionClass($class);
-            if (is_dir($dir = dirname($reflection->getFileName()).'/Resources/views')) {
+            if (is_dir($dir = dirname($reflection->getFilename()).'/Resources/views')) {
                 $this->addTwigPath($twigFilesystemLoaderDefinition, $dir, $bundle);
             }
         }
@@ -109,9 +109,12 @@ class TwigExtension extends Extension
         }
 
         if (isset($config['autoescape_service']) && isset($config['autoescape_service_method'])) {
-            $config['autoescape'] = array(new Reference($config['autoescape_service']), $config['autoescape_service_method']);
+            $container->findDefinition('templating.engine.twig')->addMethodCall('setDefaultEscapingStrategy', array(array(new Reference($config['autoescape_service']), $config['autoescape_service_method'])));
+
+            unset($config['autoescape_service'], $config['autoescape_service_method']);
+        } elseif (!isset($config['autoescape'])) {
+            $container->findDefinition('templating.engine.twig')->addMethodCall('setDefaultEscapingStrategy', array(array(new Reference('templating.engine.twig'), 'guessDefaultEscapingStrategy')));
         }
-        unset($config['autoescape_service'], $config['autoescape_service_method']);
 
         $container->setParameter('twig.options', $config);
 

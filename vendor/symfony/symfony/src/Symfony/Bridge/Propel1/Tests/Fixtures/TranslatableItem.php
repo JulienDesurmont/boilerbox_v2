@@ -11,11 +11,16 @@
 
 namespace Symfony\Bridge\Propel1\Tests\Fixtures;
 
+use PropelPDO;
+
 class TranslatableItem implements \Persistent
 {
     private $id;
+
     private $currentTranslations;
+
     private $groupName;
+
     private $price;
 
     public function __construct($id = null, $translations = array())
@@ -86,15 +91,15 @@ class TranslatableItem implements \Persistent
     {
     }
 
-    public function delete(\PropelPDO $con = null)
+    public function delete(PropelPDO $con = null)
     {
     }
 
-    public function save(\PropelPDO $con = null)
+    public function save(PropelPDO $con = null)
     {
     }
 
-    public function getTranslation($locale = 'de', \PropelPDO $con = null)
+    public function getTranslation($locale = 'de', PropelPDO $con = null)
     {
         if (!isset($this->currentTranslations[$locale])) {
             $translation = new TranslatableItemI18n();

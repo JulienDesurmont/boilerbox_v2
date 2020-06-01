@@ -17,7 +17,7 @@ use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 
 /**
- * ObjectIdentity implementation.
+ * ObjectIdentity implementation
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
@@ -36,7 +36,7 @@ final class ObjectIdentity implements ObjectIdentityInterface
      */
     public function __construct($identifier, $type)
     {
-        if ('' === $identifier) {
+        if (empty($identifier)) {
             throw new \InvalidArgumentException('$identifier cannot be empty.');
         }
         if (empty($type)) {
@@ -48,12 +48,10 @@ final class ObjectIdentity implements ObjectIdentityInterface
     }
 
     /**
-     * Constructs an ObjectIdentity for the given domain object.
+     * Constructs an ObjectIdentity for the given domain object
      *
      * @param object $domainObject
-     *
      * @throws InvalidDomainObjectException
-     *
      * @return ObjectIdentity
      */
     public static function fromDomainObject($domainObject)
@@ -66,10 +64,10 @@ final class ObjectIdentity implements ObjectIdentityInterface
             if ($domainObject instanceof DomainObjectInterface) {
                 return new self($domainObject->getObjectIdentifier(), ClassUtils::getRealClass($domainObject));
             } elseif (method_exists($domainObject, 'getId')) {
-                return new self((string) $domainObject->getId(), ClassUtils::getRealClass($domainObject));
+                return new self($domainObject->getId(), ClassUtils::getRealClass($domainObject));
             }
-        } catch (\InvalidArgumentException $e) {
-            throw new InvalidDomainObjectException($e->getMessage(), 0, $e);
+        } catch (\InvalidArgumentException $invalid) {
+            throw new InvalidDomainObjectException($invalid->getMessage(), 0, $invalid);
         }
 
         throw new InvalidDomainObjectException('$domainObject must either implement the DomainObjectInterface, or have a method named "getId".');
@@ -103,7 +101,7 @@ final class ObjectIdentity implements ObjectIdentityInterface
     }
 
     /**
-     * Returns a textual representation of this object identity.
+     * Returns a textual representation of this object identity
      *
      * @return string
      */

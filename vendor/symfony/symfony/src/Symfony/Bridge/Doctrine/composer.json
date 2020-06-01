@@ -3,7 +3,7 @@
     "type": "symfony-bridge",
     "description": "Symfony Doctrine Bridge",
     "keywords": [],
-    "homepage": "https://symfony.com",
+    "homepage": "http://symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -12,24 +12,21 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
+            "homepage": "http://symfony.com/contributors"
         }
     ],
     "require": {
         "php": ">=5.3.3",
-        "doctrine/common": "~2.3"
+        "doctrine/common": "~2.2"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~2.7",
         "symfony/stopwatch": "~2.2",
-        "symfony/dependency-injection": "~2.2",
-        "symfony/form": "~2.3,>=2.3.8",
+        "symfony/dependency-injection": "~2.0",
+        "symfony/form": "~2.2",
         "symfony/http-kernel": "~2.2",
-        "symfony/property-access": "~2.3",
         "symfony/security": "~2.2",
         "symfony/expression-language": "~2.2",
-        "symfony/validator": "~2.5,>=2.5.5",
-        "symfony/translation": "~2.0,>=2.0.5",
+        "symfony/validator": "~2.3.0",
         "doctrine/data-fixtures": "1.0.*",
         "doctrine/dbal": "~2.2",
         "doctrine/orm": "~2.2,>=2.2.3"
@@ -48,7 +45,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

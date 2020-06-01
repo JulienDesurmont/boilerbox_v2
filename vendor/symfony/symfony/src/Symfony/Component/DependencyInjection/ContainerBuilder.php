@@ -25,7 +25,6 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\InstantiatorInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\RealServiceInstantiator;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * ContainerBuilder is a DI container that provides an API to easily describe services.
@@ -86,17 +85,12 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     private $expressionLanguage;
 
     /**
-     * @var ExpressionFunctionProviderInterface[]
-     */
-    private $expressionLanguageProviders = array();
-
-    /**
      * Sets the track resources flag.
      *
      * If you are not using the loaders and therefore don't want
      * to depend on the Config component, set this flag to false.
      *
-     * @param bool $track true if you want to track resources, false otherwise
+     * @param bool    $track true if you want to track resources, false otherwise
      */
     public function setResourceTracking($track)
     {
@@ -106,7 +100,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Checks if resources are tracked.
      *
-     * @return bool true if resources are tracked, false otherwise
+     * @return bool    true if resources are tracked, false otherwise
      */
     public function isTrackingResources()
     {
@@ -180,7 +174,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param string $name The name of the extension
      *
-     * @return bool If the extension exists
+     * @return bool    If the extension exists
      *
      * @api
      */
@@ -286,9 +280,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @param array  $values    An array of values that customizes the extension
      *
      * @return ContainerBuilder The current instance
-     *
      * @throws BadMethodCallException When this ContainerBuilder is frozen
-     * @throws \LogicException        if the container is frozen
+     *
+     * @throws \LogicException if the container is frozen
      *
      * @api
      */
@@ -434,7 +428,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param string $id The service identifier
      *
-     * @return bool true if the service is defined, false otherwise
+     * @return bool    true if the service is defined, false otherwise
      *
      * @api
      */
@@ -448,8 +442,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Gets a service.
      *
-     * @param string $id              The service identifier
-     * @param int    $invalidBehavior The behavior when the service does not exist
+     * @param string  $id              The service identifier
+     * @param int     $invalidBehavior The behavior when the service does not exist
      *
      * @return object The associated service
      *
@@ -466,41 +460,51 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         $id = strtolower($id);
 
-        if ($service = parent::get($id, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
-            return $service;
-        }
-
-        if (!array_key_exists($id, $this->definitions) && isset($this->aliasDefinitions[$id])) {
-            return $this->get($this->aliasDefinitions[$id]);
-        }
-
         try {
-            $definition = $this->getDefinition($id);
-        } catch (InvalidArgumentException $e) {
+            return parent::get($id, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE);
+        } catch (InactiveScopeException $e) {
             if (ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE !== $invalidBehavior) {
                 return;
             }
 
             throw $e;
-        }
-
-        $this->loading[$id] = true;
-
-        try {
-            $service = $this->createService($definition, $id);
-        } catch (\Exception $e) {
-            unset($this->loading[$id]);
-
-            if ($e instanceof InactiveScopeException && self::EXCEPTION_ON_INVALID_REFERENCE !== $invalidBehavior) {
-                return;
+        } catch (InvalidArgumentException $e) {
+            if (isset($this->loading[$id])) {
+                throw new LogicException(sprintf('The service "%s" has a circular reference to itself.', $id), 0, $e);
             }
 
-            throw $e;
+            if (!$this->hasDefinition($id) && isset($this->aliasDefinitions[$id])) {
+                return $this->get($this->aliasDefinitions[$id]);
+            }
+
+            try {
+                $definition = $this->getDefinition($id);
+            } catch (InvalidArgumentException $e) {
+                if (ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE !== $invalidBehavior) {
+                    return;
+                }
+
+                throw $e;
+            }
+
+            $this->loading[$id] = true;
+
+            try {
+                $service = $this->createService($definition, $id);
+            } catch (\Exception $e) {
+                unset($this->loading[$id]);
+
+                if ($e instanceof InactiveScopeException && self::EXCEPTION_ON_INVALID_REFERENCE !== $invalidBehavior) {
+                    return;
+                }
+
+                throw $e;
+            }
+
+            unset($this->loading[$id]);
+
+            return $service;
         }
-
-        unset($this->loading[$id]);
-
-        return $service;
     }
 
     /**
@@ -522,6 +526,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * constructor.
      *
      * @param ContainerBuilder $container The ContainerBuilder instance to merge.
+     *
      *
      * @throws BadMethodCallException When this ContainerBuilder is frozen
      *
@@ -573,8 +578,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Prepends a config array to the configs of the given extension.
      *
-     * @param string $name   The name of the extension
-     * @param array  $config The config to set
+     * @param string $name    The name of the extension
+     * @param array  $config  The config to set
      */
     public function prependExtensionConfig($name, array $config)
     {
@@ -666,8 +671,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Sets an alias for an existing service.
      *
-     * @param string       $alias The alias to create
-     * @param string|Alias $id    The service to alias
+     * @param string        $alias The alias to create
+     * @param string|Alias  $id    The service to alias
      *
      * @throws InvalidArgumentException if the id is not a string or an Alias
      * @throws InvalidArgumentException if the alias is for itself
@@ -684,7 +689,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             throw new InvalidArgumentException('$id must be a string, or an Alias object.');
         }
 
-        if ($alias === (string) $id) {
+        if ($alias === strtolower($id)) {
             throw new InvalidArgumentException(sprintf('An alias can not reference itself, got a circular reference on "%s".', $alias));
         }
 
@@ -710,7 +715,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param string $id The service identifier
      *
-     * @return bool true if the alias exists, false otherwise
+     * @return bool    true if the alias exists, false otherwise
      *
      * @api
      */
@@ -746,7 +751,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         $id = strtolower($id);
 
-        if (!isset($this->aliasDefinitions[$id])) {
+        if (!$this->hasAlias($id)) {
             throw new InvalidArgumentException(sprintf('The service alias "%s" does not exist.', $id));
         }
 
@@ -768,7 +773,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function register($id, $class = null)
     {
-        return $this->setDefinition($id, new Definition($class));
+        return $this->setDefinition(strtolower($id), new Definition($class));
     }
 
     /**
@@ -840,7 +845,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @param string $id The service identifier
      *
-     * @return bool true if the service definition exists, false otherwise
+     * @return bool    true if the service definition exists, false otherwise
      *
      * @api
      */
@@ -864,7 +869,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         $id = strtolower($id);
 
-        if (!array_key_exists($id, $this->definitions)) {
+        if (!$this->hasDefinition($id)) {
             throw new InvalidArgumentException(sprintf('The service definition "%s" does not exist.', $id));
         }
 
@@ -886,10 +891,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function findDefinition($id)
     {
-        $id = strtolower($id);
-
-        while (isset($this->aliasDefinitions[$id])) {
-            $id = (string) $this->aliasDefinitions[$id];
+        while ($this->hasAlias($id)) {
+            $id = (string) $this->getAlias($id);
         }
 
         return $this->getDefinition($id);
@@ -904,9 +907,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * @return object The service described by the service definition
      *
-     * @throws RuntimeException         When the scope is inactive
-     * @throws RuntimeException         When the factory definition is incomplete
-     * @throws RuntimeException         When the service is a synthetic service
+     * @throws RuntimeException When the scope is inactive
+     * @throws RuntimeException When the factory definition is incomplete
+     * @throws RuntimeException When the service is a synthetic service
      * @throws InvalidArgumentException When configure callable is not callable
      *
      * @internal this method is public because of PHP 5.3 limitations, do not use it explicitly in your code
@@ -942,15 +945,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         $arguments = $this->resolveServices($parameterBag->unescapeValue($parameterBag->resolveValue($definition->getArguments())));
 
-        if (null !== $factory = $definition->getFactory()) {
-            if (is_array($factory)) {
-                $factory = array($this->resolveServices($parameterBag->resolveValue($factory[0])), $factory[1]);
-            } elseif (!is_string($factory)) {
-                throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
-            }
-
-            $service = call_user_func_array($factory, $arguments);
-        } elseif (null !== $definition->getFactoryMethod()) {
+        if (null !== $definition->getFactoryMethod()) {
             if (null !== $definition->getFactoryClass()) {
                 $factory = $parameterBag->resolveValue($definition->getFactoryClass());
             } elseif (null !== $definition->getFactoryService()) {
@@ -1006,7 +1001,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     public function resolveServices($value)
     {
         if (is_array($value)) {
-            $value = array_map(array($this, 'resolveServices'), $value);
+            foreach ($value as &$v) {
+                $v = $this->resolveServices($v);
+            }
         } elseif ($value instanceof Reference) {
             $value = $this->get((string) $value, $value->getInvalidBehavior());
         } elseif ($value instanceof Definition) {
@@ -1063,19 +1060,6 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         }
 
         return array_unique($tags);
-    }
-
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
-    {
-        $this->expressionLanguageProviders[] = $provider;
-    }
-
-    /**
-     * @return ExpressionFunctionProviderInterface[]
-     */
-    public function getExpressionLanguageProviders()
-    {
-        return $this->expressionLanguageProviders;
     }
 
     /**
@@ -1154,7 +1138,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     }
 
     /**
-     * Shares a given service in the container.
+     * Shares a given service in the container
      *
      * @param Definition $definition
      * @param mixed      $service
@@ -1183,7 +1167,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
                 throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
             }
-            $this->expressionLanguage = new ExpressionLanguage(null, $this->expressionLanguageProviders);
+            $this->expressionLanguage = new ExpressionLanguage();
         }
 
         return $this->expressionLanguage;

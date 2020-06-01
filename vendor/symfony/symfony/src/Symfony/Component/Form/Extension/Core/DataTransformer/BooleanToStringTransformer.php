@@ -23,8 +23,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class BooleanToStringTransformer implements DataTransformerInterface
 {
     /**
-     * The value emitted upon transform if the input is true.
-     *
+     * The value emitted upon transform if the input is true
      * @var string
      */
     private $trueValue;

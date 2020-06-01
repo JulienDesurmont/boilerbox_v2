@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\TranslatorPass;
 
@@ -26,10 +27,7 @@ class TranslatorPassTest extends \PHPUnit_Framework_TestCase
             ->method('addMethodCall')
             ->with('addLoader', array('xlf', new Reference('xliff')));
 
-        $container = $this->getMock(
-            'Symfony\Component\DependencyInjection\ContainerBuilder',
-            array('hasDefinition', 'getDefinition', 'findTaggedServiceIds', 'findDefinition')
-        );
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
         $container->expects($this->any())
             ->method('hasDefinition')
             ->will($this->returnValue(true));

@@ -9,15 +9,13 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\Intl\Locale\Locale as IntlLocale;
-
 /**
- * Stub implementation for the Locale class of the intl extension.
+ * Stub implementation for the Locale class of the intl extension
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @see IntlLocale
+ * @see \Symfony\Component\Intl\Locale\Locale
  */
-class Locale extends IntlLocale
+class Locale extends \Symfony\Component\Intl\Locale\Locale
 {
 }

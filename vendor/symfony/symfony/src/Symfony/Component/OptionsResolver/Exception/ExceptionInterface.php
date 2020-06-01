@@ -12,7 +12,7 @@
 namespace Symfony\Component\OptionsResolver\Exception;
 
 /**
- * Marker interface for all exceptions thrown by the OptionsResolver component.
+ * Marker interface for the Options component.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */

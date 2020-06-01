@@ -3,7 +3,7 @@
     "type": "symfony-bridge",
     "description": "Symfony Twig Bridge",
     "keywords": [],
-    "homepage": "https://symfony.com",
+    "homepage": "http://symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -12,31 +12,26 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
+            "homepage": "http://symfony.com/contributors"
         }
     ],
     "require": {
         "php": ">=5.3.3",
-        "twig/twig": "~1.13,>=1.13.1"
+        "symfony/security-csrf": "~2.4",
+        "twig/twig": "~1.12"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~2.7",
-        "symfony/finder": "~2.3",
-        "symfony/form": "~2.6,>=2.6.10",
-        "symfony/http-kernel": "~2.3",
-        "symfony/intl": "~2.3",
+        "symfony/form": "~2.2,<2.5.0",
+        "symfony/http-kernel": "~2.2",
         "symfony/routing": "~2.2",
         "symfony/templating": "~2.1",
         "symfony/translation": "~2.2",
-        "symfony/yaml": "~2.0,>=2.0.5",
+        "symfony/yaml": "~2.0",
         "symfony/security": "~2.4",
         "symfony/stopwatch": "~2.2",
-        "symfony/console": "~2.4",
-        "symfony/var-dumper": "~2.6",
         "symfony/expression-language": "~2.4"
     },
     "suggest": {
-        "symfony/finder": "",
         "symfony/form": "For using the FormExtension",
         "symfony/http-kernel": "For using the HttpKernelExtension",
         "symfony/routing": "For using the RoutingExtension",
@@ -45,7 +40,6 @@
         "symfony/yaml": "For using the YamlExtension",
         "symfony/security": "For using the SecurityExtension",
         "symfony/stopwatch": "For using the StopwatchExtension",
-        "symfony/var-dumper": "For using the DumpExtension",
         "symfony/expression-language": "For using the ExpressionExtension"
     },
     "autoload": {
@@ -55,7 +49,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

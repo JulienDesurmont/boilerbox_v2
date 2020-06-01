@@ -14,7 +14,6 @@ namespace Symfony\Component\Form\Extension\DataCollector;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Default implementation of {@link FormDataExtractorInterface}.
@@ -44,7 +43,6 @@ class FormDataExtractor implements FormDataExtractorInterface
     {
         $data = array(
             'id' => $this->buildId($form),
-            'name' => $form->getName(),
             'type' => $form->getConfig()->getType()->getName(),
             'type_class' => get_class($form->getConfig()->getType()->getInnerType()),
             'synchronized' => $this->valueExporter->exportValue($form->isSynchronized()),
@@ -110,47 +108,9 @@ class FormDataExtractor implements FormDataExtractorInterface
         }
 
         foreach ($form->getErrors() as $error) {
-            $errorData = array(
+            $data['errors'][] = array(
                 'message' => $error->getMessage(),
-                'origin' => is_object($error->getOrigin())
-                    ? spl_object_hash($error->getOrigin())
-                    : null,
-                'trace' => array(),
             );
-
-            $cause = $error->getCause();
-
-            while (null !== $cause) {
-                if ($cause instanceof ConstraintViolationInterface) {
-                    $errorData['trace'][] = array(
-                        'class' => $this->valueExporter->exportValue(get_class($cause)),
-                        'root' => $this->valueExporter->exportValue($cause->getRoot()),
-                        'path' => $this->valueExporter->exportValue($cause->getPropertyPath()),
-                        'value' => $this->valueExporter->exportValue($cause->getInvalidValue()),
-                    );
-
-                    $cause = method_exists($cause, 'getCause') ? $cause->getCause() : null;
-
-                    continue;
-                }
-
-                if ($cause instanceof \Exception) {
-                    $errorData['trace'][] = array(
-                        'class' => $this->valueExporter->exportValue(get_class($cause)),
-                        'message' => $this->valueExporter->exportValue($cause->getMessage()),
-                    );
-
-                    $cause = $cause->getPrevious();
-
-                    continue;
-                }
-
-                $errorData['trace'][] = $cause;
-
-                break;
-            }
-
-            $data['errors'][] = $errorData;
         }
 
         $data['synchronized'] = $this->valueExporter->exportValue($form->isSynchronized());
@@ -167,12 +127,8 @@ class FormDataExtractor implements FormDataExtractorInterface
 
         // Set the ID in case no FormInterface object was collected for this
         // view
-        if (!isset($data['id'])) {
-            $data['id'] = isset($view->vars['id']) ? $view->vars['id'] : null;
-        }
-
-        if (!isset($data['name'])) {
-            $data['name'] = isset($view->vars['name']) ? $view->vars['name'] : null;
+        if (isset($view->vars['id'])) {
+            $data['id'] = $view->vars['id'];
         }
 
         foreach ($view->vars as $varName => $value) {

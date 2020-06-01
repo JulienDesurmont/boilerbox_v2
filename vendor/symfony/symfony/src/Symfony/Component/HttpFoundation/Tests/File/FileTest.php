@@ -45,19 +45,6 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('gif', $file->guessExtension());
     }
 
-    public function testGuessExtensionWithReset()
-    {
-        $file = new File(__DIR__.'/Fixtures/other-file.example');
-        $guesser = $this->createMockGuesser($file->getPathname(), 'image/gif');
-        MimeTypeGuesser::getInstance()->register($guesser);
-
-        $this->assertEquals('gif', $file->guessExtension());
-
-        MimeTypeGuesser::reset();
-
-        $this->assertNull($file->guessExtension());
-    }
-
     public function testConstructWhenFileNotExists()
     {
         $this->setExpectedException('Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException');
@@ -129,7 +116,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         copy(__DIR__.'/Fixtures/test.gif', $path);
 
         $file = new File($path);
-        $movedFile = $file->move($targetDir, $filename);
+        $movedFile = $file->move($targetDir,$filename);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\File\File', $movedFile);
 
         $this->assertTrue(file_exists($targetPath));

@@ -88,7 +88,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
         try {
             $provider->findAcl($oid);
             $this->fail('ACL has not been properly deleted.');
-        } catch (AclNotFoundException $e) {
+        } catch (AclNotFoundException $notFound) {
         }
     }
 
@@ -104,7 +104,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
         try {
             $provider->findAcl(new ObjectIdentity(1, 'Foo'));
             $this->fail('Child-ACLs have not been deleted.');
-        } catch (AclNotFoundException $e) {
+        } catch (AclNotFoundException $notFound) {
         }
     }
 
@@ -290,7 +290,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
         try {
             $provider->updateAcl($acl1);
             $this->fail('Provider failed to detect a concurrent modification.');
-        } catch (ConcurrentModificationException $e) {
+        } catch (ConcurrentModificationException $ex) {
         }
     }
 
@@ -410,39 +410,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
         $provider->updateAcl($acl);
     }
 
-    public function testUpdateUserSecurityIdentity()
-    {
-        $provider = $this->getProvider();
-        $acl = $provider->createAcl(new ObjectIdentity(1, 'Foo'));
-        $sid = new UserSecurityIdentity('johannes', 'FooClass');
-        $acl->setEntriesInheriting(!$acl->isEntriesInheriting());
-
-        $acl->insertObjectAce($sid, 1);
-        $acl->insertClassAce($sid, 5, 0, false);
-        $acl->insertObjectAce($sid, 2, 1, true);
-        $acl->insertClassFieldAce('field', $sid, 2, 0, true);
-        $provider->updateAcl($acl);
-
-        $newSid = new UserSecurityIdentity('mathieu', 'FooClass');
-        $provider->updateUserSecurityIdentity($newSid, 'johannes');
-
-        $reloadProvider = $this->getProvider();
-        $reloadedAcl = $reloadProvider->findAcl(new ObjectIdentity(1, 'Foo'));
-
-        $this->assertNotSame($acl, $reloadedAcl);
-        $this->assertSame($acl->isEntriesInheriting(), $reloadedAcl->isEntriesInheriting());
-
-        $aces = $acl->getObjectAces();
-        $reloadedAces = $reloadedAcl->getObjectAces();
-        $this->assertEquals(count($aces), count($reloadedAces));
-        foreach ($reloadedAces as $ace) {
-            $this->assertTrue($ace->getSecurityIdentity()->equals($newSid));
-        }
-    }
-
     /**
-     * Imports acls.
-     *
      * Data must have the following format:
      * array(
      *     *name* => array(
@@ -454,7 +422,6 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
      *
      * @param AclProvider $provider
      * @param array       $data
-     *
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
@@ -478,7 +445,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
 
                 if (isset($aclData['parent_acl'])) {
                     if (isset($aclIds[$aclData['parent_acl']])) {
-                        $con->executeQuery('UPDATE acl_object_identities SET parent_object_identity_id = '.$aclIds[$aclData['parent_acl']].' WHERE id = '.$aclId);
+                        $con->executeQuery("UPDATE acl_object_identities SET parent_object_identity_id = ".$aclIds[$aclData['parent_acl']]." WHERE id = ".$aclId);
                         $con->executeQuery($this->callMethod($provider, 'getInsertObjectIdentityRelationSql', array($aclId, $aclIds[$aclData['parent_acl']])));
                     } else {
                         $parentAcls[$aclId] = $aclData['parent_acl'];
@@ -491,7 +458,7 @@ class MutableAclProviderTest extends \PHPUnit_Framework_TestCase
                     throw new \InvalidArgumentException(sprintf('"%s" does not exist.', $name));
                 }
 
-                $con->executeQuery(sprintf('UPDATE acl_object_identities SET parent_object_identity_id = %d WHERE id = %d', $aclIds[$name], $aclId));
+                $con->executeQuery(sprintf("UPDATE acl_object_identities SET parent_object_identity_id = %d WHERE id = %d", $aclIds[$name], $aclId));
                 $con->executeQuery($this->callMethod($provider, 'getInsertObjectIdentityRelationSql', array($aclId, $aclIds[$name])));
             }
 
