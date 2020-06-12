@@ -875,7 +875,7 @@ public function configurationAuto($type) {
 
 	// Variable de la nouvelle version
 	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.13.2";
+	$liste_conf['numero_version']['value'] = "2.14.0";
 	$liste_conf['numero_version']['parametreAdmin'] = true;
 
 
@@ -883,6 +883,9 @@ public function configurationAuto($type) {
     $liste_conf['nb_jours_nb_db_donnees']['value'] = "3";
     $liste_conf['nb_jours_nb_db_donnees']['parametreAdmin'] = true;
 
+	$liste_conf['listing_nb_par_page']['description'] = "Indique le nombre de listing à afficher par page";
+	$liste_conf['listing_nb_par_page']['value'] = "1000";
+	$liste_conf['listing_nb_par_page']['parametreAdmin'] = false;
 
 		
 
