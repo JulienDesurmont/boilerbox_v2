@@ -347,7 +347,7 @@ public function importAction() {
 				}
 				$pattern = '/^tei_(.+?)_(.+?)_#(.+?)#_.+?$/';
 				if (! preg_match($pattern, $nomfichier, $tabNomFichier)) {
-					 $this->getRequest()->getSession()->getFlashBag()->add('info', 'Nomenclature du fichier attendue : TEI_CodeAffaire_NumLocalisation_#(CodeProgramme || noprog)#_Horodatage. ( Fichier reçu '.$nomfichier.' )');
+					$this->getRequest()->getSession()->getFlashBag()->add('info', 'Nomenclature du fichier attendue : TEI_CodeAffaire_NumLocalisation_#(CodeProgramme || noprog)#_Horodatage. ( Fichier reçu '.$nomfichier.' )');
 					$dbh = $connexion->disconnect();
 					return $this->render('IpcConfigurationBundle:Configuration:import_table_echange_ipc.html.twig', array(
 						'form' => $form->createView(),
@@ -1032,26 +1032,6 @@ public function creationSiteAction($numfresh) {
 			$site = new Site();
 			$intitule = htmlspecialchars($_POST['Site']['intitule']);
 			$affaire = htmlspecialchars($_POST['Site']['affaire']);
-			$login_ftp = htmlspecialchars($_POST['Site']['login_ftp']);
-			$mot_de_passe_ftp = htmlspecialchars($_POST['Site']['password_ftp']['first']);
-			$confirmation = htmlspecialchars($_POST['Site']['password_ftp']['second']);
-			// Vérification de la conformité des mdp
-			if ($mot_de_passe_ftp != $confirmation) {
-				$this->container->get("session")->getFlashBag()->add('info', "Les mots de passes ne sont pas identiques");
-				$liste_sites = $em->getRepository('IpcProgBundle:Site')->findAll();
-				$dbh = $connexion->disconnect();
-				$response = new Response($this->renderView('IpcConfigurationBundle:Configuration:creationSite.html.twig', array(
-					'liste_sites' => $liste_sites,
-					'form_loc' => $form_localisation->createView(),
-					'form' => $form->createView(),
-					'hasError' 	=> $request->getMethod() == 'POST' && !$form->isValid(),
-					'sessionCourante' => $this->session->getSessionName(),
-        			'tabSessions' => $this->session->getTabSessions()
-				)));
-				$response->setPublic();
-				$response->setETag(md5($response->getContent()));
-				return $response;
-			}
 			$nbAutomates = 0;
 			if (isset($_POST['Site']['siteCourant'])) {
 				$siteCourant = 1;
@@ -1061,8 +1041,6 @@ public function creationSiteAction($numfresh) {
 			$site->setIntitule($intitule);
 			$site->setAffaire($affaire);
 			$site->setSiteCourant($siteCourant);
-			$site->setLoginFtp($login_ftp);
-			$site->setPasswordFtp($mot_de_passe_ftp);
 			if ($site->getSiteCourant() == true) {
 				// Le précédent Site courant passe à false et sa date de fin d'exploitation est mise à jour
 				$site->SqlUncheck($dbh, $site->SqlGetIdCourant($dbh), $site->getDebutExploitationStr());
@@ -1152,41 +1130,15 @@ public function creationSiteAction($numfresh) {
 			$id = intval(htmlspecialchars($_POST['idconf']));
 			$intitule = htmlspecialchars($_POST['intitule']);
 			$affaire = htmlspecialchars($_POST['affaire']);
-			$login_ftp = htmlspecialchars($_POST['loginFtp']);
-			$mot_de_passe = htmlspecialchars($_POST['passwordFtp']);
-			$confirmation = htmlspecialchars($_POST['confirmation']);
 			$debExploit	= htmlspecialchars($_POST['debutExploitation']);
 			$finExploit = htmlspecialchars($_POST['finExploitation']);
 			// Si un des paramètres n'est pas définit, retour d'un message d'erreur
-			if (($intitule == '') || ($affaire == '') || ($debExploit == '') || ($login_ftp == '')) {
+			if (($intitule == '') || ($affaire == '') || ($debExploit == '')) {
 				$this->get("session")->getFlashBag()->add('info', "Veuillez remplir tous les champs svp");
 				break;
 			}
 			// Récupération du site dont l'id est $id
 			$site = $em->getRepository('IpcProgBundle:Site')->find($id);
-			// Si le login ftp diffère du précédent un mot de passe ftp est requis
-			if ($login_ftp != $site->getLoginFtp()) {
-				if ((! $mot_de_passe) || (! $confirmation)) {
-					$this->get("session")->getFlashBag()->add('info', 'Veuillez entrer le mdp pour le nouvel accès ftp svp');
-					break;
-				}
-			}
-			if ($mot_de_passe != $confirmation) {
-				$this->container->get("session")->getFlashBag()->add('info', "Les mots de passes ne sont pas identiques");
-				$liste_sites = $em->getRepository('IpcProgBundle:Site')->findAll();
-				$dbh = $connexion->disconnect();
-				$response = new Response($this->renderView('IpcConfigurationBundle:Configuration:creationSite.html.twig', array(
-					'liste_sites' => $liste_sites,
-					'form' => $form->createView(),
-					'form_loc' => $form_localisation->createView(),
-					'hasError' => $request->getMethod() == 'POST' && !$form->isValid(),
-					'sessionCourante' => $this->session->getSessionName(),
-        			'tabSessions' => $this->session->getTabSessions()
-				)));
-				$response->setPublic();
-				$response->setETag(md5($response->getContent()));
-				return $response;
-			}
 			if (isset($_POST['siteCourant'])) {
 				$siteCourant = 1;
 			} else {
@@ -1194,7 +1146,6 @@ public function creationSiteAction($numfresh) {
 			}
 			$site->setIntitule($intitule);
 			$site->setAffaire($affaire);
-			$site->setLoginFtp($login_ftp);
 			$site->setSiteCourant($siteCourant);
 			if ($site->getSiteCourant() == true) {
 				// Le précédent Site courant passe à false et sa date de fin d'exploitation est mise à jour
@@ -1206,10 +1157,6 @@ public function creationSiteAction($numfresh) {
 			}
 			if ($finExploit) {
 				$site->setFinExploitation(new \Datetime($finExploit));
-			}
-			// Mise à jour avec modification des paramètres ftp si un mot de passe est entré
-			if ($mot_de_passe) {
-				$site->setPasswordFtp($mot_de_passe);
 			}
 			try {
 				$em->flush();
