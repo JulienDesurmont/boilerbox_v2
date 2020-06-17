@@ -382,11 +382,13 @@ function sendAjaxForm(page) {
 		}
 		// Modification de la variable globale
 		tabRequete = nouvelle_liste;
-		var texte_requete_html  = "<table><thead><tr><th class='localisation'>" + traduire('label.localisation') + "</th><th class='code'>" + traduire('label.code_message') + "</th><th class='designation'>" + traduire('label.designation') + "</th><th class='actions'>" + traduire('label.action') + "</th></tr></thead>";
-		texte_requete_html = texte_requete_html + "<tbody>";
+		var en_tete_texte_requete_html  = "<table><thead><tr><th class='localisation'>" + traduire('label.localisation') + "</th><th class='code'>" + traduire('label.code_message') + "</th><th class='designation'>" + traduire('label.designation') + "</th><th class='actions'>" + traduire('label.action') + "</th></tr></thead>";
+		var body_texte_requete_html = "<tbody>";
+		var content_body = '';
+		
 		var numListe = 0;
 		for (liste in nouvelle_liste) {
-			texte_requete_html = texte_requete_html + "<tr><td class='localisation'><div class='txtlocalisation'>" + nouvelle_liste[liste]['localisation'] + "</div></td>";
+			var texte_requete_html = "<tr><td class='localisation'><div class='txtlocalisation'>" + nouvelle_liste[liste]['localisation'] + "</div></td>";
 			if (nouvelle_liste[liste]['code'] != null) {
 				texte_requete_html = texte_requete_html + "<td class='code'>" + nouvelle_liste[liste]['code'] + "</td>";
 			} else {
@@ -403,6 +405,8 @@ function sendAjaxForm(page) {
 			}
 			texte_requete_html = texte_requete_html + "<a class='bouton' href='#' target='_blank' name='suppRequete_" + nouvelle_liste[liste]['numrequete'] + "' onClick=\"declanchementDeleteAjaxForm(1,'" + page + "',this.name,'suppressionRequete');return false;\" ><div class='bouton supprimer'></div><div class='boutonname'>" + traduire('bouton.supprimer_requete') + "</div></a></td>";
 			texte_requete_html = texte_requete_html + "</tr>";
+
+			content_body = texte_requete_html + content_body;
 			numListe += 1;
 		}
 		/*
@@ -419,8 +423,10 @@ function sendAjaxForm(page) {
 		texte_requete_html = texte_requete_html + "<div class='boutonname'>" + traduire('bouton.ajouter_requete') + "</div></a></td>";
 		texte_requete_html = texte_requete_html + "</tr>";
 		*/
-		texte_requete_html = texte_requete_html + "<input type='hidden' id='nombre_requetes' name='nombre_requetes' value='" + nouvelle_liste.length + "'>";
-		texte_requete_html = texte_requete_html + "</tbody></table>";
+		content_body = content_body + "<input type='hidden' id='nombre_requetes' name='nombre_requetes' value='" + nouvelle_liste.length + "'>";
+		
+		texte_requete_html = en_tete_texte_requete_html + body_texte_requete_html + content_body + "</tbody></table>";;
+
 		$('div.requetemessage').html(texte_requete_html);
 		fin_attente();
 		return;
