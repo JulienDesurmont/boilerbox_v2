@@ -875,7 +875,7 @@ public function configurationAuto($type) {
 
 	// Variable de la nouvelle version
 	$liste_conf['numero_version']['description'] = "Numéro de version du site web";
-	$liste_conf['numero_version']['value'] = "2.14.1";
+	$liste_conf['numero_version']['value'] = "2.14.2";
 	$liste_conf['numero_version']['parametreAdmin'] = true;
 
 
@@ -886,6 +886,11 @@ public function configurationAuto($type) {
 	$liste_conf['listing_nb_par_page']['description'] = "Indique le nombre de listing à afficher par page";
 	$liste_conf['listing_nb_par_page']['value'] = "1000";
 	$liste_conf['listing_nb_par_page']['parametreAdmin'] = false;
+
+    $liste_conf['site_parent']['description'] = "Site parent entre boiler-box et boiler-box-lts";
+    $liste_conf['site_parent']['value'] = "boiler-box";
+    $liste_conf['site_parent']['parametreAdmin'] = true;
+
 
 		
 

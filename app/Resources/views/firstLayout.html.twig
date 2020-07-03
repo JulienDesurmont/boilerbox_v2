@@ -106,7 +106,7 @@
 							<div>	<span class='bleu'>I</span><span class='grandScreen'>NDUSTRIAL<br /></span>
 									<span class='bleu'>B</span><span class='grandScreen'>OILER<br /></span>
 									<span class='bleu'>C</span><span class='grandScreen'>ONTROL<br /></span>
-									<span class='version'>{% if service_session.get('pageTitle').version is defined %}{{ service_session.get('pageTitle').version }}{% endif %}</span>
+									<span class='version'>{{ service_configuration.getSiteParent }} {% if service_session.get('pageTitle').version is defined %}{{ service_session.get('pageTitle').version }}{% endif %}</span>
 							</div>
 						</div>
                    	</div>
